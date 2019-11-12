@@ -4,11 +4,12 @@ import styled from 'styled-components';
 const ThumbnailStyle = styled.div`
   width: 10rem;
   height: 10rem;
+  border-radius: 1rem;
   overflow: hidden;
-  padding: 0.2rem;
-  border-radius: 0.5rem;
   img {
-    height: 100%;
+    border-radius: 1rem;
+    width: 10rem;
+    height: 10rem;
   }
 `;
 
