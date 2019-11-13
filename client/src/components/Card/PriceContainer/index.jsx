@@ -6,6 +6,8 @@ import TopBid from '../TopBid';
 const PriceContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  margin-top: 0.5rem;
 `;
 
 const PriceContainer = (props) => {
