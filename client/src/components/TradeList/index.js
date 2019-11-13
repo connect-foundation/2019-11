@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import React, { useState , useEffect} from 'react';
-
+import ButtonSelect from './ButtonSelect';
+import ButtonDays from './ButtonDays';
+const TradeWrap= styled.div` 
+    width:50rem;
+`;
 const TradeTitle = styled.div` 
     text-align:left;
 `;
@@ -8,7 +12,8 @@ const TradeTitle = styled.div`
 const RightAlign = styled.div` 
 display:flex;
 justify-content:flex-end;
-height:2.5rem;
+height:2rem;
+margin:0 0 0.5rem;
 `;
 const CenterAlign = styled.div` 
 display:flex;
@@ -94,24 +99,20 @@ function TradeList(props) {
 
     if (loading) return <div>Loading...</div>;
     return (
-      <div>
+      <TradeWrap>
         <TradeTitle>
             <h3>거래 내역</h3>
         </TradeTitle>
 
         <RightAlign>
-            <button onClick={setSale}>
-                판매
-            </button>
-            <button onClick={setBuy}>
-                구매
-            </button>
+            <ButtonSelect name="판매" select={()=>setSale()}/>  
+            <ButtonSelect name="구매" select={()=>setBuy()}/>            
         </RightAlign>
         <RightAlign>
-            <button onClick={()=>setDay(1)}>1일</button>
-            <button onClick={()=>setDay(7)}>1주일</button>   
-            <button onClick={()=>setDay(365)}>1년</button>   
-            <button onClick={()=>setDay(365*3)}>3년</button>     
+            <ButtonDays 
+            select_1d={()=>setDay(1)} select_1w={()=>setDay(7)}
+            select_1y={()=>setDay(365)} select_3y={()=>setDay(365*3)}
+            />
         </RightAlign>
         
         <TableWrap>
@@ -148,13 +149,7 @@ function TradeList(props) {
                 </tbody>
             </TableCustom>
         </TableWrap>
-        <CenterAlign>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        </CenterAlign>
-      </div>
+      </TradeWrap>
     );
   }
   
