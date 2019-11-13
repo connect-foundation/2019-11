@@ -7,8 +7,9 @@ const Container = styled.div`
     width: 100%;
     height: 10em;
     display:flex;
+    flex-direction:column;
+    position: relative;
     justify-content:center;
-    position:relative;
     align-items:center;
 `
 
@@ -19,15 +20,16 @@ const ButtonDiv = styled.div`
     border:none;
     outline:none;
     justify-content:space-between;
-    top:0;
-    left:0;
+    z-index:1;
 `
 
 const CenterLine = styled.div`
     width:100%;
-    height:0.5px;
-    border:none;
-    background-color: #FFAf6e;
+    height:1.5px;
+    border: #FFAF6e dashed 0.75px;
+    position:absolute;
+    line-height:50%;
+    box-sizing:border-box;
 `
 
 const Components = () => {
@@ -40,6 +42,7 @@ const Components = () => {
                     <ProgressButton text={"Step.3 상품등록"}/>
                     <ProgressButton text={"Step.4 완료"}/>
                 </ButtonDiv>
+                <CenterLine/>
             </Container>
         </>
     )
