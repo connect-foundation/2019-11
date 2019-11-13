@@ -1,35 +1,35 @@
 import styled from 'styled-components';
 import React, { useState , useEffect} from 'react';
 
-const Trade_title = styled.div` 
+const TradeTitle = styled.div` 
     text-align:left;
 `;
 
-const Right_align = styled.div` 
+const RightAlign = styled.div` 
 display:flex;
 justify-content:flex-end;
 height:2.5rem;
 `;
-const Center_align = styled.div` 
+const CenterAlign = styled.div` 
 display:flex;
 justify-content:center;
 height:2.5rem;
 `;
-const Table_Wrap = styled.div`
+const TableWrap = styled.div`
 border:solid 0.1rem;
 width:50rem;
 height:31.5rem;
 `;
-const Table_custom = styled.table` 
+const TableCustom = styled.table` 
 width:50rem;
 `;
-const Table_head = styled.th` 
+const TableHead = styled.th` 
 width:4rem;
 `;
-const Table_head_date = styled.th` 
+const TableHeadDate = styled.th` 
 width:7rem;
 `;
-const Table_head_title = styled.th` 
+const TableHeadTitle = styled.th` 
 width:20rem;
 `;
 
@@ -95,36 +95,36 @@ function TradeList(props) {
     if (loading) return <div>Loading...</div>;
     return (
       <div>
-        <Trade_title>
+        <TradeTitle>
             <h3>거래 내역</h3>
-        </Trade_title>
+        </TradeTitle>
 
-        <Right_align>
+        <RightAlign>
             <button onClick={setSale}>
                 판매
             </button>
             <button onClick={setBuy}>
                 구매
             </button>
-        </Right_align>
-        <Right_align>
+        </RightAlign>
+        <RightAlign>
             <button onClick={()=>setDay(1)}>1일</button>
             <button onClick={()=>setDay(7)}>1주일</button>   
             <button onClick={()=>setDay(365)}>1년</button>   
             <button onClick={()=>setDay(365*3)}>3년</button>     
-        </Right_align>
+        </RightAlign>
         
-        <Table_Wrap>
-            <Table_custom>
+        <TableWrap>
+            <TableCustom>
                 <thead>
                     <tr>
-                        <Table_head></Table_head>
-                        <Table_head_title>상품제목</Table_head_title>
-                        <Table_head_date>등록일</Table_head_date>
-                        <Table_head_date>거래일</Table_head_date>
-                        <Table_head>편차</Table_head>
-                        <Table_head>희망가격</Table_head>
-                        <Table_head>거래가격</Table_head>
+                        <TableHead></TableHead>
+                        <TableHeadTitle>상품제목</TableHeadTitle>
+                        <TableHeadDate>등록일</TableHeadDate>
+                        <TableHeadDate>거래일</TableHeadDate>
+                        <TableHead>편차</TableHead>
+                        <TableHead>희망가격</TableHead>
+                        <TableHead>거래가격</TableHead>
                     </tr>
                 </thead>
                 <tbody>
@@ -146,14 +146,14 @@ function TradeList(props) {
                         );
                     })}
                 </tbody>
-            </Table_custom>
-        </Table_Wrap>
-        <Center_align>
+            </TableCustom>
+        </TableWrap>
+        <CenterAlign>
         <button>1</button>
         <button>2</button>
         <button>3</button>
         <button>4</button>
-        </Center_align>
+        </CenterAlign>
       </div>
     );
   }
