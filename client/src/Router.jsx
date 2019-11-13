@@ -1,13 +1,18 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import Index from './pages/Index'
+import CategoryBar from './components/CategoryBar'
 
 const Router = () => {
     return (
-        <Switch>
-            <Route path="/" exact component={Index}></Route>
-            <Route path="/user"></Route>
-        </Switch>
+        <>
+            <CategoryBar>
+            </CategoryBar>
+            <Switch>
+                <Route path="/" exact component={Index}></Route>
+                <Route path="/user"></Route>
+            </Switch>
+        </>
     )
 }
 
