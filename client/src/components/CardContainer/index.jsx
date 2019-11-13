@@ -7,14 +7,14 @@ const CardContainerStyle = styled.div`
   justify-content: center;
   width: 100%;
   height: 17rem;
+  margin-bottom: 2rem;
 `;
 
 const CardContainer = (props) => {
-  console.log(props.populars)
   return (
     <CardContainerStyle>
     {
-      props.populars.map(item => <Card item={item}/>)
+      props.items.map(item => <Card item={item}/>)
     }
     </CardContainerStyle>
   )
