@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import personIcon from '../../../assets/person.svg'
 
 const BidsStyle = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const BidsStyle = styled.div`
 const Bids = (props) => {
   return (
     <BidsStyle>
-      <img src="/icon/person.jpg"/>
+      <img src={personIcon}/>
       {props.bids}
     </BidsStyle>
   )

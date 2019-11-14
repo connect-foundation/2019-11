@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
-import ImgIcon from './imageIcon'
-import TextIcon from './textIcon'
+import ImgIcon from './ImageIcon'
+import TextIcon from './TextIcon'
 
 const Wrapper = styled.li`
     position: relative;
