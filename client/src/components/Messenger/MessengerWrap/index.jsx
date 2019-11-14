@@ -5,8 +5,8 @@ const MessengerDiv= styled.div`
     position:fixed;
     bottom:7rem;
     right:1rem;
-    width:15rem;
-    height:20rem;
+    width:20rem;
+    height:25rem;
     border:solid 0.1rem;
     border-color:#FEAA6E;
     &::after{
@@ -23,7 +23,7 @@ const MessengerDiv= styled.div`
 function MessengerWrap(props) {
 
     return (
-        <MessengerDiv class="balloon">
+        <MessengerDiv>
 
         </MessengerDiv>
     );

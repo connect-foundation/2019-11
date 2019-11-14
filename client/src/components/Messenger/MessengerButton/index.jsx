@@ -29,7 +29,7 @@ function MessengerButton(props) {
 
     return (
       <>
-        <ShowButton>메신저</ShowButton>
+        <ShowButton onClick={props.select}>메신저</ShowButton>
       </>
     );
   }
