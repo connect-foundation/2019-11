@@ -3,15 +3,16 @@ import styled from 'styled-components'
 
 const Container = styled.div`
     display: flex;
-    width: ${props => props.open ? '15em' : 0};
+    width: 15em;
     height: 100%;
     overflow-y: auto;
     background: #FFA626;
     border:none;
     z-index: 1;
 
-    transition: width .35s ease-in-out;
-`
+    transform: translateX(${props => props.open ? '0' : '-15em'});
+    transition: all .35s ease-in-out;
+`;
 
 
 const Components = (props) => {
