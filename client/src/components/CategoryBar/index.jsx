@@ -2,18 +2,21 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import Logo from './Logo'
 import CategoryIcon from './CategoryIcon'
-import Clothes from '../../assets/clothes.svg'
+import Cloth from '../../assets/cloth.svg'
+import Electronic from '../../assets/television.svg'
 import ExpandList from './ExpandList'
 
 const Container = styled.div`
     display:flex;
-    border-right: gray 0.5px solid;
 `
 
 const OriginWrapper = styled.div`
     width: 5em;
     display:flex;
     flex-direction:column;
+    z-index: 2;
+    background: white;
+    border-right: #FEF2C7 0.2rem solid;
 `
 
 const Bar = styled.div`
@@ -44,8 +47,16 @@ const Components = () => {
             <Bar>
                 <List>
                     <CategoryIcon
-                        img={Clothes}
-                        text="옷"
+                        color="#FFE1A2"
+                        img={Cloth}
+                        text="의류"
+                        active={open}
+                        onClick={handleClick}
+                    />
+                    <CategoryIcon
+                        color="#BEDDBF"
+                        img={Electronic}
+                        text="가전"
                         active={open}
                         onClick={handleClick}
                     />

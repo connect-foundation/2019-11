@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 
 const TextIcon = styled.span`
@@ -21,7 +22,7 @@ const TextIcon = styled.span`
 
     &:hover{
         opacity: 1;
-        color: #FEAA6E;
+        color: ${props => props.color};
     }
 `
 

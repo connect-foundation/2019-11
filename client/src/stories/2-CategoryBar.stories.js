@@ -1,8 +1,8 @@
 import React from 'react'
 
 import CategoryIcon from '../components/CategoryBar/CategoryIcon'
-import TextIcon from '../components/CategoryBar/CategoryIcon/textIcon'
-import ImageIcon from '../components/CategoryBar/CategoryIcon/imageIcon'
+import TextIcon from '../components/CategoryBar/CategoryIcon/TextIcon'
+import ImageIcon from '../components/CategoryBar/CategoryIcon/ImageIcon'
 
 export default {
     title: 'Category',
@@ -11,7 +11,7 @@ export default {
 export const texticon = () => {
     return (
         <div style={{ width: 200, height: 100 }}>
-            <TextIcon>{'Hello World'}</TextIcon>
+            <TextIcon color="yellow">{'Hello World'}</TextIcon>
         </div>
     )
 }
@@ -19,7 +19,7 @@ export const texticon = () => {
 export const imageicon = () => {
     return (
         <div style={{ width: 100, height: 100 }}>
-            <ImageIcon src={"https://post-phinf.pstatic.net/MjAxNzA1MzFfOTAg/MDAxNDk2MjMwNTkyMTI3.TJR2yRakRXPx9UYAcp78nvQCXhAbIzJN-jbqBSWK6AQg.Y82yrzYZa33Z27SxcK5wkx5htM2NJphC6-QzjrEgSLog.PNG/%EC%8B%9C%EA%B3%B5.png?type=w1200"} />
+            <ImageIcon img={"https://post-phinf.pstatic.net/MjAxNzA1MzFfOTAg/MDAxNDk2MjMwNTkyMTI3.TJR2yRakRXPx9UYAcp78nvQCXhAbIzJN-jbqBSWK6AQg.Y82yrzYZa33Z27SxcK5wkx5htM2NJphC6-QzjrEgSLog.PNG/%EC%8B%9C%EA%B3%B5.png?type=w1200"} />
         </div>
     )
 }
