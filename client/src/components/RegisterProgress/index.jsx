@@ -11,6 +11,8 @@ const Container = styled.div`
     position: relative;
     justify-content:center;
     align-items:center;
+
+    margin: auto 0;
 `
 
 const ButtonDiv = styled.div`
@@ -32,15 +34,15 @@ const CenterLine = styled.div`
     box-sizing:border-box;
 `
 
-const Components = () => {
+const Components = ( props ) => {
+
+    const { phase, list } = props
+
     return(
         <>
             <Container>
                 <ButtonDiv>
-                    <ProgressButton text={"Step.1 카테고리"} active={true}/>
-                    <ProgressButton text={"Step.2 판매방식"}/>
-                    <ProgressButton text={"Step.3 상품등록"}/>
-                    <ProgressButton text={"Step.4 완료"}/>
+                    {list.map((value, idx) => <ProgressButton text={value} active={phase===idx}/>)}
                 </ButtonDiv>
                 <CenterLine/>
             </Container>
