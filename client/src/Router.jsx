@@ -4,6 +4,8 @@ import Index from './pages/Index'
 import Main from './pages/Main'
 import TradeList from './pages/TradeList'
 import CategoryBar from './components/CategoryBar'
+import Register from './pages/Regiester'
+
 import Messenger from './components/Messenger'
 const Router = () => {
     return (
@@ -15,6 +17,7 @@ const Router = () => {
                 <Route path="/" exact component={Index}></Route>
                 <Route path="/user"></Route>
                 <Route path="/tradelist" component={TradeList}></Route>
+                <Route path="/register" exact component={Register}></Route>
                 <Route path="/main" component={Main}></Route>
             </Switch>
         </>

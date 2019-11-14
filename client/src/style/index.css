@@ -26,4 +26,21 @@ code {
     monospace;
 }
 
+::-webkit-scrollbar-track
+{
+    border-radius: 0.25rem;
+    background: none;
+}
+
+::-webkit-scrollbar
+{
+    width: 0.5rem;
+    background: none;
+}
+
+::-webkit-scrollbar-thumb
+{
+    border-radius: 0.25rem;
+    background-color: rgba(64, 64, 64, 0.3);
+}
 
