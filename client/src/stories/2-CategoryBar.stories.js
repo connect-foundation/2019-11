@@ -1,8 +1,8 @@
 import React from 'react'
 
 import CategoryIcon from '../components/CategoryBar/CategoryIcon'
-import TextIcon from '../components/CategoryBar/CategoryIcon/TextIcon'
-import ImageIcon from '../components/CategoryBar/CategoryIcon/ImageIcon'
+import TextIcon from '../components/CategoryBar/CategoryIcon/textIcon'
+import ImageIcon from '../components/CategoryBar/CategoryIcon/imageIcon'
 
 export default {
     title: 'Category',
