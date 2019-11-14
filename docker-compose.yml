@@ -19,7 +19,7 @@ services:
 
   api-server:
     build:
-      context: ./api-server
+      context: ./server
       dockerfile: Dockerfile
     volumes:
       - ./server:/app:cached
