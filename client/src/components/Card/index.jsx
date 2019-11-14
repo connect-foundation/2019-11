@@ -8,10 +8,17 @@ import PriceContainer from './PriceContainer'
 
 const CardStyle = styled.div`
   border-radius: 1rem;
-  margin: 0.1rem;
+  margin: 1rem;
   background: white;
-  height: 15rem;
-  border: solid 0.1rem #FEAA6E
+  width: 13rem;
+  height: 17rem;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2), 0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
+  transition: all .15s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const InfoContainer = styled.div`
