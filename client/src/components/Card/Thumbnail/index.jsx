@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ThumbnailStyle = styled.div`
-  width: 10rem;
+  display: block;
   height: 10rem;
-  border-radius: 1rem;
+  border-radius: 1rem 1rem 0 0;
   overflow: hidden;
   img {
-    border-radius: 1rem;
-    width: 10rem;
-    height: 10rem;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 

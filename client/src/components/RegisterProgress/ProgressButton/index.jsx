@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Progress = styled.div`
     width: 15em;
     height: 3em;
-    border: #FFAf6E 0.7px solid;
+    border: #FFAf6E 1.5px solid;
     border-radius:3em;
     background: ${props => props.active ? '#ffaf6e' : 'white'};
     color: ${props => props.active ? 'white' : '#ffaf6e'};
