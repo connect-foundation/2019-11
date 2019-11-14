@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import Index from './pages/Index'
 import TradeList from './pages/TradeList'
 import CategoryBar from './components/CategoryBar'
+import Register from './pages/Regiester'
 
 const Router = () => {
     return (
@@ -13,6 +14,7 @@ const Router = () => {
                 <Route path="/" exact component={Index}></Route>
                 <Route path="/user"></Route>
                 <Route path="/tradelist" component={TradeList}></Route>
+                <Route path="/register" exact component={Register}></Route>
             </Switch>
         </>
     )
