@@ -19,10 +19,10 @@ services:
 
   api-server:
     build:
-      context: ./api-server
+      context: ./server
       dockerfile: Dockerfile
     volumes:
-      - ./api-server:/app:cached
+      - ./server:/app:cached
     ports:
       - "3000:3000"
     environment:
