@@ -35,7 +35,7 @@ const BoxHeader = styled.button`
 
 const Components = props => {
 
-    const { list } = props
+    const { list, selected, event } = props
 
     const [header, setHeader] = useState('선택해주세요')
     const [open, setOpen] = useState(false)
@@ -45,7 +45,7 @@ const Components = props => {
         <Conatiner>
             <BoxHeader onClick={handleListOpen}>{header}</BoxHeader>
             <ItemListDiv>
-                <ItemList open={open} show={3} list={list} selected={2}></ItemList>
+                <ItemList open={open} show={3} list={list} selected={selected}></ItemList>
             </ItemListDiv>
         </Conatiner>
     )

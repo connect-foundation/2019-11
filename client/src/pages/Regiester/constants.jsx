@@ -5,4 +5,14 @@ export const phaseList = [
     'Step 4. 완료'
 ]
 
-export default { phaseList }
+export const termList = [
+    { title: '1일', term : 1},
+    { title: '2일', term : 2},
+    { title: '3일', term : 3},
+    { title: '4일', term : 4},
+    { title: '5일', term : 5},
+    { title: '6일', term : 6},
+    { title: '1주', term : 7},
+]
+
+export default { phaseList, termList }

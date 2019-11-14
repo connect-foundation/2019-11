@@ -1,10 +1,13 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components'
 
 import PageBase from '../../../components/PageBase'
 import Button from '@material-ui/core/Button'
 import Carousel from '../../../components/Carousel'
+import SelectBox from '../../../components/SelectBox'
+
+import { termList } from '../constants'
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -53,10 +56,25 @@ const DetailInput = styled.textarea`
     resize: none;
 `
 
+const generateDayList = () => {
+
+    return termList.map((value) => {
+        const { title, term } = value
+        const deadline = new Date()
+        deadline.setDate(deadline.getDate() + term)
+        const newTitle = `${title}  ~${deadline.getFullYear()}.${deadline.getMonth() + 1}.${deadline.getDate()} ${deadline.getHours()}시`
+        
+        return newTitle
+    })
+}
+
 const Component = (props) => {
     const classes = useStyles();
 
     const { width, prev, next } = props
+    const dayList = generateDayList()
+
+    const [dayIdx, setDayIdx] = useState(-1)
 
     return (
         <PageBase width={width}>
@@ -66,10 +84,10 @@ const Component = (props) => {
                         <Carousel/>
                     </CarouselDiv>
                     <InputDiv>
+                        <SelectBox list={dayList} selected={dayIdx}/>
                     </InputDiv>
                 </TopContentDiv>
                 <DetailInput>
-
                 </DetailInput>
             </ContentDiv>
             <ButtonContainer>

@@ -25,13 +25,13 @@ const Content = styled.div`
     height: calc(100vh - 10rem);
     box-sizing: border-box;
     background-color:whitesmoke;
-    overflow-x:hidden;
+    overflow:hidden;
 `
 
 const Window = styled.div`
     display:flex;
     width: ${phaseList.length * WIDTH}rem;
-    height: 90%;
+    height: 100%;
 
     transform: ${props => `translateX(${-props.phase * WIDTH}rem)`};
     transition: transform .2s ease-in-out;
