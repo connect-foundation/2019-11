@@ -5,12 +5,19 @@ import MessengerRoom from '../components/Messenger/MessengerWrap/MessengerRoom';
 import MessengerReceive from '../components/Messenger/MessengerWrap/MessengerChat/MessengerReceive';
 import MessengerSend from '../components/Messenger/MessengerWrap/MessengerChat/MessengerSend';
 import MessengerChat from '../components/Messenger/MessengerWrap/MessengerChat';
-
-
+import MessengerCreateButton from '../components/Messenger/MessengerCreateButton';
 import Messenger from '../components/Messenger'
 export default {
   title: 'Messenger',
 };
+
+
+export const CreateButton = () => (
+  <>
+  <MessengerCreateButton>
+  </MessengerCreateButton>
+  </>
+);
 
 
 
