@@ -6,20 +6,16 @@ const Container = styled.div`
     width: 15em;
     height: 100%;
     overflow-y: auto;
-    background: #FFA626;
-    border:none;
+    background-color: #ffe1a2;
+    border-right: #FFA626 solid 2px;
+    box-sizing: border-box;
     z-index: 1;
-
-    transform: translateX(${props => props.open ? '0' : '-15em'});
-    transition: all .35s ease-in-out;
 `;
 
 
 const Components = (props) => {
     return (
-        <Container open={props.open}>
-            
-        </Container>
+        <Container open={props.open}/>
     )
 }
 
