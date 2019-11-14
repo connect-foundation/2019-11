@@ -4,12 +4,13 @@ import Index from './pages/Index'
 import Main from './pages/Main'
 import TradeList from './pages/TradeList'
 import CategoryBar from './components/CategoryBar'
-
+import Messenger from './components/Messenger'
 const Router = () => {
     return (
         <>
             <CategoryBar>
             </CategoryBar>
+            <Messenger/>
             <Switch>
                 <Route path="/" exact component={Index}></Route>
                 <Route path="/user"></Route>
