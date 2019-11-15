@@ -1,7 +1,6 @@
 .App {
   height: 100vh;
   display: flex;
-  text-align: center;
 }
 
 .App-logo {
@@ -21,4 +20,56 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+/* css variables */
+:root {
+  --color-primary: #ff5a5f;
+  --color-primary-minus0: #ff7b80;
+  --color-primary-minus1: #fd999c;
+  --color-primary-minus2: #ffc4c6;
+
+  --color-secondary: #feaa6e;
+  --color-secondary-minus0: #ffc69d;
+  --color-secondary-minus1: #ffd9be;
+
+  /*
+  --color-success
+  --color-warning
+  --color-fail
+  */
+
+  --color-gray-lighter: #f9f9f9;
+  --color-gray: #cccccc;
+  --color-gray-darker: #999999;
+
+  --color-darkgray-lighter: #666666;
+  --color-darkgray: #333333;
+  --color-darkgray-darker: #111111;
+
+  --padding-xs: 0.25rem;
+  --padding-sm: 0.5rem;
+  --padding-md: 1rem;
+  --padding-lg: 1.5rem;
+  --padding-xl: 1.75rem;
+  --padding-xxl: 2rem;
+
+  --margin-xs: 0.25rem;
+  --margin-sm: 0.5rem;
+  --margin-md: 1rem;
+  --margin-lg: 1.5rem;
+  --margin-xl: 1.75rem;
+  --margin-xxl: 2rem;
+
+  --font-size-xxs: 0.5rem;
+  --font-size-xs: 0.8rem;
+  --font-size-sm: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-xxl: 1.5rem;
+}
+
+button {
+  border: none;
 }
