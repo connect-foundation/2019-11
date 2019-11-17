@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React from 'react';
 
 const Wrap= styled.div`
 width:19.5rem;
@@ -21,7 +21,7 @@ background-color:#FEF2C7;
 border-radius:1rem;
 `;
 
-function MessengerSand(props) {
+function MessengerSend(props) {
 
     return (
       <Wrap>
@@ -32,4 +32,4 @@ function MessengerSand(props) {
     );
   }
   
-  export default MessengerSand;
+  export default MessengerSend;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React, { useState } from 'react';
 
 const ButtonSB = styled.button`
 all:unset;
@@ -16,14 +16,14 @@ border-radius:0.5rem;
 
 function ButtonSelect(props) {
     const [select,setSelect] = useState(true);
-    function clckbutton(){
+    function clickbutton(){
         props.select()
         if(select) setSelect(false);
         else setSelect(true);
         
     }
     return (
-        <ButtonSB onClick={clckbutton} state={select}>
+        <ButtonSB onClick={clickbutton} state={select}>
         {props.name}
         </ButtonSB>
     );

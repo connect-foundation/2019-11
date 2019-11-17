@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React from 'react';
 
 const ShowButton= styled.button` 
     all:unset;
@@ -11,7 +11,6 @@ const ShowButton= styled.button`
     color:white;
 
     border-radius:4rem;
-    border-width: 3px;
     border-style: solid;
     border-color: #FEAA6E;;
 
@@ -28,9 +27,7 @@ const ShowButton= styled.button`
 function MessengerButton(props) {
 
     return (
-      <>
         <ShowButton onClick={props.select}>메신저</ShowButton>
-      </>
     );
   }
   

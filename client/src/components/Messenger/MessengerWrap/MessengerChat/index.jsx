@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React from 'react';
 import MessengerReceive from './MessengerReceive';
 import MessengerSend from './MessengerSend';
 const MessengerScroll = styled.div`

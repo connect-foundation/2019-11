@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React, { useState } from 'react';
 import MessengerButton from './MessengerButton';
 import MessengerWrap from './MessengerWrap';
 
@@ -7,11 +6,7 @@ function Messenger(props) {
     const [show,setShow] = useState(false);
 
     function ChangeState(){
-      if(show){
-        setShow(false);
-      }else{
-        setShow(true);
-      }
+      setShow(!show);
     }
 
     let MessengerContent = null;
