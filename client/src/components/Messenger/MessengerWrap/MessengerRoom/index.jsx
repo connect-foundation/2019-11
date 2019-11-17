@@ -39,7 +39,6 @@ overflow: hidden;
 text-overflow: ellipsis;
 white-space: nowrap;
 width: 15rem;
-height: 1rem;
 text-align:left;
 `;
 
