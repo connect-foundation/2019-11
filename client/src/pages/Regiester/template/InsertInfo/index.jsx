@@ -4,10 +4,11 @@ import styled from 'styled-components'
 import PageBase from '../../../../components/PageBase'
 import Button from '../../../../components/BoxButton'
 import Carousel from '../../../../components/Carousel'
-import SelectBox from '../../../../components/SelectBox'
 import InputBox from '../../../../components/InputBox'
 import InputMoney from '../../../../components/InputMoney'
 import ItemDescription from '../../../../components/ItemDescription'
+import TermSelector from '../../../../components/RegisterTermSelector'
+import ToggleButton from '../../../../components/ToggleButton'
 
 import { termList, itemDescription } from '../../constants'
 
@@ -58,13 +59,26 @@ const MoneyDiv = styled.div`
 
 const ItemTitle = styled.span`
     text-align:left;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 500;
 `
 
 const ItemDesc = styled.span`
     text-align: left;
     font-size: 0.78rem;
+`
+
+const SelectorDiv = styled.div`
+    width: 15rem;
+    margin: 0.5rem 0;
+`
+
+const AuctionDiv = styled.div`
+    display:flex;
+    width: 15rem;
+    height: 2rem;
+    justify-content: space-between;
+    align-items:center;
 `
 
 const renderItemDescription = (idx, focusIdx) => {
@@ -73,15 +87,20 @@ const renderItemDescription = (idx, focusIdx) => {
 }
 
 const generateDayList = () => {
+    const endDates = []
 
-    return termList.map((value) => {
-        const { title, term } = value
-        const deadline = new Date()
-        deadline.setDate(deadline.getDate() + term)
-        const newTitle = `${title}  ~${deadline.getFullYear()}.${deadline.getMonth() + 1}.${deadline.getDate()} ${deadline.getHours()}시`
+    return [
+        termList.map((value) => {
+            const { title, term } = value
+            const deadline = new Date(); deadline.setDate(deadline.getDate() + term)
+            const endDate = `${deadline.getFullYear()}.${deadline.getMonth() + 1}.${deadline.getDate()} ${deadline.getHours()}시 종료`
 
-        return newTitle
-    })
+            endDates.push(endDate)
+            return title
+        })
+        ,
+        endDates
+    ]
 }
 
 const Component = (props) => {
@@ -90,6 +109,9 @@ const Component = (props) => {
 
     const [dayIdx, setDayIdx] = useState(-1)
     const [focusItem, setFocus] = useState(-1)
+    const [isAuction, setIsAuction] = useState(true)
+
+    const handleAuction = ev => setIsAuction(!isAuction)
 
     return (
         <PageBase width={width}>
@@ -98,27 +120,33 @@ const Component = (props) => {
                     <CarouselDiv>
                         <Carousel />
                     </CarouselDiv>
-                    <InputDiv onBlur={event => {setFocus(-1)}}>
+                    <InputDiv onBlur={event => { setFocus(-1) }}>
                         <InputBox font={1.25} placeholder={'상품 제목'} />
-                        <SelectBox list={dayList} selected={dayIdx} />
-                        <MoneyDiv onFocus={ev => {setFocus(0)}}>
+                        <SelectorDiv>
+                            <TermSelector title={'경매 기간'} data={dayList} selected={dayIdx} handler={setDayIdx} />
+                        </SelectorDiv>
+                        <AuctionDiv>
+                            <ItemTitle>경매</ItemTitle>
+                            <ToggleButton checked={isAuction} onClick={handleAuction}/>
+                        </AuctionDiv>
+                        <MoneyDiv onFocus={ev => { setFocus(0) }}>
                             <ItemTitle>즉시 구매가</ItemTitle>
-                            <InputMoney/>
+                            <InputMoney />
                             {renderItemDescription(0, focusItem)}
                         </MoneyDiv>
-                        <MoneyDiv onFocus={ev => {setFocus(1)}}>
+                        <MoneyDiv onFocus={ev => { setFocus(1) }}>
                             <ItemTitle>경매 시작가</ItemTitle>
-                            <InputMoney/>
+                            <InputMoney />
                             {renderItemDescription(1, focusItem)}
                         </MoneyDiv>
-                        <MoneyDiv onFocus={ev => {setFocus(2)}}>
+                        <MoneyDiv onFocus={ev => { setFocus(2) }}>
                             <ItemTitle>낙찰 예상가</ItemTitle>
-                            <InputMoney/>
+                            <InputMoney />
                             {renderItemDescription(2, focusItem)}
                         </MoneyDiv>
                     </InputDiv>
                 </TopContentDiv>
-                <ItemDescription title={'상품 설명'} maxLen={500}/>
+                <ItemDescription title={'상품 설명'} maxLen={500} />
                 <ButtonContainer>
                     <Button onClick={next} text={'다음'} />
                 </ButtonContainer>
