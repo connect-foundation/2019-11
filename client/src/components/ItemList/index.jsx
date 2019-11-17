@@ -12,21 +12,21 @@ const Container = styled.div`
 
 const ListContainer = styled.div`
   width:100%;
-  height:30em;
+  height:20em;
   overflow-x:hidden;
   overflow-y:auto;
   box-sizing:border-box;
   margin-top:0.2em;
-  background-color:whitesmoke;
+  background-color:white;
 `
 
 const Components = props => {
 
-  const [title, setTitle] = useState('선택해주세요')
+  const { title, list } = props
+
   const [selectedIdx, setSelectedIdx] = useState(-1);
   const handleSelected = (idx) =>{
     setSelectedIdx(idx)
-    setTitle(props.list[idx])
     props.callback(idx)
   }
 
@@ -35,7 +35,7 @@ const Components = props => {
       <ListHeader text={title}/>
       <ListContainer>
         {
-          props.list.map((value, idx) => <ListItem text={value} selected={selectedIdx === idx} event={() => handleSelected(idx)}/>)
+          list.map((value, idx) => <ListItem text={value} selected={selectedIdx === idx} event={() => handleSelected(idx)}/>)
         }
       </ListContainer>
     </Container>

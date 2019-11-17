@@ -6,9 +6,9 @@ const Button = styled.button`
     font-size: 1em;
     background: ${props => props.selected ? '#e0e0e0' : 'white'};
     padding:0.5em;
-    margin-bottom: 0.1em;
     text-align: left;
     border:none;
+    border-bottom: #dfdfdf solid 1px;
     outline:none;
 
     &:hover{
