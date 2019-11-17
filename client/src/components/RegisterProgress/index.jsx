@@ -5,7 +5,7 @@ import ProgressButton from './ProgressButton'
 
 const Container = styled.div`
     width: 100%;
-    height: 10em;
+    height: 7em;
     display:flex;
     flex-direction:column;
     position: relative;
@@ -36,13 +36,13 @@ const CenterLine = styled.div`
 
 const Components = ( props ) => {
 
-    const { phase, list } = props
+    const { phase, list, event } = props
 
     return(
         <>
             <Container>
                 <ButtonDiv>
-                    {list.map((value, idx) => <ProgressButton text={value} active={phase===idx}/>)}
+                    {list.map((value, idx) => <ProgressButton text={value} active={phase===idx} onClick={ev => {event(idx); console.dir(phase === idx)}}/>)}
                 </ButtonDiv>
                 <CenterLine/>
             </Container>

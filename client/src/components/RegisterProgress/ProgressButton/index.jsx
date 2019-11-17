@@ -10,6 +10,8 @@ const Progress = styled.div`
     color: ${props => props.active ? 'white' : '#ffaf6e'};
     font-weight: bold;
     display:flex;
+
+    cursor: pointer;
 `
 
 const Content = styled.span`
@@ -17,9 +19,12 @@ const Content = styled.span`
 `
 
 const Components = (props) => {
+
+    const { active, text, onClick } = props
+
     return(
-        <Progress active={props.active}>
-            <Content>{props.text}</Content>
+        <Progress active={active} onClick={onClick}>
+            <Content>{text}</Content>
         </Progress>
     )
 }
