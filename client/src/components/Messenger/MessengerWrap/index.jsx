@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, {useState}from 'react';
+import React, {useState,useEffect}from 'react';
 import MessengerRoom from './MessengerRoom';
 import MessengerChatWrap from './MessengerChat';
 
@@ -33,7 +33,7 @@ overflow-y:auto;
 function MessengerWrap(props) {
 
     const [RoomList,setRoomList] = useState([
-    <MessengerRoom clickroom={()=>{clickRoomList()}} Img={"A"} Name={"과장님"} RecentMsg={"ㅇ야ㅑ야야야야ㅑ야야야야ㅑ야야야ㅑ야야야야ㅑ양"}/>,
+    <MessengerRoom clickroom={()=>{clickRoomList(false)}} Img={"A"} Name={"과장님"} RecentMsg={"ㅇ야ㅑ야야야야ㅑ야야야야ㅑ야야야ㅑ야야야야ㅑ양"}/>,
     <MessengerRoom Img={"B"} Name={"주임님"} RecentMsg={"부재중 전화 112통"}/>,
     <MessengerRoom Img={"E"} Name={"거래처"} RecentMsg={"부재중 전화 2통"}/>,
     <MessengerRoom Img={"A"} Name={"과장님"} RecentMsg={"부재중 전화 21통"}/>,
@@ -43,7 +43,7 @@ function MessengerWrap(props) {
     <MessengerRoom Img={"B"} Name={"주임님"} RecentMsg={"부재중 전화 11통"}/>,
     <MessengerRoom Img={"E"} Name={"거래처"} RecentMsg={"부재중 전화 2통"}/>]);
 
-    const [ChatHistory,setChatHistory] = useState(<MessengerChatWrap></MessengerChatWrap>);
+    const [ChatHistory,setChatHistory] = useState(<MessengerChatWrap clickback={()=>{clickRoomList(true)}} ></MessengerChatWrap>);
     const [isRoomList,setIsRoomList] = useState(true);
 
     function initRoomList(){
@@ -52,16 +52,25 @@ function MessengerWrap(props) {
     function initChat(){
         setChatHistory([]);
     }
-    function clickRoomList(){
-        setIsRoomList(!isRoomList);
+    function clickRoomList(flag){
+        setIsRoomList(flag);
     }
     
+    let initMessenger = () =>{
+        return isRoomList ? 
+        <MessengerScroll>
+            {RoomList}
+        </MessengerScroll>
+        :ChatHistory
+    }
+
+    useEffect(()=>{
+        initMessenger();
+    },[isRoomList])
 
     return (
         <MessengerDiv>
-            <MessengerScroll>
-                {isRoomList ? RoomList:ChatHistory}
-            </MessengerScroll>
+                {initMessenger()}
         </MessengerDiv>
     );
   }
