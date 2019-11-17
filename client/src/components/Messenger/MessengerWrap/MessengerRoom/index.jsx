@@ -45,7 +45,7 @@ text-align:left;
 function MessengerRoom(props) {
 
     return (
-      <Wrap>
+      <Wrap onClick={()=>props.clickroom()}>
         <Img>{props.Img}</Img>
         <RoomContent>
             <HostName>
