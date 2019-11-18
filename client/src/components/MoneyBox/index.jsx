@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import NonBorderBox from '../NonBorderBox'
-
 const Container = styled.div`
     width: 100%;
     display:flex;
@@ -43,8 +41,6 @@ const NonBorderBox = styled.input`
     outline:none;
     font-size:${props=> props.font}rem;
 `
-
-export default Component
 
 const Component = (props) => {
 
