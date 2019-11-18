@@ -18,6 +18,26 @@ const ButtonDiv = styled.div`
     margin: 0 auto;
 `
 
+const LinkBox = styled.a`
+    width: 100%;
+    height: 4rem;
+    padding: 0.5rem 0.25rem;
+    border: #bfbfbf solid 1px;
+    background: #eeeeee;
+    font-size: 1.3rem;
+    box-sizing:border-box;
+    text-decoration:none;
+    color: black;
+    line-height:2rem;
+
+    transition: border .2s ease-in-out;
+
+    &:hover, &:focus{
+        border: #ffae6a solid 2px;
+        border-radius: 10px;
+    }
+`
+
 const Component = (props) => {
     const { width, next } = props
 
@@ -25,9 +45,9 @@ const Component = (props) => {
         <PageBase width={width}>
             <ContentDiv>
                 <ButtonDiv>
-                    <BoxLink href="/register">새 상품등록</BoxLink>
-                    <BoxLink href="/">마이페이지로</BoxLink>
-                    <BoxLink href="/">확인</BoxLink>
+                    <LinkBox href="/register">새 상품등록</LinkBox>
+                    <LinkBox href="/">마이페이지로</LinkBox>
+                    <LinkBox href="/">확인</LinkBox>
                 </ButtonDiv>
             </ContentDiv>
         </PageBase>
