@@ -34,6 +34,17 @@ const WonDiv = styled.div`
     justify-content:center;
     align-items:center;
 `
+const NonBorderBox = styled.input`
+    font-family: 'BMJUA';
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    box-sizing: border-box;
+    border:none;
+    outline:none;
+    font-size:${props=> props.font}rem;
+`
+
+export default Component
 
 const Component = (props) => {
 
