@@ -6,12 +6,10 @@ import deadlines from '../../mock/deadline-items/deadline-items.js';
 
 const MainStyle = styled.div`
   display: flex;
-  position: absolute;
   font-family: 'BMJUA';
   width: 100%;
   flex-direction: column;
   justify-content: center;
-  padding-top: 2rem;
   .category {
     display: flex;
     font-size: xx-large;
