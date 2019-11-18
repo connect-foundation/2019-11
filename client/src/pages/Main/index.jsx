@@ -1,8 +1,7 @@
 import React, { useState, useEffect }from 'react';
 import styled from 'styled-components';
-import CardContainer from '../../components/CardContainer';
-import populars from '../../mock/popular-items/popular-items.js';
-import deadlines from '../../mock/deadline-items/deadline-items.js';
+import { CardContainer } from '../../components';
+import { populars, deadlines } from '../../mock';
 
 const MainStyle = styled.div`
   display: flex;
@@ -10,12 +9,6 @@ const MainStyle = styled.div`
   width: 100%;
   flex-direction: column;
   justify-content: center;
-  .category {
-    display: flex;
-    font-size: xx-large;
-    justify-content: flex-start;
-    padding-left:10rem;
-  }
 `;
 
 const Main = () => {
@@ -37,19 +30,14 @@ const Main = () => {
   }
 
   useEffect(() => {
-    getPopular()
-  },[])
-
-  useEffect(() => {
+    getPopular();
     getDeadLine()
-  }, [])
+  },[])
 
   return (
     <MainStyle>
-      <label className="category">HOT - 인기 경매 상품</label>
-      <CardContainer className="popular" items={popular}/>
-      <label className="category">HURRY UP - 마감 임박 경매 상품</label>
-      <CardContainer className="deadline" items={deadline}/>
+      <CardContainer items={popular} title={"HOT - 인기 경매 상품"}/>
+      <CardContainer items={deadline} title={"HURRY UP - 마감 임박 경매 상품"}/>
     </MainStyle>
   )
 }
