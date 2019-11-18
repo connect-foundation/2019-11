@@ -5,9 +5,9 @@ import Main from "./pages/Main";
 import TradeList from "./pages/TradeList";
 import CategoryBar from "./components/CategoryBar";
 import Register from "./pages/Regiester";
-import Products from "./pages/Products";
-
 import Messenger from "./components/Messenger";
+import ProductPage from "./components/Product/ProductPage";
+
 const Router = () => {
   return (
     <>
@@ -20,7 +20,7 @@ const Router = () => {
         <Route path="/tradelist" component={TradeList}></Route>
         <Route path="/register" exact component={Register}></Route>
         <Route path="/main" component={Main}></Route>
-        <Route path="/products" component={Products}></Route>
+        <Route path="/products" component={ProductPage}></Route>
       </Switch>
     </>
   );

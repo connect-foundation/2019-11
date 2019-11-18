@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import BuyNowPrice from '../BuyNowPrice';
-import TopBid from '../TopBid';
+import React from "react";
+import styled from "styled-components";
+import BuyNowPrice from "../BuyNowPrice";
+import TopBid from "../TopBid";
 
 const PriceContainerStyle = styled.div`
   display: flex;
@@ -10,13 +10,13 @@ const PriceContainerStyle = styled.div`
   margin-top: 0.5rem;
 `;
 
-const PriceContainer = (props) => {
-  return(
+const PriceContainer = props => {
+  return (
     <PriceContainerStyle>
-      <BuyNowPrice buyNowPrice={props.buyNowPrice}/>
-      <TopBid topBid={props.topBid}/>
+      <BuyNowPrice buyNowPrice={props.buyNowPrice} />
+      <TopBid topBid={props.topBid} />
     </PriceContainerStyle>
-  )
-}
+  );
+};
 
 export default PriceContainer;
