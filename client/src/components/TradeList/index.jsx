@@ -49,7 +49,7 @@ width:36%;
 `;
 
 const TdCategory = styled.td` 
-color:${props => props.isSale ? "red":"green"}
+color:${props => props.isSaleElement ? "red":"green"}
 `;
 const TdDeviation = styled.td` 
 color:${props => props.isPlus ? "blue":"red"}
@@ -73,10 +73,10 @@ function TradeList(props) {
 
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const [sale_s, setSale_s] = useState(true);
-    const [buy_s, setBuy_s] = useState(true);
-    const [all_s, setAll_s] = useState(true);
-    const [day_s, setDay_s] = useState(1);
+    const [isSale, setIsSale] = useState(true);
+    const [isBuy, setIsBuy] = useState(true);
+    const [isAll, setisAll] = useState(true);
+    const [dayago, setDayago] = useState(1);
     const [page, setPage] = useState(1);
 
     const getData = (sale,buy,day) => {
@@ -86,46 +86,43 @@ function TradeList(props) {
         }).then(result => {
             setData([]);
             setData(
-                result.reduce((acc,ele,i)=>{
-                let today = new Date();
-                let check_day= new Date(ele["거래일"]);
-                let day_check = (today-check_day)/1000/60/60/24;
-                if(day>=day_check){
-                    if(ele["판매"]===1&&sale){
-                        acc.push(ele);
-                    }
-                    if(ele["구매"]===1&&buy){
-                        acc.push(ele);
-                    }
-                }
-                return acc;
-                },[])
+                // 서버 에서 필터를 처리후 받기
+                // 페이지시 전체갯수 + 1페이지 보일것 두개의 데이터를 받아오는방식
+
+                // result.reduce((acc,ele,i)=>{
+                // let today = new Date();
+                // let check_day= new Date(ele["거래일"]);
+                // let day_check = (today-check_day)/1000/60/60/24;
+                // if(dayago>=day_check){
+                //     if(ele["판매"]===1&&isSale){
+                //         acc.push(ele);
+                //     }
+                //     if(ele["구매"]===1&&isBuy){
+                //         acc.push(ele);
+                //     }
+                // }
+                // return acc;
+                // },[])
             );
             setLoading(false);
         })
     }
 
     useEffect(()=>{
-        getData(sale_s,buy_s,day_s);
-    },[sale_s,buy_s,day_s]);
+        getData(isSale,isBuy,dayago);
+    },[isSale,isBuy,dayago]);
 
 
     function setSale(){
-        if(sale_s){
-            setSale_s(false); 
-        }else{
-            setSale_s(true); 
-        }    
+        setIsSale(!isSale);  
     }
+        
     function setBuy(){
-        if(buy_s){
-            setBuy_s(false); 
-        }else{
-            setBuy_s(true); 
-        }  
+        setIsBuy(!isBuy);
     }
+    
     function setDay(day){
-        setDay_s(day);
+        setDayago(day);
     }
 
     function pageclick(page_num){
@@ -172,7 +169,7 @@ function TradeList(props) {
                         }
                         return (
                         <tr>
-                            <TdCategory isSale={item["판매"]}>{category}</TdCategory>
+                            <TdCategory isSaleElement={item["판매"]}>{category}</TdCategory>
                             <td>{item["상품제목"]}</td>
                             <td>{item["등록일"]}</td>
                             <td>{item["거래일"]}</td>

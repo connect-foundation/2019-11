@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState , useEffect} from 'react';
+import React from 'react';
 
 const Wrap= styled.div`
 width:19.5rem;
@@ -39,25 +39,24 @@ overflow: hidden;
 text-overflow: ellipsis;
 white-space: nowrap;
 width: 15rem;
-height: 1rem;
 text-align:left;
 `;
 
 function MessengerRoom(props) {
 
     return (
-      <Wrap>
-<Img>{props.Img}</Img>
-          <RoomContent>
-              <HostName>
-    {props.Name}
-              </HostName>
-              <div>
-                  <HostRecentMsg>
+      <Wrap onClick={()=>props.clickroom()}>
+        <Img>{props.Img}</Img>
+        <RoomContent>
+            <HostName>
+                {props.Name}
+            </HostName>
+            <div>
+                <HostRecentMsg>
                     {props.RecentMsg}
-                    </HostRecentMsg>
-              </div>
-          </RoomContent>
+                </HostRecentMsg>
+            </div>
+        </RoomContent>
       </Wrap>
     );
   }
