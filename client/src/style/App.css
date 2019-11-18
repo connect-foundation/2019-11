@@ -1,3 +1,7 @@
+html {
+  box-sizing: border-box;
+}
+
 .App {
   height: 100vh;
   display: flex;
@@ -24,7 +28,7 @@
 
 /* css variables */
 :root {
-  --color-primary: #ff5a5f;
+  --color-primary: #ff3466;
   --color-primary-minus0: #ff7b80;
   --color-primary-minus1: #fd999c;
   --color-primary-minus2: #ffc4c6;
@@ -70,6 +74,12 @@
   --font-size-xxl: 1.5rem;
 }
 
-button {
+button,
+input {
   border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
 }
