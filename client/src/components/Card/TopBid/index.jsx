@@ -6,17 +6,17 @@ const TopBidStyle = styled.div`
   height: 1rem;
   font-size: middle;
   color: #FEAA6E;
-  .top-bid-label {
+  label {
     color: black;
     margin-right: 0.5rem;
   }
 `;
 
-const TopBid = (props) => {
+const TopBid = ({topBid}) => {
   return (
   <TopBidStyle>
-    <label className="top-bid-label">현재 입찰가</label>
-    {props.topBid}
+    <label>현재 입찰가</label>
+    {topBid}
   </TopBidStyle>
   )
 }

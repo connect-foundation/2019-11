@@ -6,19 +6,17 @@ const BuyNowPriceStyle = styled.div`
   height: 1rem;
   font-size: small;
   color: #BEDDBF;
-  .buy-now-label {
+  label {
     color: black;
     margin-right: 0.5rem;
   }
 `;
 
-const BuyNowPrice = (props) => {
+const BuyNowPrice = ({buyNowPrice}) => {
   return (
     <BuyNowPriceStyle>
-      {
-        props.buyNowPrice === null ? <></> : <label className="buy-now-label">즉시 구매가</label>
-      }
-      {props.buyNowPrice}
+      <label>즉시 구매가</label>
+      {buyNowPrice}
     </BuyNowPriceStyle>
   )
 }

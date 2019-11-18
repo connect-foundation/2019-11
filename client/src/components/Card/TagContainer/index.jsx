@@ -24,8 +24,7 @@ const DDayTag = styled.div`
   margin: 0.25rem;
 `;
 
-const TagContainer = (props) => {
-  const { isAuction, date } = props;
+const TagContainer = ({isAuction, date}) => {
   const day = getDDay(date)
 
   return (
