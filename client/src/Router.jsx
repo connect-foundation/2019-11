@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import Main from './pages/Main'
 import TradeList from './pages/TradeList'
 import CategoryBar from './components/CategoryBar'
-import Register from './pages/Regiester'
+import Register from './pages/Register'
 
 import Messenger from './components/Messenger'
 const Router = () => {
