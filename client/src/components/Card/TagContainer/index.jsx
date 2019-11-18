@@ -24,7 +24,12 @@ const DDayTag = styled.div`
   margin: 0.25rem;
 `;
 
+<<<<<<< HEAD
 const TagContainer = ({isAuction, date}) => {
+=======
+const TagContainer = (props) => {
+  const { isAuction, date } = props;
+>>>>>>> 17a98a467404639a4b0a05369bbc66a8cc03fb9f
   const day = getDDay(date)
 
   return (
