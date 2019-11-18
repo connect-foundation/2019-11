@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import PageBase from '../../../../components/PageBase'
-import BoxLink from '../../../../components/BoxLink'
 
 const ContentDiv = styled.div`
     width:80%;

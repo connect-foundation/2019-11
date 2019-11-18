@@ -5,7 +5,7 @@ import PageBase from '../../../../components/PageBase'
 import Button from '../../../../components/BoxButton'
 import Carousel from '../../../../components/Carousel'
 import InputBox from '../../../../components/InputBox'
-import InputMoney from '../../../../components/InputMoney'
+import MoneyBox from '../../../../components/MoneyBox'
 import ItemDescription from '../../../../components/ItemDescription'
 import TermSelector from '../../../../components/RegisterTermSelector'
 import ToggleButton from '../../../../components/ToggleButton'
@@ -131,17 +131,17 @@ const Component = (props) => {
                         </AuctionDiv>
                         <MoneyDiv onFocus={ev => { setFocus(0) }}>
                             <ItemTitle>즉시 구매가</ItemTitle>
-                            <InputMoney />
+                            <MoneyBox />
                             {renderItemDescription(0, focusItem)}
                         </MoneyDiv>
                         <MoneyDiv onFocus={ev => { setFocus(1) }}>
                             <ItemTitle>경매 시작가</ItemTitle>
-                            <InputMoney />
+                            <MoneyBox />
                             {renderItemDescription(1, focusItem)}
                         </MoneyDiv>
                         <MoneyDiv onFocus={ev => { setFocus(2) }}>
                             <ItemTitle>낙찰 예상가</ItemTitle>
-                            <InputMoney />
+                            <MoneyBox />
                             {renderItemDescription(2, focusItem)}
                         </MoneyDiv>
                     </InputDiv>
