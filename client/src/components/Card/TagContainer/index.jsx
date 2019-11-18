@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-// import Tag from '../Tag';
+import getDDay from '../../../utils/getDDay'
 
 const TagContainerStyle = styled.div`
   display: flex;
   font-size: x-small;
   padding: 0.1rem;
 `;
-// <TagContainer isAuction={props.item.isAuction} date={props.item.date}/>
 
 const IsAuctionTag = styled.div`
   border-radius: 0.5rem;
@@ -26,18 +25,13 @@ const DDayTag = styled.div`
 `;
 
 const TagContainer = (props) => {
-  const getDDay = () => {
-    const dday = new Date(props.date);
-    const now = new Date();
+  const { isAuction, date } = props;
+  const day = getDDay(date)
 
-    const gap = now.getTime() - dday.getTime();
-    const result = Math.floor(gap / (1000 * 60 * 60 * 24)) * -1;
-    return result;
-  }
   return (
     <TagContainerStyle>
-      {props.isAuction === true ? <IsAuctionTag>경매중</IsAuctionTag> : <></>}
-      <DDayTag>D - {getDDay()}</DDayTag>
+      {isAuction === true && <IsAuctionTag>경매중</IsAuctionTag>}
+      <DDayTag>D - {day}</DDayTag>
     </TagContainerStyle>
   );
 }

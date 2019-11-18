@@ -13,11 +13,11 @@ const BidsStyle = styled.div`
   font-size: small;
 `;
 
-const Bids = (props) => {
+const Bids = ({bids}) => {
   return (
     <BidsStyle>
       <img src={personIcon}/>
-      {props.bids}
+      {bids}
     </BidsStyle>
   )
 }

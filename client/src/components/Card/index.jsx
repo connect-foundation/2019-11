@@ -26,15 +26,23 @@ const InfoContainer = styled.div`
   justify-content: space-around;
 `;
 
-const Card = (props) => {
+const Card = ({item}) => {
+  const { thumbnail,
+          isAuction,
+          date,
+          title,
+          bids,
+          buyNowPrice,
+          topBid } = item
+
   return (
     <CardStyle>
-      <Thumbnail thumbnail={props.item.thumbnail}/>
-      <TagContainer isAuction={props.item.isAuction} date={props.item.date}/>
-      <CardTitle title={props.item.title}/>
+      <Thumbnail thumbnail={thumbnail}/>
+      <TagContainer isAuction={isAuction} date={date}/>
+      <CardTitle>{title}</CardTitle>
       <InfoContainer>
-        <Bids bids={props.item.bids}/>
-        <PriceContainer buyNowPrice={props.item.buyNowPrice} topBid={props.item.topBid}/>
+        <Bids bids={bids}/>
+        <PriceContainer buyNowPrice={buyNowPrice} topBid={topBid}/>
       </InfoContainer>
     </CardStyle>
   )
