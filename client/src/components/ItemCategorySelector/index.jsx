@@ -8,7 +8,7 @@ const Container = styled.div`
     justify-content:space-between;
 `
 
-const Components = () => {
+const Components = (props) => {
     const category = ['의류', '가전', '일상']
     const detail = [
         ['여성', '남성', '아동', '아웃도어'],
@@ -25,8 +25,8 @@ const Components = () => {
     return (
         <>
             <Container>
-                <ItemList list={category} callback={handleCallback}></ItemList>
-                <ItemList list={rightList}></ItemList>
+                <ItemList title={'대분류'} list={category} callback={handleCallback}></ItemList>
+                <ItemList title={'소분류'} list={rightList}></ItemList>
             </Container>
         </>
     )

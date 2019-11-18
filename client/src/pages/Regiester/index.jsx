@@ -1,37 +1,37 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import Footer from '../../components/Footer'
 import Progress from '../../components/RegisterProgress'
-import CategoryPage from './1'
-import SellKindPage from './2'
-import InfoPage from './3'
+import SelectCategory from './template/SelectCategory'
+import InsertInfo from './template/InsertInfo'
+import Complete from './template/Complete'
 import { phaseList } from './constants'
-
 
 const WIDTH = 80;
 
 const Container = styled.div`
-    width: ${WIDTH}rem;
-    height: 100%;
+    width: 100%;
+    height:100%;
     overflow-y: auto;
+`
+
+const TemplateContainer = styled.div`
+    width: ${WIDTH}rem;
     box-sizing:border-box;
-    border-right: gray solid 1px;
-    border-left: gray solid 1px;
     margin: 0 auto;
+    min-height:100%;
 `
 
 const Content = styled.div`
     width: 100%;
-    height: calc(100vh - 10rem);
     box-sizing: border-box;
-    background-color:whitesmoke;
     overflow:hidden;
 `
 
 const Window = styled.div`
     display:flex;
     width: ${phaseList.length * WIDTH}rem;
-    height: 100%;
 
     transform: ${props => `translateX(${-props.phase * WIDTH}rem)`};
     transition: transform .2s ease-in-out;
@@ -42,14 +42,17 @@ const Page = () => {
 
     return (
         <Container>
-            <Progress phase={phase} list={phaseList}/>
-            <Content>
-                <Window phase={phase}>
-                    <CategoryPage width={80} prev={() => setPhase(0)} next={() => setPhase(1)}/>
-                    <SellKindPage width={80} prev={() => setPhase(0)} next={() => setPhase(2)}/>
-                    <InfoPage width={80} prev={() => setPhase(1)} next={() => setPhase(3)}/>
-                </Window>
-            </Content>
+            <TemplateContainer>
+                <Progress phase={phase} list={phaseList} event={setPhase} />
+                <Content>
+                    <Window phase={phase}>
+                        <SelectCategory width={80} next={() => setPhase(1)} />
+                        <InsertInfo width={80} next={() => setPhase(2)} />
+                        <Complete width={80} next={() => setPhase(3)} />
+                    </Window>
+                </Content>
+            </TemplateContainer>
+            <Footer />
         </Container>
     )
 }

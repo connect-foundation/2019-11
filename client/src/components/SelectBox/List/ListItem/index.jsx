@@ -9,7 +9,7 @@ const Container = styled.div`
     color: ${props=> props.active ? '#ffae6a' : 'black'};
     background: white;
     border-radius: 5px;
-    
+    padding: 0 0.25rem;
     font-family: 'BMJUA';
     font-weight: 600;
 
@@ -25,10 +25,10 @@ const Text = styled.span`
 `
 
 const Component = props => {
-    const { selected } = props
+    const { selected, onClick } = props
 
     return (
-        <Container active={selected}><Text>{props.text}</Text></Container>
+        <Container active={selected} onClick={onClick}><Text>{props.text}</Text></Container>
     )
 }
 
