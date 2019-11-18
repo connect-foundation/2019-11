@@ -15,14 +15,14 @@ const Main = () => {
   const [popular, setPopular] = useState([]);
   const [deadline, setDeadline] = useState([]);
 
-  const getPopular = () => {
+  const getPopularList = () => {
     // fetch('/mock/popular-items/popular-items.json')
     // .then(result => result.json())
     // .then(result => setPopular(result))
     setPopular(populars);
   }
 
-  const getDeadLine = () => {
+  const getDeadLineList = () => {
     // fetch('/mock/deadline-items/deadline-items.json')
     // .then(result => result.json())
     // .then(result => setDeadline(result))
@@ -30,8 +30,8 @@ const Main = () => {
   }
 
   useEffect(() => {
-    getPopular();
-    getDeadLine()
+    getPopularList();
+    getDeadLineList()
   },[])
 
   return (
