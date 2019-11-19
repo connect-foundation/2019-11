@@ -1,37 +1,37 @@
 import React, { useState, useEffect }from 'react';
 import styled from 'styled-components';
-import CardContainer from '../../components/CardContainer';
-import populars from '../../mock/popular-items/popular-items.js';
-import deadlines from '../../mock/deadline-items/deadline-items.js';
+import { CardContainer } from '../../components';
+import { populars, deadlines } from '../../mock';
 
 const MainStyle = styled.div`
   display: flex;
-  position: absolute;
   font-family: 'BMJUA';
   width: 100%;
   flex-direction: column;
   justify-content: center;
-  padding-top: 2rem;
+<<<<<<< HEAD
+=======
   .category {
     display: flex;
     font-size: xx-large;
     justify-content: flex-start;
     padding-left:10rem;
   }
+>>>>>>> 17a98a467404639a4b0a05369bbc66a8cc03fb9f
 `;
 
 const Main = () => {
   const [popular, setPopular] = useState([]);
   const [deadline, setDeadline] = useState([]);
 
-  const getPopular = () => {
+  const getPopularList = () => {
     // fetch('/mock/popular-items/popular-items.json')
     // .then(result => result.json())
     // .then(result => setPopular(result))
     setPopular(populars);
   }
 
-  const getDeadLine = () => {
+  const getDeadLineList = () => {
     // fetch('/mock/deadline-items/deadline-items.json')
     // .then(result => result.json())
     // .then(result => setDeadline(result))
@@ -39,19 +39,14 @@ const Main = () => {
   }
 
   useEffect(() => {
-    getPopular()
+    getPopularList();
+    getDeadLineList()
   },[])
-
-  useEffect(() => {
-    getDeadLine()
-  }, [])
 
   return (
     <MainStyle>
-      <label className="category">HOT - 인기 경매 상품</label>
-      <CardContainer className="popular" items={popular}/>
-      <label className="category">HURRY UP - 마감 임박 경매 상품</label>
-      <CardContainer className="deadline" items={deadline}/>
+      <CardContainer items={popular} title={"HOT - 인기 경매 상품"}/>
+      <CardContainer items={deadline} title={"HURRY UP - 마감 임박 경매 상품"}/>
     </MainStyle>
   )
 }

@@ -7,14 +7,17 @@ const PriceContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: flex-end;
   margin-top: 0.5rem;
+  flex: 1;
 `;
 
 const PriceContainer = props => {
-  return (
+  const { buyNowPrice, topBid } = props;
+    return (
     <PriceContainerStyle>
-      <BuyNowPrice buyNowPrice={props.buyNowPrice} />
-      <TopBid topBid={props.topBid} />
+      { buyNowPrice === null ? <></> : <BuyNowPrice buyNowPrice={buyNowPrice}/>}
+      <TopBid topBid={topBid}/>
     </PriceContainerStyle>
   );
 };

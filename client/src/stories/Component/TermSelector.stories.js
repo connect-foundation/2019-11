@@ -3,7 +3,7 @@ import React from 'react'
 import RegisterTermSelector from '../../components/RegisterTermSelector'
 
 export default ({
-    title: 'RegisterTermSelector'
+    title: 'Component|RegisterTermSelector'
 })
 
 export const itemDescription = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import List from '../components/ItemList'
-import ListItem from '../components/ItemList/ListItem'
+import List from '../components/ListBox'
+import ListItem from '../components/ListBox/ListItem'
 import ItemCategorySelector from '../components/ItemCategorySelector'
 
 export default {
