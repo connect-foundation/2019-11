@@ -6,7 +6,7 @@ const Progress = styled.div`
     height: 3em;
     border: #FFAf6E 1.5px solid;
     border-radius:3em;
-    background: ${props => props.disabled ? '#dfdfdf' : (props.active ? '#ffaf6e' : 'white')};
+    background: ${props => props.disabled ? '#f3f3f3' : (props.active ? '#ffaf6e' : 'white')};
     color: ${props => props.active ? 'white' : '#ffaf6e'};
     font-weight: bold;
     display:flex;
