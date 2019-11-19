@@ -27,7 +27,7 @@ const InfoContainer = styled.div`
   display: flex;
   justify-content: space-around;
   flex: 1;
-  padding-bottom: 1rem;
+  padding: 0 1rem 1rem 1rem ;
 `;
 
 export { CardStyle, CardTitle, InfoContainer }
