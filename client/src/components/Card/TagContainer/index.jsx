@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import getDDay from '../../../utils/getDDay'
+import React from "react";
+import styled from "styled-components";
+import getDDay from "../../../utils/getDDay";
 
 const TagContainerStyle = styled.div`
   display: flex;
@@ -18,19 +18,14 @@ const IsAuctionTag = styled.div`
 
 const DDayTag = styled.div`
   border-radius: 0.5rem;
-  border: #FEAA6E solid 0.1rem;
-  color: #FEAA6E;
+  border: #feaa6e solid 0.1rem;
+  color: #feaa6e;
   padding: 0.1rem 0.3rem 0.1rem 0.3rem;
   margin: 0.25rem;
 `;
 
-<<<<<<< HEAD
-const TagContainer = ({isAuction, date}) => {
-=======
-const TagContainer = (props) => {
-  const { isAuction, date } = props;
->>>>>>> 17a98a467404639a4b0a05369bbc66a8cc03fb9f
-  const day = getDDay(date)
+const TagContainer = ({ isAuction, date }) => {
+  const day = getDDay(date);
 
   return (
     <TagContainerStyle>
@@ -38,6 +33,6 @@ const TagContainer = (props) => {
       <DDayTag>D - {day}</DDayTag>
     </TagContainerStyle>
   );
-}
+};
 
-export default  TagContainer;
+export default TagContainer;
