@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import ProductInfo from "./ProductInfo";
 import ChatBox from "../Chat/ChatBox";
+import AuctionGraph from "./AuctionGraph";
 
 const ProductPageStyle = styled.div`
   display: flex;
   margin: 0 auto;
   width: 100%;
-  border: 1px solid red;
   max-width: 1440px;
   padding: var(--padding-md);
 `;
@@ -24,7 +24,9 @@ const TextStyle = styled.p`
 
 const Section = styled.section`
   min-height: 400px;
-  margin-bottom: var(--margin-md);
+  margin-bottom: var(--margin-xl);
+  display: flex;
+  ${props => (props.center ? "justify-content: center" : undefined)}
 `;
 
 const ChatColumn = styled.div`
@@ -47,7 +49,9 @@ const ProductPage = () => {
         <Section>
           <ProductInfo product={product} />
         </Section>
-        <Section>그래프</Section>
+        <Section center>
+          <AuctionGraph />
+        </Section>
         <Section>상품 상세 정보</Section>
         <Section>댓글 정보</Section>
       </MainColumn>
