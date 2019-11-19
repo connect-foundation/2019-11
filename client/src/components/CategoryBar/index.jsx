@@ -1,24 +1,40 @@
 import React, { useState } from 'react'
 import Logo from './Logo'
 import CategoryIcon from './CategoryIcon'
+import ExpandList from './ExpandList'
+import LoginButton from './LoginButton'
+import Profile from './Profile'
+
 import Cloth from '../../assets/cloth.svg'
 import Electronic from '../../assets/television.svg'
 import LifeStyle from '../../assets/geek.svg'
-import ExpandList from './ExpandList'
 
-import { Container, OriginWrapper, ListWrapper, Bar, List } from './CategoryBarStyle'
+import detailCategoryList from '../../data/detail-category-list'
+
+
+import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from './CategoryBarStyle'
 
 const Components = () => {
 
     const [open, setOpen] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
+    const [selectIdx, setSelectIdx] = useState(1);
 
-    const handleClick = (event) => setOpen(!open)
+    const handleClick = (e) => {
+        const { idx } = e.target.dataset;
+        if(selectIdx === idx || open === false) {
+            setOpen(!open);
+        }
+        setSelectIdx(idx);
+    }
 
     return (
         <Container>
             <OriginWrapper>
                 <Logo />
                 <Bar>
+                    { isLogin === true ? <Profile active={open}/> : <LoginButton/> }
+                    <DivisionLine/>
                     <List>
                         <CategoryIcon
                             color="#FFE1A2"
@@ -26,6 +42,7 @@ const Components = () => {
                             text="의류"
                             active={open}
                             onClick={handleClick}
+                            idx={1}
                         />
                         <CategoryIcon
                             color="#BEDDBF"
@@ -33,6 +50,7 @@ const Components = () => {
                             text="가전"
                             active={open}
                             onClick={handleClick}
+                            idx={2}
                         />
                         <CategoryIcon
                             color="#5C5749"
@@ -40,12 +58,13 @@ const Components = () => {
                             text="생활"
                             active={open}
                             onClick={handleClick}
+                            idx={3}
                         />
                     </List>
                 </Bar>
             </OriginWrapper>
             <ListWrapper open={open} >
-                <ExpandList/>
+                <ExpandList open={open} idx={selectIdx} details={detailCategoryList[selectIdx - 1]}/>
             </ListWrapper>
         </Container>
     )
