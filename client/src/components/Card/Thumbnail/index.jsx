@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ThumbnailStyle = styled.div`
-  display: block;
+  display: flex;
   height: 10rem;
   border-radius: 1rem 1rem 0 0;
   overflow: hidden;
@@ -13,10 +13,10 @@ const ThumbnailStyle = styled.div`
   }
 `;
 
-const Thumbnail = (props) => {
+const Thumbnail = ({thumbnail}) => {
   return(
     <ThumbnailStyle>
-      <img src={props.thumbnail}/>
+      <img src={thumbnail}/>
     </ThumbnailStyle>
   )
 }
