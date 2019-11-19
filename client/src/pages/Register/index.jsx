@@ -39,15 +39,17 @@ const Window = styled.div`
 
 const Page = () => {
     const [phase, setPhase] = useState(0);
+    const [maxPhase, setMaxPhase] = useState(0);
+    const [show, setShow] = useState(true)
 
     return (
         <Container>
             <TemplateContainer>
-                <Progress phase={phase} list={phaseList} event={setPhase} />
+                <Progress maxPhase={maxPhase} phase={phase} list={phaseList} event={setPhase} />
                 <Content>
                     <Window phase={phase}>
-                        <SelectCategory width={80} next={() => setPhase(1)} />
-                        <InsertInfo width={80} next={() => setPhase(2)} />
+                        <SelectCategory width={80} next={() => { setPhase(1); setMaxPhase(1) }} />
+                        <InsertInfo width={80} next={() => { setPhase(2); setMaxPhase(2) }} />
                         <Complete width={80} next={() => setPhase(3)} />
                     </Window>
                 </Content>
