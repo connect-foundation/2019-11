@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import ListBox from '../ListBox'
+import ItemList from '../ItemList'
 
 const Container = styled.div`
     width:100%;
@@ -9,17 +9,24 @@ const Container = styled.div`
 `
 
 const Components = (props) => {
+    const category = ['의류', '가전', '일상']
+    const detail = [
+        ['여성', '남성', '아동', '아웃도어'],
+        ['TV', '컴퓨터', '형광등'],
+        ['만화', '생활', '탈출']
+    ]
 
-    const { lTitle, lList, rTitle, rList, lIdx, lHandler, rIdx, rHandler } = props
+    const [rightList, setRightList] = useState([])
 
-    const leftEvent = idx => { lHandler(idx); rHandler(-1) }
-    const rightEvent = idx => { rHandler(idx) }
-   
+    const handleCallback = (idx) => {
+        setRightList(detail[idx])
+    }
+
     return (
         <>
             <Container>
-                <ListBox title={lTitle} list={lList} selected={lIdx} onItemClick={leftEvent}></ListBox>
-                <ListBox title={rTitle} list={rList[lIdx]} selected={rIdx} onItemClick={rightEvent}></ListBox>
+                <ItemList title={'대분류'} list={category} callback={handleCallback}></ItemList>
+                <ItemList title={'소분류'} list={rightList}></ItemList>
             </Container>
         </>
     )

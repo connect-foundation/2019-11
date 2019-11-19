@@ -26,18 +26,17 @@ const ButtonContainer = styled.div`
 
 const TopContentDiv = styled.div`
   width:100%;
-  height: 23rem;
+  height: 20rem;
   display:flex;
   justify-content: space-between; 
   margin-bottom: 2rem;
 `
 
 const CarouselDiv = styled.div`
-    width: 23rem;
+    width: 20rem;
     height: 100%;
     display:flex;
     align-items:center;
-    justify-content:center;
 `
 
 const InputDiv = styled.div`
@@ -135,27 +134,16 @@ const Component = (props) => {
                             <MoneyBox />
                             {renderItemDescription(0, focusItem)}
                         </MoneyDiv>
-                        {
-                            (() => {
-                                if (isAuction){
-                                    return (
-                                        <>
-                                            <MoneyDiv onFocus={ev => { setFocus(1) }}>
-                                                <ItemTitle>경매 시작가</ItemTitle>
-                                                <MoneyBox />
-                                                {renderItemDescription(1, focusItem)}
-                                            </MoneyDiv>
-                                            <MoneyDiv onFocus={ev => { setFocus(2) }}>
-                                                <ItemTitle>낙찰 예상가</ItemTitle>
-                                                <MoneyBox />
-                                                {renderItemDescription(2, focusItem)}
-                                            </MoneyDiv>
-                                        </>
-                                    )
-                                }
-                            })()
-                        }
-                        
+                        <MoneyDiv onFocus={ev => { setFocus(1) }}>
+                            <ItemTitle>경매 시작가</ItemTitle>
+                            <MoneyBox />
+                            {renderItemDescription(1, focusItem)}
+                        </MoneyDiv>
+                        <MoneyDiv onFocus={ev => { setFocus(2) }}>
+                            <ItemTitle>낙찰 예상가</ItemTitle>
+                            <MoneyBox />
+                            {renderItemDescription(2, focusItem)}
+                        </MoneyDiv>
                     </InputDiv>
                 </TopContentDiv>
                 <ItemDescription title={'상품 설명'} maxLen={500} />

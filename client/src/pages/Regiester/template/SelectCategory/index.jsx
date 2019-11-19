@@ -1,11 +1,9 @@
-import React, {useState} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import PageBase from '../../../../components/PageBase'
 import Button from '../../../../components/BoxButton'
 import CategorySelector from '../../../../components/ItemCategorySelector'
-
-import {categoryList} from '../../constants.jsx'
 
 const ContentDiv = styled.div`
     width:60%;
@@ -24,22 +22,10 @@ const Component = (props) => {
 
     const { width, next } = props
 
-    const [leftIdx, setLeftIdx] = useState(-1);
-    const [rightIdx, setRightIdx] = useState(-1);
-
     return (
         <PageBase width={width}>
             <ContentDiv>
-                <CategorySelector
-                    lTitle = {categoryList.leftTitle}
-                    rTitle = {categoryList.rightTitle}
-                    lList = {categoryList.leftList}
-                    rList = {categoryList.rightList}
-                    lIdx = {leftIdx}
-                    rIdx = {rightIdx}
-                    lHandler = {setLeftIdx}
-                    rHandler = {setRightIdx}
-                />
+                <CategorySelector />
                 <ButtonContainer>
                     <Button onClick={next} text={'다음'}/>
                 </ButtonContainer>

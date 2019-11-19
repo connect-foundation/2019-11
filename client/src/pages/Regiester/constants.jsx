@@ -15,10 +15,8 @@ export const termList = [
 ]
 
 export const categoryList = {
-    leftTitle: '카테고리',
-    rightTitle: '상세 카테고리',
-    leftList: ['의류', '가전', '생활'],
-    rightList:[['남성의류', '여성의류', '아동의류'], ['컴퓨터', '휴대폰', '카메라'], ['도서', '문구']]
+    left: '대분류',
+    right: '소분류'
 }
 
 export const itemDescription = [
@@ -27,12 +25,4 @@ export const itemDescription = [
     '낙찰 예상가를 적어주세요. 낙찰가와 차이를 알려드립니다.'
 ]
 
-export const notice ={
-    successRegister: '정상적으로 등록되었습니다.'
-}
-
-export const shareConfig = {
-    url: `http://palda.shop`
-}
-
-export default { phaseList, termList, notice }
+export default { phaseList, termList }

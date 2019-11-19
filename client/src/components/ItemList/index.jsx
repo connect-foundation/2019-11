@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState }from 'react'
 import styled from 'styled-components'
 import ListHeader from './ListHeader'
 import ListItem from './ListItem'
@@ -22,18 +22,20 @@ const ListContainer = styled.div`
 
 const Components = props => {
 
-  const { title, list, selected, onItemClick } = props
+  const { title, list } = props
 
-  const handleSelected = (idx) => { onItemClick(idx) }
+  const [selectedIdx, setSelectedIdx] = useState(-1);
+  const handleSelected = (idx) =>{
+    setSelectedIdx(idx)
+    props.callback(idx)
+  }
 
   return (
     <Container>
-      <ListHeader text={title} />
+      <ListHeader text={title}/>
       <ListContainer>
         {
-          list !== undefined ?
-          list.map((value, idx) => <ListItem text={value} selected={selected === idx} onClick={() => handleSelected(idx)} />) :
-          list
+          list.map((value, idx) => <ListItem text={value} selected={selectedIdx === idx} event={() => handleSelected(idx)}/>)
         }
       </ListContainer>
     </Container>
