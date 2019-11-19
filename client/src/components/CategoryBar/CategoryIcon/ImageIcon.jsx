@@ -19,10 +19,10 @@ const ImgIconStyle = styled.div`
     }
 `;
 
-const ImgIcon = (props) => {
+const ImgIcon = ({color, img}) => {
     return (
-        <ImgIconStyle color={props.color}>
-            <img src={props.img}/>
+        <ImgIconStyle color={color}>
+            <img src={img}/>
         </ImgIconStyle>
     );
 }

@@ -18,7 +18,8 @@ const Components = props => {
           img,
           active,
           onClick, 
-          text } = props
+          text,
+          idx } = props
 
   return (
     <Wrapper color={color}>
@@ -27,6 +28,7 @@ const Components = props => {
         color={color}
         active={active}
         onClick={onClick}
+        data-idx={idx}
       >
         {text}
       </TextIcon>
