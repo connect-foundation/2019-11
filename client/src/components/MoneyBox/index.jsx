@@ -44,9 +44,13 @@ const NonBorderBox = styled.input`
 
 const Component = (props) => {
 
+    const { money, handler } = props
+
+    const changeHandler = ev => handler(ev.target.value)
+
     return (
         <Container>
-            <NonBorderBox type={'input'} font={1}/>
+            <NonBorderBox value={money} onChange={changeHandler} type={'input'} font={1}/>
             <WonDiv>
                 <span>원</span>
             </WonDiv>
