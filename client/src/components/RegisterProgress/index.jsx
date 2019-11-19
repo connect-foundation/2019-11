@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import ProgressButton from './ProgressButton'
@@ -34,19 +34,34 @@ const CenterLine = styled.div`
     box-sizing:border-box;
 `
 
-const Components = ( props ) => {
+const renderProgress = (show, component) => {
+    if (!show) return;
+    return component
+}
 
-    const { phase, list, event } = props
+const Components = (props) => {
 
-    return(
-        <>
-            <Container>
-                <ButtonDiv>
-                    {list.map((value, idx) => <ProgressButton text={value} active={phase===idx} onClick={ev => {event(idx); console.dir(phase === idx)}}/>)}
-                </ButtonDiv>
-                <CenterLine/>
-            </Container>
-        </>
+    const { phase, maxPhase, list, event } = props
+    let show = phase !== list.length - 1;
+
+    return (
+        <Container>
+            {
+                renderProgress(show, <>
+                    <ButtonDiv>
+                    {
+                        list.map((value, idx) => {
+                            return <ProgressButton disabled={idx > maxPhase} text={value} active={phase === idx} onClick={ev => { 
+                                if (idx <= maxPhase) event(idx);
+                                else alert('작성되지 않은 정보가 있습니다.')
+                            }} />
+                        })
+                    }
+                    </ButtonDiv>
+                    <CenterLine /></>)
+            }
+
+        </Container>
     )
 }
 
