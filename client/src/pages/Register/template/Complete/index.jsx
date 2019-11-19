@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import PageBase from '../../../../components/PageBase'
@@ -63,7 +63,7 @@ const NoticeText = styled.div`
 `
 
 const Component = (props) => {
-    const { width } = props
+    const { width, data } = props
 
     return (
         <PageBase width={width}>
