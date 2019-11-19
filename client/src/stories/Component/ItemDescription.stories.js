@@ -3,7 +3,7 @@ import React from 'react'
 import ItemDescription from '../../components/ItemDescription'
 
 export default ({
-    title: 'ItemDescription'
+    title: 'Component|ItemDescription'
 })
 
 export const itemDescription = () => {

@@ -3,7 +3,7 @@ import React from 'react'
 import ToggleButton from '../../components/ToggleButton'
 
 export default ({
-    title: 'ToggleButton'
+    title: 'Atomic|ToggleButton'
 })
 
 export const nonChecked = () => {

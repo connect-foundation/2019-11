@@ -18,12 +18,12 @@ const Button = styled.button`
 
 const Components = props => {
 
-    const handle = (event) => {
-        props.event();
-    }
+    const { selected, onClick } = props 
+
+    const handle = event => onClick()
 
     return (
-        <Button selected={props.selected} onClick={handle}>{props.text}</Button>
+        <Button selected={selected} onClick={handle}>{props.text}</Button>
     )
 }
 
