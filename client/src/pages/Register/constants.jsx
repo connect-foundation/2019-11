@@ -35,4 +35,15 @@ export const shareConfig = {
     url: `http://palda.shop`
 }
 
+export const defaultData = {
+    category: undefined,
+    title: '',
+    endDate: '',
+    buyNow: undefined,
+    minPrice: undefined,
+    predictPrice: undefined,
+    imgList: [],
+    description: ''
+}
+
 export default { phaseList, termList, notice }
