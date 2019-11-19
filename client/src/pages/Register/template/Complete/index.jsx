@@ -17,6 +17,7 @@ const ButtonDiv = styled.div`
     flex-direction: column;
     justify-content: space-between;
     margin: 0 auto;
+    text-align: center;
 `
 
 const LinkBox = styled.a`
@@ -71,7 +72,7 @@ const Component = (props) => {
                     <NoticeText>{notice.successRegister}</NoticeText>
                 </NoticeDiv>
                 <ShareDiv>
-                    <ShareBox url={shareConfig}/>
+                    <ShareBox url={shareConfig.url}/>
                 </ShareDiv>
                 <ButtonDiv>
                     <LinkBox href="/register">새 상품등록</LinkBox>
