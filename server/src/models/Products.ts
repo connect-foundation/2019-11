@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from 'typeorm';
 import { Images } from './Images';
-import { Users } from './Users2';
+import { Users } from './Users';
 import { Auction_logs } from './Auction_logs';
 
 @Entity()
@@ -15,7 +15,7 @@ export class Products {
   contents: string;
 
   @Column()
-  immediat_price: number;
+  immediate_price: number;
 
   @Column()
   hope_price: number;

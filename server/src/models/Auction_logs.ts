@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import {Products} from './Products';
-import {Users} from './Users2';
+import {Users} from './Users';
 
 @Entity()
 export class Auction_logs {
