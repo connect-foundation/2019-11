@@ -39,5 +39,9 @@ const List = styled.ul`
     padding: 0;
     margin: 0;
 `
+const DivisionLine = styled.hr`
+    border-top: 1px solid #5C5749;
+    border-left: none;
+`;
 
-export { Container, OriginWrapper, ListWrapper, Bar, List };
+export { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine };
