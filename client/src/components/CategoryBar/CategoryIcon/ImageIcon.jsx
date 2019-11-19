@@ -12,6 +12,7 @@ const ImgIconStyle = styled.div`
     z-index: 0;
     justify-content: center;
     align-items: center;
+    background: ${props => props.color};
     img {
         width: 70%;
         height: 70%;
@@ -20,7 +21,7 @@ const ImgIconStyle = styled.div`
 
 const ImgIcon = (props) => {
     return (
-        <ImgIconStyle>
+        <ImgIconStyle color={props.color}>
             <img src={props.img}/>
         </ImgIconStyle>
     );
