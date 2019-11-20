@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Rooms } from './Rooms';
-import { Reservations } from './Reservations';
+import { Products } from './Products';
+import { Auction_logs } from './Auction_logs';
 
 @Entity()
 export class Users {
@@ -8,20 +8,29 @@ export class Users {
   id: number;
 
   @Column()
-  loginId: string;
+  login_id: string;
 
   @Column()
   password: string;
 
   @Column()
+  salt: string;
+
+  @Column()
   name: string;
 
   @Column()
-  super: boolean;
+  profile_image: string;
 
-  @OneToMany(type => Rooms, room => room.user)
-  rooms: Rooms[];
+  @Column()
+  manner_point: number;
 
-  @OneToMany(type => Reservations, reservation => reservation.user)
-  reservations: Reservations[];
+  @Column()
+  is_delete: boolean;
+
+  @OneToMany(type => Products, Products => Products.id)
+  products: Products[];
+
+  @OneToMany(type => Auction_logs, auction_logs => auction_logs.id)
+  auction_logs: Auction_logs[];
 }
