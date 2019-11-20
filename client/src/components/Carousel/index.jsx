@@ -52,14 +52,6 @@ const CarouselItem = styled.div`
     height: 20em;
 `
 
-const renderImage = (imgSrc) => {
-    return (
-        <CarouselItem>
-            <CarouselImage src={imgSrc} />
-        </CarouselItem>
-    )
-}
-
 const Components = () => {
 
     let onImageLoad = false;
@@ -87,33 +79,18 @@ const Components = () => {
     }
 
     const handleDrop = (e) => {
-        const supportedFilesTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const files = e.dataTransfer.files
 
-        if (imageList.length + files.length <= 10){
-            for (const file of files){
-                const { type } = file
-                if (supportedFilesTypes.indexOf(type) > -1){
-                    ++renderCount;
-                    const render = new FileReader();
-                    render.onload = e => {
-                        ++onloadCount;
-                        imageBuffer.push(e.target.result)
-                        imageLoadOver();
-                    }
-                    render.readAsDataURL(file)
-                }
-            }
-        }
-        else {
+        if (imageList.length + files.length <= 10)
+            imageOnLoad(files)
+        else 
             alert("이미지는 최대 10개입니다.")
-        }
-
+        
         setDragOn(false)
         e.preventDefault()     
     }
 
-    const imageLoadOver = () => {
+    const imageOnLoadEnd = () => {
         if (onloadCount !== renderCount) return ;
         while (imageBuffer.length){
             imageList.push(imageBuffer.shift());
@@ -121,6 +98,24 @@ const Components = () => {
         }
         onloadCount = renderCount = 0;
         setImageList(imageList.splice(0))
+    }
+
+    const imageOnLoad = (files) => {
+        const supportedFilesTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        for (const file of files){
+            const { type } = file
+            if (supportedFilesTypes.indexOf(type) > -1){
+                ++renderCount;
+                const render = new FileReader();
+                render.onload = e => {
+                    ++onloadCount;
+                    imageBuffer.push(e.target.result)
+                    imageOnLoadEnd();
+                }
+                render.readAsDataURL(file)
+            }
+        }
     }
 
     return (
@@ -133,8 +128,15 @@ const Components = () => {
             </RightDiv>
             <Window>
                 <Panel idx={showIdx}>
-                    {imageList.map(value => renderImage(value))}
-                    <AddButton />
+                    {imageList.map((value, idx) => 
+                    <CarouselItem>
+                        <CarouselImage key={value} src={value} onRemove={() => { 
+                            imageList.splice(idx, 1)
+                            setImageList(imageList.splice(0))
+                            }}/>
+                    </CarouselItem>)
+                    }
+                    <AddButton trigger={imageOnLoad}/>
                 </Panel>
             </Window>
         </Container>
