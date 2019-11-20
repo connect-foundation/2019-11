@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Chat from "./Chat";
 import ChatSend from "./ChatSend";
+import io from "socket.io-client";
 
 const ChatBoxStyle = styled.div`
   display: flex;
@@ -115,22 +116,27 @@ const chatList = [
 ];
 
 const ChatBox = () => {
+  useEffect(() => {
+    console.log("try connect to socket");
+    const socket = io("localhost:3002");
+  }, []);
+
   return (
     <ChatBoxStyle>
       <ChatHeader>
         <TitleText>채팅</TitleText>
       </ChatHeader>
       <ChatBody>
-        {chatList.map(chat => {
-          return <Chat chat={chat}></Chat>;
+        {chatList.map((chat, idx) => {
+          return <Chat key={idx} chat={chat}></Chat>;
         })}
         <ChatAlert>
           <ChatAlertWithBid>
             hwangSJ 님이 50,000원에 입찰하셨습니다.
           </ChatAlertWithBid>
         </ChatAlert>
-        {chatList.slice(0, 2).map(chat => {
-          return <Chat chat={chat}></Chat>;
+        {chatList.slice(0, 2).map((chat, idx) => {
+          return <Chat key={idx} chat={chat}></Chat>;
         })}
       </ChatBody>
       <ChatFooter>
