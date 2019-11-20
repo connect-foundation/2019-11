@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import NextButton from './NextButton'
 import BeforeButton from './BeforeButton'
@@ -11,6 +11,8 @@ const Container = styled.div`
     box-sizing: border-box;
     background-color: #e0e0e0;
     position:relative;
+
+    opacity: ${props => props.dragOn ? 0.6 : 1};
 `
 
 const LeftDiv = styled.div`
@@ -53,34 +55,85 @@ const CarouselItem = styled.div`
 const renderImage = (imgSrc) => {
     return (
         <CarouselItem>
-            <CarouselImage src={imgSrc}/>
+            <CarouselImage src={imgSrc} />
         </CarouselItem>
     )
 }
 
 const Components = () => {
 
-    const dummy = ['http://www.foodnmed.com/news/photo/201903/18296_3834_4319.jpg',
-'https://pds.joins.com/news/component/htmlphoto_mmdata/201904/08/1d956ae6-eb9c-4a04-8f1f-d1a9e719cde5.jpg',
-'http://ko.experiments.wikidok.net/api/File/Real/5a8a654951334d0a0260e718']
-
+    let onImageLoad = false;
+    let imageBuffer = [];
+    let onloadCount = 0;
+    let renderCount = 0;
     const [showIdx, changeIdx] = useState(0);
-    const [imageList, setImageList] = useState(dummy);
+    const [imageList, setImageList] = useState([]);
+    const [dragOn, setDragOn] = useState(false);
 
-    const handleLeft = event => changeIdx(showIdx > 0 ? showIdx -1 : 0)
-    const handleRight = event => changeIdx(showIdx < imageList.length ? showIdx+ 1 : imageList.length)
+    const handleLeft = event => { if (!onImageLoad) changeIdx(showIdx > 0 ? showIdx - 1 : 0) }
+    const handleRight = event => { if (!onImageLoad) changeIdx(showIdx < imageList.length ? showIdx + 1 : imageList.length) }
+    const handleDragOn = (e) => {
+        setDragOn(true)
+        e.preventDefault();
+    }
+
+    const handleDragLeave = (e) => {
+        setDragOn(false)
+        e.preventDefault();
+    }
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    }
+
+    const handleDrop = (e) => {
+        const supportedFilesTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const files = e.dataTransfer.files
+
+        if (imageList.length + files.length <= 10){
+            for (const file of files){
+                const { type } = file
+                if (supportedFilesTypes.indexOf(type) > -1){
+                    ++renderCount;
+                    const render = new FileReader();
+                    render.onload = e => {
+                        ++onloadCount;
+                        imageBuffer.push(e.target.result)
+                        imageLoadOver();
+                    }
+                    render.readAsDataURL(file)
+                }
+            }
+        }
+        else {
+            alert("이미지는 최대 10개입니다.")
+        }
+
+        setDragOn(false)
+        e.preventDefault()     
+    }
+
+    const imageLoadOver = () => {
+        if (onloadCount !== renderCount) return ;
+        while (imageBuffer.length){
+            imageList.push(imageBuffer.shift());
+            changeIdx(imageList.length -1);
+        }
+        onloadCount = renderCount = 0;
+        setImageList(imageList.splice(0))
+    }
 
     return (
-        <Container>
+        <Container dragOn={dragOn} onDragOver={handleDragOver} onDragOver={handleDragOn} onDrop={handleDrop} onDragLeave={handleDragLeave}>
             <LeftDiv>
-                <BeforeButton visible={showIdx !== 0} onClick={handleLeft}/>
+                <BeforeButton visible={showIdx !== 0} onClick={handleLeft} />
             </LeftDiv>
             <RightDiv>
-                <NextButton visible={showIdx !== imageList.length } onClick={handleRight}/>
+                <NextButton visible={showIdx !== imageList.length} onClick={handleRight} />
             </RightDiv>
             <Window>
                 <Panel idx={showIdx}>
-                    { imageList.map(value => renderImage(value)) }
+                    {imageList.map(value => renderImage(value))}
                     <AddButton />
                 </Panel>
             </Window>
