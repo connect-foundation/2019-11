@@ -9,20 +9,28 @@ const Wrapper = styled.li`
   width: 100%;
   padding-top: 100%;
   margin-bottom: 0.5em;
-  background: ${props => props.color};
   border-radius: 20%;
+  overflow: hidden;
 `;
 
 const Components = props => {
+  const { color,
+          img,
+          active,
+          onClick, 
+          text,
+          idx } = props
+
   return (
-    <Wrapper color={props.color}>
-      <ImgIcon img={props.img}></ImgIcon>
+    <Wrapper color={color}>
+      <ImgIcon img={img} color={color}></ImgIcon>
       <TextIcon
-        color={props.color}
-        active={props.active}
-        onClick={props.onClick}
+        color={color}
+        active={active}
+        onClick={onClick}
+        data-idx={idx}
       >
-        {props.text}
+        {text}
       </TextIcon>
     </Wrapper>
   );

@@ -4,15 +4,9 @@ import TagContainer from "./TagContainer";
 import Bids from "./Bids";
 import PriceContainer from "./PriceContainer";
 import { CardStyle, CardTitle, InfoContainer } from "./CardStyles";
-import styled from "styled-components";
 
 const Card = ({ item }) => {
   const { thumbnail, isAuction, date, title, bids, buyNowPrice, topBid } = item;
-
-  const InfoContainer = styled.div`
-    display: flex;
-    justify-content: space-around;
-  `;
 
   return (
     <CardStyle>

@@ -4,14 +4,25 @@ import Logo from '../../../assets/logo.svg'
 import styled from 'styled-components'
 
 const Image = styled.img`
-    width: 100%;
-    height: same-as-width;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
 `
 
-const Components = (props) => {
+const LogoContainer = styled.div`
+    display: flex;
+    width: 5em;
+    height: 5em;
+    justify-content: center;
+    align-items: center;
+`;
+
+const Components = () => {
     return (
         <Link to="/">
-            <Image src={Logo} alt={"Logo"} />
+            <LogoContainer>
+                <Image src={Logo} alt={"Logo"} />
+            </LogoContainer>
         </Link>
     )
 }
