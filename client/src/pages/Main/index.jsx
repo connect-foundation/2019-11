@@ -9,15 +9,12 @@ const MainStyle = styled.div`
   width: 100%;
   flex-direction: column;
   justify-content: center;
-<<<<<<< HEAD
-=======
   .category {
     display: flex;
     font-size: xx-large;
     justify-content: flex-start;
     padding-left:10rem;
   }
->>>>>>> 17a98a467404639a4b0a05369bbc66a8cc03fb9f
 `;
 
 const Main = () => {

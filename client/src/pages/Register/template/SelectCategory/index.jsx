@@ -5,7 +5,8 @@ import PageBase from '../../../../components/PageBase'
 import Button from '../../../../components/BoxButton'
 import CategorySelector from '../../../../components/ItemCategorySelector'
 
-import {categoryList} from '../../constants.jsx'
+import { categoryList } from '../../constants.jsx'
+import { idxNotSelected } from '../../../../utils/validator.js'
 
 const ContentDiv = styled.div`
     width:60%;
@@ -20,12 +21,28 @@ const ButtonContainer = styled.div`
     margin: 1rem 0;
 `
 
+const validation = (result, successCallback, failCallback) => {
+    const isInvalid = result.some(value => value)
+    isInvalid ? failCallback() : successCallback()
+}
+
 const Component = (props) => {
 
-    const { width, next } = props
+    const { width, obj, next } = props
 
     const [leftIdx, setLeftIdx] = useState(-1);
     const [rightIdx, setRightIdx] = useState(-1);
+
+    const valiResult = [idxNotSelected(leftIdx), idxNotSelected(rightIdx)]
+
+    const successCallback = () => {
+        obj.category = leftIdx * 100 + rightIdx
+        next()
+    }
+
+    const failCallback = () => {
+        alert('선택되지 않은 값이 있습니다.')
+    }
 
     return (
         <PageBase width={width}>
@@ -41,7 +58,7 @@ const Component = (props) => {
                     rHandler = {setRightIdx}
                 />
                 <ButtonContainer>
-                    <Button onClick={next} text={'다음'}/>
+                    <Button onClick={ev => {validation( valiResult ,successCallback, failCallback)}} text={'다음'}/>
                 </ButtonContainer>
             </ContentDiv>
         </PageBase>

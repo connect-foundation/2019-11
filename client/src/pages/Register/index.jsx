@@ -6,7 +6,7 @@ import Progress from '../../components/RegisterProgress'
 import SelectCategory from './template/SelectCategory'
 import InsertInfo from './template/InsertInfo'
 import Complete from './template/Complete'
-import { phaseList } from './constants'
+import { phaseList, defaultData } from './constants'
 
 const WIDTH = 80;
 
@@ -39,16 +39,18 @@ const Window = styled.div`
 
 const Page = () => {
     const [phase, setPhase] = useState(0);
+    const [maxPhase, setMaxPhase] = useState(0);
+    const [data, setData] = useState(defaultData)
 
     return (
         <Container>
             <TemplateContainer>
-                <Progress phase={phase} list={phaseList} event={setPhase} />
+                <Progress maxPhase={maxPhase} phase={phase} list={phaseList} event={setPhase} />
                 <Content>
                     <Window phase={phase}>
-                        <SelectCategory width={80} next={() => setPhase(1)} />
-                        <InsertInfo width={80} next={() => setPhase(2)} />
-                        <Complete width={80} next={() => setPhase(3)} />
+                        <SelectCategory obj={data} width={80} next={() => { setPhase(1); setMaxPhase(1) }} />
+                        <InsertInfo obj={data} width={80} next={() => { setPhase(2); setMaxPhase(2) }} />
+                        <Complete obj={data} width={80} next={() => setPhase(3)} />
                     </Window>
                 </Content>
             </TemplateContainer>

@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components'
 
 const Button = styled.button`
+    font-family: D2Coding, 'D2 coding', monosapce;
     width:100%;
-    font-size: 1em;
+    font-size: 1rem;
     background: ${props => props.selected ? '#e0e0e0' : 'white'};
     padding:0.5em;
     text-align: left;
-    border:none;
     border-bottom: #dfdfdf solid 1px;
     outline:none;
 

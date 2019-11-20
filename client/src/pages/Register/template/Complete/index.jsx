@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import PageBase from '../../../../components/PageBase'
@@ -17,6 +17,7 @@ const ButtonDiv = styled.div`
     flex-direction: column;
     justify-content: space-between;
     margin: 0 auto;
+    text-align: center;
 `
 
 const LinkBox = styled.a`
@@ -62,7 +63,7 @@ const NoticeText = styled.div`
 `
 
 const Component = (props) => {
-    const { width } = props
+    const { width, data } = props
 
     return (
         <PageBase width={width}>
@@ -71,7 +72,7 @@ const Component = (props) => {
                     <NoticeText>{notice.successRegister}</NoticeText>
                 </NoticeDiv>
                 <ShareDiv>
-                    <ShareBox url={shareConfig}/>
+                    <ShareBox url={shareConfig.url}/>
                 </ShareDiv>
                 <ButtonDiv>
                     <LinkBox href="/register">새 상품등록</LinkBox>

@@ -11,6 +11,7 @@ import TermSelector from '../../../../components/RegisterTermSelector'
 import ToggleButton from '../../../../components/ToggleButton'
 
 import { termList, itemDescription } from '../../constants'
+import { idxNotSelected, isArrayEmpty, strEmpty } from '../../../../utils/validator.js'
 
 const ContentDiv = styled.div`
     width:80%;
@@ -104,15 +105,36 @@ const generateDayList = () => {
     ]
 }
 
+const validation = (result ,successCallback, failCallback) => {
+    const isInvalid = result.some(value => value)
+    isInvalid ? failCallback() : successCallback()
+}
+
 const Component = (props) => {
-    const { width, next } = props
+    const { width, next, obj } = props
     const dayList = generateDayList()
 
+    const [title, setTitle] = useState(obj.title)
+    const [description, setDescription] = useState(obj.description)
+    const [buyNow, setBuyNow] = useState(obj.buyNow)
+    const [minPrice, setMinPrice] = useState(obj.minPrice)
+    const [predictPrice, setPredictPrice] = useState(obj.predictPrice)
     const [dayIdx, setDayIdx] = useState(-1)
     const [focusItem, setFocus] = useState(-1)
     const [isAuction, setIsAuction] = useState(true)
 
     const handleAuction = ev => setIsAuction(!isAuction)
+
+    const valiResult = [strEmpty(title), idxNotSelected(dayIdx), strEmpty(buyNow), 
+        isAuction && strEmpty(minPrice), isAuction && strEmpty(predictPrice), strEmpty(description)]
+
+    const successCallback = () =>{
+        next()
+    }
+
+    const failCallback = () => {
+        alert('이미지가 등록되지 않거나, 빈 값이 있습니다.')
+    }
 
     return (
         <PageBase width={width}>
@@ -122,7 +144,7 @@ const Component = (props) => {
                         <Carousel />
                     </CarouselDiv>
                     <InputDiv onBlur={event => { setFocus(-1) }}>
-                        <InputBox font={1.25} placeholder={'상품 제목'} />
+                        <InputBox font={1.25} placeholder={'상품 제목'} value={title} onChange={ev => { setTitle(ev.target.value) }}/>
                         <SelectorDiv>
                             <TermSelector title={'경매 기간'} data={dayList} selected={dayIdx} handler={setDayIdx} />
                         </SelectorDiv>
@@ -132,35 +154,33 @@ const Component = (props) => {
                         </AuctionDiv>
                         <MoneyDiv onFocus={ev => { setFocus(0) }}>
                             <ItemTitle>즉시 구매가</ItemTitle>
-                            <MoneyBox />
+                            <MoneyBox money={buyNow} handler={setBuyNow}/>
                             {renderItemDescription(0, focusItem)}
                         </MoneyDiv>
                         {
                             (() => {
-                                if (isAuction){
-                                    return (
+                                if (isAuction) return (
                                         <>
                                             <MoneyDiv onFocus={ev => { setFocus(1) }}>
                                                 <ItemTitle>경매 시작가</ItemTitle>
-                                                <MoneyBox />
+                                                <MoneyBox money={minPrice} handler={setMinPrice}/>
                                                 {renderItemDescription(1, focusItem)}
                                             </MoneyDiv>
                                             <MoneyDiv onFocus={ev => { setFocus(2) }}>
                                                 <ItemTitle>낙찰 예상가</ItemTitle>
-                                                <MoneyBox />
+                                                <MoneyBox money={predictPrice} handler={setPredictPrice}/>
                                                 {renderItemDescription(2, focusItem)}
                                             </MoneyDiv>
                                         </>
                                     )
-                                }
                             })()
                         }
                         
                     </InputDiv>
                 </TopContentDiv>
-                <ItemDescription title={'상품 설명'} maxLen={500} />
+                <ItemDescription title={'상품 설명'} content={description} handler={setDescription} maxLen={500}  />
                 <ButtonContainer>
-                    <Button onClick={next} text={'다음'} />
+                    <Button onClick={ev => validation(valiResult, successCallback, failCallback)} text={'등록'} />
                 </ButtonContainer>
             </ContentDiv>
         </PageBase>
