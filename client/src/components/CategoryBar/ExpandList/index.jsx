@@ -17,10 +17,15 @@ const DetailCategory = styled.div`
     font-size: large;
     text-align: center;
     padding: 1em;
+    cursor: pointer;
 
     transition: all .3s ease-in-out;
     &:hover {
         background-color: #EC8852;
+    }
+
+    label {
+        cursor: pointer;
     }
 `;
 

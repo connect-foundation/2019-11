@@ -63,8 +63,12 @@ const Components = () => {
                     </List>
                 </Bar>
             </OriginWrapper>
-            <ListWrapper open={open} >
-                <ExpandList open={open} idx={selectIdx} details={detailCategoryList[selectIdx - 1]}/>
+            <ListWrapper open={open}>
+                <ExpandList 
+                    open={open} 
+                    idx={selectIdx} 
+                    details={detailCategoryList[selectIdx - 1]}
+                />
             </ListWrapper>
         </Container>
     )
