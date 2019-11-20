@@ -19,8 +19,8 @@ export class LogService {
     return this.logRepository.findOne(id);
   }
 
-  public findBuyLogs(user_id : number) {
-    return this.logRepository.findBuyLogs(user_id);
+  public findBuyLogs(user_id : number,dayago:number,page:number,limit:number) {
+    return this.logRepository.findBuyLogs(user_id,dayago,page,limit);
   }
 
 
