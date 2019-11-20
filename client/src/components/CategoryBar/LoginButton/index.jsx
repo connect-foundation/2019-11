@@ -17,9 +17,9 @@ const LoginButtonStyle = styled.button`
   }
 `;
 
-const LoginButton = () => {
+const LoginButton = ({onClick}) => {
   return (
-    <LoginButtonStyle>로그인</LoginButtonStyle>
+    <LoginButtonStyle onClick={onClick}>로그인</LoginButtonStyle>
   )
 }
 
