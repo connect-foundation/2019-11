@@ -11,12 +11,6 @@ const ShareCollectionStyle = styled.div`
   flex-direction: column;
 `;
 
-const ShareText = styled.div`
-  padding-left: var(--padding-xl);
-  font-weight: bold;
-  color: var(--color-darkgray-lighter);
-`;
-
 const IconList = styled.div`
   display: flex;
   justify-content: flex-end;
