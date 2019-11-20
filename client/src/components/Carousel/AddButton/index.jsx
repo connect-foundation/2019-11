@@ -2,53 +2,56 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
-    width: 20em;
-    height: 20em;
+    width: 20rem;
+    height: 20rem;
     display:flex;
     justify-content:center;
     align-items:center;
+    text-align: center;
+    flex-direction: column;
+    background-color: white;
 `
 
-const Button = styled.div`
-    position:relative;
-    width: 15em;
-    height: 15em;
-    border: 0.5em solid lightgray;
-    border-radius:50%;
-    background: #efefef;
-    transition: border 0.15s ease-in-out;
+const Button = styled.input`
+    display: inline-block;
+    width: 15rem;
+    height: 15rem;
+    overflow: hidden;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding: 15rem 0 0 0;
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpIjkbjiYaOXrIsSOnHx_JNsnKywIPgOmNrE3YSGIQmAtD6bkM&s') no-repeat center center;
+    background-size:cover;
+    border:none;
+    outline: none;
 
-    &::before, &::after {
-        position: absolute;
-        top: 7em;
-        left: 2.5em;
-        width: 10em;
-        height: 1em;
-        content: "";
-        background-color: lightgray;
-        display: block;
-        transition: background-color 0.15s ease-in-out;
-    }
-
-    &::after{
-        -ms-transform: rotate(90deg);
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-    }
+    transition: background .5s ease-in-out;
 
     &:hover{
-        cursor: pointer;
-        border-color: darkgray;
-        ::before, ::after{ background-color: darkgray}
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPUnl4fCTUsfUSlMwG6ulPrs7OJZSlpa6hSoRdDPAKId81_BGw&s');
     }
 `
 
-const Components = () => {
+const Span = styled.span`
+    font-family: 'BMJUA';
+    width: 100%;
+    word-break: keep-all;
+`
+
+const Component = (props) => {
+
+    const { trigger } = props;
+    const handleFile = ev => {
+        const files = ev.target.files;
+        trigger(files)
+    }
+
     return (
         <Container>
-            <Button/>
+            <Button type={'file'} onChange={handleFile}/>
+            <Span>이미지를 끌어다 놓거나 클릭해주세요</Span>
         </Container>
     )
 }
 
-export default Components
+export default Component
