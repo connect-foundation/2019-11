@@ -16,8 +16,8 @@ export class LogReporsitory {
   public findBuyLogs(user_id : number) {
     return this.em.find(Auction_logs,{
         where:{
-            user: { id: user_id },
-            is_winning:true
+            User:{Id: user_id},
+            IsWinning:true
         }
     });
   }

@@ -5,32 +5,32 @@ import { Auction_logs } from './Auction_logs';
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
-  id: number;
+  Id: number;
 
   @Column()
-  login_id: string;
+  LoginId: string;
 
   @Column()
-  password: string;
+  Password: string;
 
   @Column()
-  salt: string;
+  Salt: string;
 
   @Column()
-  name: string;
+  Name: string;
 
   @Column()
-  profile_image: string;
+  ProfileImage: string;
 
   @Column()
-  manner_point: number;
+  MannerPoint: number;
 
   @Column()
-  is_delete: boolean;
+  IsDelete: boolean;
 
-  @OneToMany(type => Products, Products => Products.id)
-  products: Products[];
+  @OneToMany(type => Products, Products => Products.Id)
+  Products: Products[];
 
-  @OneToMany(type => Auction_logs, auction_logs => auction_logs.id)
-  auction_logs: Auction_logs[];
+  @OneToMany(type => Auction_logs, auction_logs => auction_logs.Id)
+  AuctionLogs: Auction_logs[];
 }
