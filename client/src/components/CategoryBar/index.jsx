@@ -4,6 +4,7 @@ import CategoryIcon from './CategoryIcon'
 import ExpandList from './ExpandList'
 import LoginButton from './LoginButton'
 import Profile from './Profile'
+import { LoginModal } from '../'
 
 import Cloth from '../../assets/cloth.svg'
 import Electronic from '../../assets/television.svg'
@@ -17,6 +18,7 @@ import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from '
 const Components = () => {
 
     const [open, setOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [selectIdx, setSelectIdx] = useState(1);
 
@@ -28,12 +30,20 @@ const Components = () => {
         setSelectIdx(idx);
     }
 
+    const handleLoginClick = () => {
+        setLoginOpen(!loginOpen);
+    }
+
+    const handleLoginClose = () => {
+        loginOpen === true && setLoginOpen(!loginOpen);
+    }
+
     return (
         <Container>
             <OriginWrapper>
                 <Logo />
                 <Bar>
-                    { isLogin === true ? <Profile active={open}/> : <LoginButton/> }
+                    { isLogin === true ? <Profile active={open}/> : <LoginButton onClick={handleLoginClick}/> }
                     <DivisionLine/>
                     <List>
                         <CategoryIcon
@@ -63,9 +73,14 @@ const Components = () => {
                     </List>
                 </Bar>
             </OriginWrapper>
-            <ListWrapper open={open} >
-                <ExpandList open={open} idx={selectIdx} details={detailCategoryList[selectIdx - 1]}/>
+            <ListWrapper open={open}>
+                <ExpandList 
+                    open={open} 
+                    idx={selectIdx} 
+                    details={detailCategoryList[selectIdx - 1]}
+                />
             </ListWrapper>
+            <LoginModal onClose={handleLoginClose} open={loginOpen}/>
         </Container>
     )
 }

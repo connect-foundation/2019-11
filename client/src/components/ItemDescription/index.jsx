@@ -39,14 +39,13 @@ const Content = styled.textarea`
 
 const Component = (props) => {
 
-    const {title, maxLen} = props
+    const {title, maxLen, content, handler} = props
 
     const [len, setLen] = useState(0)
-    const [content, setContent] = useState('')
 
     const handleContent = event => {
         const content = event.target.value
-        setContent(content)
+        handler(content)
         setLen(content.length)
     }
 
@@ -56,7 +55,7 @@ const Component = (props) => {
                 <Title>{title}</Title>
                 <Counter isOver={len > maxLen}>{`(${len} / ${maxLen})`}</Counter>
             </Header>
-            <Content placeholder={`최대 ${maxLen}글자 입니다.`} onChange={handleContent}/>
+            <Content placeholder={`최대 ${maxLen}글자 입니다.`} onChange={handleContent} value={content}/>
         </Container>
     )
 
