@@ -4,11 +4,11 @@ import { Products } from './Products';
 @Entity()
 export class Images {
   @PrimaryGeneratedColumn()
-  Id: number;
+  id: number;
 
   @Column()
-  ImageUrl: string;
+  imageUrl: string;
 
-  @ManyToOne(type => Products, products => products.Id)
-  Product: Products;
+  @ManyToOne(type => Products, products => products.id)
+  product: Products;
 }
