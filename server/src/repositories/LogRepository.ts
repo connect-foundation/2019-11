@@ -34,12 +34,10 @@ export class LogReporsitory {
   }
 
   public async findSaleLogs(user_id : number,dayago:number,page:number,limit:number) {
-    // user / product/ auctionlogs
-    let result = await this.em.query("select * from products as p join auction_logs as a on p.id=a.product_id where is_winning=true and p.user_id=? and a.auction_date>=? order by a.auction_date desc limit ?,?",[user_id,prevDay(dayago),(page-1)*limit,limit]);
+    let result = await this.em.query("select p.id as product_id,p.title,p.hope_price,p.register_date,p.is_sale,p.user_id as register_user, a.auction_price, a.auction_date,a.user_id as buy_user, a.is_winning from products as p join auction_logs as a on p.id=a.product_id where is_winning=true and p.user_id=? and a.auction_date>=? order by a.auction_date desc limit ?,?",[user_id,prevDay(dayago),(page-1)*limit,limit]);
     let count = await this.em.query("select count(*) as count from products as p join auction_logs as a on p.id=a.product_id where is_winning=true and p.user_id=? and a.auction_date>=?",[user_id,prevDay(dayago)]);
 
     return [result,count[0].count];
-    // this.em.query("select count(*) from products as p join auction_logs as a on p.id=a.product_id where is_winning=true and p.user_id=? and a.auction_date>=? order by a.auction_date desc",[user_id,prevDay(dayago)])
   }
 
   public save(auctionLogs: AuctionLogs) {

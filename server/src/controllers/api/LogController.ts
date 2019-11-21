@@ -37,7 +37,6 @@ export class LogController {
   @Post('/filter')
   public filter(
     @BodyParam('userid') userid: number,
-    @BodyParam('productid') productid: number,
     @BodyParam('dayago') dayago: number,
     @BodyParam('isSale') isSale: boolean,
     @BodyParam('isBuy') isBuy: boolean,
@@ -53,7 +52,6 @@ export class LogController {
     if(isBuy){
       return this.logService.findBuyLogs(userid,dayago,page,limit);
     }
-    //판매,구매
   }
 
   @Put('/:id')
