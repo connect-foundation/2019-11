@@ -35,9 +35,9 @@ const Division = styled.div`
         cursor: pointer;
     }
 `
-const Components = (props) => {
+const Components = ({onClick}) => {
     return (
-        <Division onclick={event => props.onclick()} />
+        <Division onClick={onClick} />
     )
 }
 

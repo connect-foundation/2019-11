@@ -39,6 +39,9 @@ const CarouselDiv = styled.div`
     display:flex;
     align-items:center;
     justify-content:center;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: #dfdfdf solid 1px;
 `
 
 const InputDiv = styled.div`

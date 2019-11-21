@@ -2,7 +2,6 @@ import React from 'react';
 
 import Thumbnail from '../components/Card/Thumbnail';
 import TagContainer from '../components/Card/TagContainer';
-import CardTitle from '../components/Card/CardTitle';
 import Bids from '../components/Card/Bids';
 import PriceContainer from '../components/Card/PriceContainer';
 import BuyNowPrice from '../components/Card/BuyNowPrice';
@@ -39,12 +38,6 @@ export const CardTags = () => (
   <>
     <TagContainer date="2019-11-19" isAuction={true}></TagContainer>
     <TagContainer date="2019-11-19" isAuction={false}></TagContainer>
-  </>
-);
-
-export const CardMainTitle = () => (
-  <>
-    <CardTitle title="TEST"></CardTitle>
   </>
 );
 

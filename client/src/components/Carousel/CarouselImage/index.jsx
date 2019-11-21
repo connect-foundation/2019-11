@@ -25,6 +25,8 @@ const CloseDiv = styled.div`
 
 const Components = (props) => {
 
+    const { src, onRemove } = props
+
     const [hover, setHover] = useState(false);
     
     const handleMouseOn = event => setHover(true)
@@ -32,9 +34,9 @@ const Components = (props) => {
 
     return (
         <Container onMouseEnter={handleMouseOn} onMouseLeave={handleMouseOut} >
-            <Image src={props.src}/>
+            <Image src={src}/>
             <CloseDiv show={hover}>
-                <RemoveButton />
+                <RemoveButton onClick={ev => { onRemove() }}/>
             </CloseDiv>
         </Container>
     )
