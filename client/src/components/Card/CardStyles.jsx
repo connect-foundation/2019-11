@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 
 const CardStyle = styled.div`
   display: flex;
@@ -30,4 +31,9 @@ const InfoContainer = styled.div`
   padding: 0 1rem 1rem 1rem ;
 `;
 
-export { CardStyle, CardTitle, InfoContainer }
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+`;
+
+export { CardStyle, CardTitle, InfoContainer, StyledLink }
