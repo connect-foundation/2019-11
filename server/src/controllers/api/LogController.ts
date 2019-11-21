@@ -39,12 +39,24 @@ export class LogController {
     @BodyParam('userid') userid: number,
     @BodyParam('productid') productid: number,
     @BodyParam('dayago') dayago: number,
-    @BodyParam('sale') sale: boolean,
-    @BodyParam('buy') buy: boolean){
+    @BodyParam('isSale') isSale: boolean,
+    @BodyParam('isBuy') isBuy: boolean,
 
-    if(buy){
-      return this.logService.findBuyLogs(userid);
+    @BodyParam('page') page: number,
+    @BodyParam('limit') limit: number){
+    
+    //판매만
+
+    //구매만
+    if(isBuy){
+      return this.logService.findBuyLogs(userid,dayago,page,limit);
     }
+    //판매,구매
+
+    //날짜
+
+    //페이지
+    //전체갯수
   }
 
   @Put('/:id')
