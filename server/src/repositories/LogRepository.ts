@@ -1,5 +1,5 @@
 import { EntityRepository, EntityManager, MoreThanOrEqual} from 'typeorm';
-import { Auction_logs } from '../models/Auction_logs';
+import { AuctionLogs } from '../models/AuctionLogs';
 import { prevDay } from '../util/DateUtils';
 
 @EntityRepository()
@@ -7,23 +7,23 @@ export class LogReporsitory {
   constructor(private readonly em: EntityManager) {}
 
   public find() {
-    return this.em.find(Auction_logs);
+    return this.em.find(AuctionLogs);
   }
 
   public findOne(id: number) {
-    return this.em.findOne(Auction_logs, id);
+    return this.em.findOne(AuctionLogs, id);
   }
 
   public findBuyLogs(user_id : number,dayago:number,page:number,limit:number) {
-    return this.em.findAndCount(Auction_logs,{
-      relations:["Product"],
+    return this.em.findAndCount(AuctionLogs,{
+      relations:["product"],
       where:{
-          User:{Id: user_id},
-          IsWinning:true,
-          AuctionDate: MoreThanOrEqual(prevDay(dayago))
+          User:{id: user_id},
+          isWinning:true,
+          auctionDate: MoreThanOrEqual(prevDay(dayago))
       },
       order: {
-        AuctionDate: "DESC"
+        auctionDate: "DESC"
       },
       skip: (page-1)*limit,
       take: limit,
@@ -32,7 +32,7 @@ export class LogReporsitory {
   }
 
 
-  public save(Auction_logs: Auction_logs) {
-    return this.em.save(Auction_logs);
+  public save(auctionLogs: AuctionLogs) {
+    return this.em.save(auctionLogs);
   }
 }
