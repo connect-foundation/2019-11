@@ -6,44 +6,44 @@ import { Auction_logs } from './Auction_logs';
 @Entity()
 export class Products {
   @PrimaryGeneratedColumn()
-  id: number;
+  Id: number;
 
   @Column()
-  title: string;
+  Title: string;
 
   @Column()
-  contents: string;
+  Contents: string;
 
   @Column()
-  immediate_price: number;
+  ImmediatePrice: number;
 
   @Column()
-  hope_price: number;
+  HopePrice: number;
 
   @Column()
-  min_auction_price: number;
+  MinAuctionPrice: number;
 
   @Column()
-  register_date: Date;
+  RegisterDate: Date;
 
   @Column()
-  product_deadline: Date;
+  ProductDeadline: Date;
 
   @Column()
-  category_code: number;
+  CategoryCode: number;
 
   @Column()
-  is_auction: boolean;
+  IsAuction: boolean;
 
   @Column()
-  is_sale: boolean;
+  IsSale: boolean;
 
-  @OneToMany(type => Images, images => images.id)
-  images: Images[];
+  @OneToMany(type => Images, images => images.Id)
+  Images: Images[];
 
-  @ManyToOne(type => Users, users => users.id)
-  user: Users;
+  @ManyToOne(type => Users, users => users.Id)
+  User: Users;
 
-  @OneToMany(type => Auction_logs, auction_logs => auction_logs.id)
-  auction_logs: Auction_logs[];
+  @OneToMany(type => Auction_logs, auction_logs => auction_logs.Id)
+  AuctionLogs: Auction_logs[];
 }

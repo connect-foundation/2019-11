@@ -5,19 +5,19 @@ import {Users} from './Users';
 @Entity()
 export class Auction_logs {
   @PrimaryGeneratedColumn()
-  id: number;
+  Id: number;
 
   @Column()
-  auction_price: number;
+  AuctionPrice: number;
 
   @Column()
-  auction_date: Date;
+  AuctionDate: Date;
 
   @Column()
-  is_winning: boolean;
+  IsWinning: boolean;
 
-  @ManyToOne(type => Products, products => products.id)
-  product: Products;
-  @ManyToOne(type => Users, users => users.id)
-  user: Users;
+  @ManyToOne(type => Products, products => products.Id)
+  Product: Products;
+  @ManyToOne(type => Users, users => users.Id)
+  User: Users;
 }
