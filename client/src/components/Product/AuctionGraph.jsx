@@ -8,7 +8,6 @@ import {
   CartesianGrid,
   Tooltip
 } from "recharts";
-import { borderRadius } from "polished";
 
 const AuctionGraphStyle = styled.div`
   display: flex;

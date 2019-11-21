@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const ChatSendStyle = styled.div`
+const ChatSendStyle = styled.form`
   display: flex;
   justify-content: center;
   width: 100%;
@@ -25,10 +25,14 @@ const SendButton = styled.button`
   margin-left: 8px;
 `;
 
-const ChatSend = () => {
+const ChatSend = ({ message, onSubmit, onChange }) => {
   return (
-    <ChatSendStyle>
-      <ChatInput placeholder="메세지를 입력하세요" />
+    <ChatSendStyle onSubmit={onSubmit}>
+      <ChatInput
+        placeholder="메세지를 입력하세요"
+        onChange={onChange}
+        value={message}
+      />
       <SendButton>전송</SendButton>
     </ChatSendStyle>
   );

@@ -34,12 +34,18 @@ const ChatColumn = styled.div`
 `;
 
 const product = {
+  id: "12",
   src:
     "https://d1rkccsb0jf1bk.cloudfront.net/products/99993547/main/medium/gb05021_04-1454001319-8684.jpg",
   title: "애플 스마트 워치 3세대",
   seller: "최성찬",
   due: "1일 6시간 27분",
   price: "45,000"
+};
+
+const user = {
+  id: "chsch1028",
+  src: "https://i.pravatar.cc/150?img=4"
 };
 
 const ProductPage = () => {
@@ -56,7 +62,7 @@ const ProductPage = () => {
         <Section>댓글 정보</Section>
       </MainColumn>
       <ChatColumn>
-        <ChatBox></ChatBox>
+        <ChatBox productId={product.id} user={user}></ChatBox>
       </ChatColumn>
     </ProductPageStyle>
   );
