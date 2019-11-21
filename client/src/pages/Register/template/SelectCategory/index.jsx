@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import PageBase from '../../../../components/PageBase'
 import Button from '../../../../components/BoxButton'
-import CategorySelector from '../../../../components/ItemCategorySelector'
+import CategorySelector from '../../../../components/Organisim/ItemCategorySelector'
 
 import { categoryList } from '../../constants.jsx'
 import { idxNotSelected } from '../../../../utils/validator.js'

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-
 import ItemList from './List'
 
 const Conatiner = styled.div`
@@ -33,10 +32,9 @@ const BoxHeader = styled.button`
     &:hover {
         background: #dfdfdf;
     }
-
 `
 
-const Components = props => {
+const Component = props => {
 
     const { list, selected, show , handler } = props
 
@@ -60,4 +58,4 @@ const Components = props => {
     )
 }
 
-export default Components
+export default Component
