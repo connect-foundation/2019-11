@@ -46,7 +46,9 @@ export class LogController {
     @BodyParam('limit') limit: number){
     
     //판매만
-
+    if(isSale){
+      return this.logService.findSaleLogs(userid,dayago,page,limit);
+    }
     //구매만
     if(isBuy){
       return this.logService.findBuyLogs(userid,dayago,page,limit);
