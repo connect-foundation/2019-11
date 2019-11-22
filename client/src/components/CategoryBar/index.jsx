@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Logo from './Logo'
 import CategoryIcon from './CategoryIcon'
 import ExpandList from './ExpandList'
@@ -22,6 +22,12 @@ const Components = () => {
     const [isLogin, setIsLogin] = useState(false);
     const [selectIdx, setSelectIdx] = useState(1);
 
+    const node = useRef();
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleOnBlur);
+    }, [])
+
     const handleClick = (e) => {
         const { idx } = e.target.dataset;
         if(selectIdx === idx || open === false) {
@@ -38,8 +44,14 @@ const Components = () => {
         loginOpen === true && setLoginOpen(!loginOpen);
     }
 
+    const handleOnBlur = (e) => {
+        if(!node.current.contains(e.target)) {
+            setOpen(false);
+        }
+    }
+
     return (
-        <Container>
+        <Container ref={node}>
             <OriginWrapper>
                 <Logo />
                 <Bar>
