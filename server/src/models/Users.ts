@@ -1,36 +1,36 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Products } from './Products';
-import { Auction_logs } from './Auction_logs';
+import { AuctionLogs } from './AuctionLogs';
 
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
-  Id: number;
+  id: number;
 
   @Column()
-  LoginId: string;
+  loginId: string;
 
   @Column()
-  Password: string;
+  password: string;
 
   @Column()
-  Salt: string;
+  salt: string;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column()
-  ProfileImage: string;
+  profileImage: string;
 
   @Column()
-  MannerPoint: number;
+  mannerPoint: number;
 
   @Column()
-  IsDelete: boolean;
+  isDelete: boolean;
 
-  @OneToMany(type => Products, Products => Products.Id)
-  Products: Products[];
+  @OneToMany(type => Products, Products => Products.id)
+  products: Products[];
 
-  @OneToMany(type => Auction_logs, auction_logs => auction_logs.Id)
-  AuctionLogs: Auction_logs[];
+  @OneToMany(type => AuctionLogs, auctionlogs => auctionlogs.id)
+  auctionLogs: AuctionLogs[];
 }

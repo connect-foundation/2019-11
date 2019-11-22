@@ -12,8 +12,6 @@ const Router = () => {
   return (
     <>
       <CategoryBar></CategoryBar>
-      <Messenger />
-
       <Switch>
         <Route path="/" exact component={Main}></Route>
         <Route path="/user"></Route>
@@ -21,6 +19,7 @@ const Router = () => {
         <Route path="/register" exact component={Register}></Route>
         <Route path="/products" component={ProductPage}></Route>
       </Switch>
+      <Messenger />
     </>
   );
 };
