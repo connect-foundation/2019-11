@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import ListHeader from './ListHeader'
-import ListItem from './ListItem'
 
 const Container = styled.div`
   font-family: 'BMDOHYEON';
@@ -22,19 +20,13 @@ const ListContainer = styled.div`
 
 const Components = props => {
 
-  const { title, list, selected, onItemClick } = props
-
-  const handleSelected = (idx) => { onItemClick(idx) }
+  const { title, list } = props
 
   return (
     <Container>
-      <ListHeader text={title} />
+      {title}
       <ListContainer>
-        {
-          list !== undefined ?
-          list.map((value, idx) => <ListItem text={value} selected={selected === idx} onClick={() => handleSelected(idx)} />) :
-          list
-        }
+        { list !== undefined ? list.map(value => value) : undefined }
       </ListContainer>
     </Container>
   )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ToggleButton from '../../components/ToggleButton'
+import ToggleButton from '../../components/Atoms/ToggleButton'
 
 export default ({
     title: 'Atomic|ToggleButton'

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import SelectBox from '../components/SelectBox'
-import ListItem from '../components/SelectBox/List/ListItem'
+import ListItem from '../components/SelectBox/ListItem'
 import SelectList from '../components/SelectBox/List'
 
 export default {
