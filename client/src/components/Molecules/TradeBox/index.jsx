@@ -1,6 +1,8 @@
 import React from "react"
 import styled from "styled-components"
 
+import { dateDiff2Str } from "../../../utils/converter"
+
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -57,14 +59,16 @@ const Date = styled.span`
   color: #dfdfdf;
 `
 
-const Component = ({ title, thumbnail, status, price }) => {
+const Component = ({ title, thumbnail, status, price, time }) => {
+  console.dir(time)
+
   return (
     <Container>
       <Thumbnail src={thumbnail} />
       <Title>{title}</Title>
       <Status>{status}</Status>
       <Price>{price}원</Price>
-      <Date>3일전</Date>
+      <Date>{dateDiff2Str(time)}</Date>
     </Container>
   )
 }
