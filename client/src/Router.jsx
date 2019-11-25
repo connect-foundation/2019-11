@@ -6,7 +6,7 @@ import TradeList from "./pages/TradeList";
 import CategoryBar from "./components/CategoryBar";
 import Register from "./pages/Register";
 import Messenger from "./components/Messenger";
-import ProductPage from "./components/Product/ProductPage";
+import ProductPage from "./pages/ProductPage";
 
 const Router = () => {
   return (
