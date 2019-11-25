@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import {Products} from './Products';
-import {Users} from './Users';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Products } from "./Products";
+import { Users } from "./Users";
 
 @Entity()
 export class AuctionLogs {
@@ -16,8 +16,14 @@ export class AuctionLogs {
   @Column()
   isWinning: boolean;
 
-  @ManyToOne(type => Products, products => products.id)
+  @ManyToOne(
+    type => Products,
+    products => products.id
+  )
   product: Products;
-  @ManyToOne(type => Users, users => users.id)
+  @ManyToOne(
+    type => Users,
+    users => users.id
+  )
   user: Users;
 }

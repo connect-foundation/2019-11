@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "exit",
-    "dev:start": "cross-env NODE_ENV=development nodemon ./dist/server.js --name 'web'",
+    "dev:start": "cross-env NODE_ENV=development nodemon --watch dist/ dist/server.js --name 'web'",
     "dev:build": "tsc -w",
     "dev": "concurrently npm:dev:*",
     "start": "rm -rf dist && tsc && cross-env NODE_ENV=development pm2-runtime dist/server.js --name 'web' ",

@@ -1,7 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from 'typeorm';
-import { Images } from './Images';
-import { Users } from './Users';
-import { AuctionLogs } from './AuctionLogs';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne
+} from "typeorm";
+import { Images } from "./Images";
+import { Users } from "./Users";
+import { AuctionLogs } from "./AuctionLogs";
 
 @Entity()
 export class Products {
@@ -38,12 +44,21 @@ export class Products {
   @Column()
   isSale: boolean;
 
-  @OneToMany(type => Images, images => images.id)
+  @OneToMany(
+    type => Images,
+    images => images.id
+  )
   images: Images[];
 
-  @ManyToOne(type => Users, users => users.id)
+  @ManyToOne(
+    type => Users,
+    users => users.id
+  )
   user: Users;
 
-  @OneToMany(type => AuctionLogs, auctionlogs => auctionlogs.id)
+  @OneToMany(
+    type => AuctionLogs,
+    auctionlogs => auctionlogs.id
+  )
   auctionLogs: AuctionLogs[];
 }

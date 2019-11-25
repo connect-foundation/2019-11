@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Products } from './Products';
-import { AuctionLogs } from './AuctionLogs';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Products } from "./Products";
+import { AuctionLogs } from "./AuctionLogs";
 
 @Entity()
 export class Users {
@@ -28,9 +28,18 @@ export class Users {
   @Column()
   isDelete: boolean;
 
-  @OneToMany(type => Products, Products => Products.id)
+  @Column()
+  email: string;
+
+  @OneToMany(
+    type => Products,
+    Products => Products.id
+  )
   products: Products[];
 
-  @OneToMany(type => AuctionLogs, auctionlogs => auctionlogs.id)
+  @OneToMany(
+    type => AuctionLogs,
+    auctionlogs => auctionlogs.id
+  )
   auctionLogs: AuctionLogs[];
 }
