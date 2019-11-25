@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import MessengerButton from './MessengerButton';
-import MessengerWrap from './MessengerWrap';
+import MainButton from './MainButton';
+import Container from './Container';
 
 function Messenger(props) {
     const [show,setShow] = useState(false);
@@ -11,12 +11,12 @@ function Messenger(props) {
 
     let MessengerContent = null;
     if(show){
-      MessengerContent = <MessengerWrap/>
+      MessengerContent = <Container/>
     }
     return (
       <>
         {MessengerContent}
-        <MessengerButton select={()=>ChangeState()}/>
+        <MainButton select={()=>ChangeState()}/>
       </>
     );
   }

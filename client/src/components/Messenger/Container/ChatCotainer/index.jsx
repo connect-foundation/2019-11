@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
-import MessengerReceive from './MessengerReceive';
-import MessengerSend from './MessengerSend';
+import ChatMessage from './ChatMessage';
 const MessengerChatScroll = styled.div`
 width:100%;
 height:80%;
@@ -88,7 +87,7 @@ border-radius:0.5rem;
     cursor:pointer;
 }
 `;
-function MessengerChatWrap(props) {
+function ChatContainer(props) {
 
     return (
         <>
@@ -103,14 +102,14 @@ function MessengerChatWrap(props) {
                 </HostName>
             </MessengerChatHead>
             <MessengerChatScroll>
-                <MessengerReceive ReceiveText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerReceive ReceiveText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerSend SendText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerSend SendText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerSend SendText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerReceive ReceiveText={"test입니다. 아아아아아아아아아"}/>
-                <MessengerSend SendText={"afjaaaaaaaafefsafdsafdsafdsafdsafdsafdsafdsafdsafdsaffdsafdsa"}/>
-                <MessengerReceive ReceiveText={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={false} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={false} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={true} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={true} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={true} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={false} Text={"test입니다. 아아아아아아아아아"}/>
+                <ChatMessage isSend={true} Text={"afjaaaaaaaafefsafdsafdsafdsafdsafdsafdsafdsafdsafdsaffdsafdsa"}/>
+                <ChatMessage isSend={false} Text={"test입니다. 아아아아아아아아아"}/>
             </MessengerChatScroll>
             <MessengerChatFoot>
                 <InputWrap>
@@ -127,4 +126,4 @@ function MessengerChatWrap(props) {
     );
   }
   
-  export default MessengerChatWrap;
+  export default ChatContainer;

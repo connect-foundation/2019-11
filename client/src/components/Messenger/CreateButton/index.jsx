@@ -22,17 +22,14 @@ const Button = styled.button`
     }
 `
 
-const MessengerCreateButton = (props) => {
-
+const CreateButton = (props) => {
     return (
-        <>
-            <Button>
-                판매자와 대화나누기
-            </Button>
-        </>
+        <Button>
+            판매자와 대화나누기
+        </Button>
     )
 }
 
-export default MessengerCreateButton
+export default CreateButton
 
 

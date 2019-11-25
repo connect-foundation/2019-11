@@ -25,11 +25,11 @@ const ShowButton= styled.button`
     }
 `;
 
-function MessengerButton(props) {
+function MainButton(props) {
 
     return (
         <ShowButton onClick={props.select}>메신저</ShowButton>
     );
   }
   
-  export default MessengerButton;
+  export default MainButton;
