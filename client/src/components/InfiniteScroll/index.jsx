@@ -1,43 +1,84 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import styled from 'styled-components'
-import useIntersect from './useIntersect'
-
-import TradeBox from '../Molecules/TradeBox'
+import React, { useEffect, useState } from "react"
+import styled from "styled-components"
+import useIntersect from "./useIntersect"
+import loaddingGIF from "../../assets/loadding.gif"
+import NotFoundImage from "../../assets/notFound.png"
 
 const Container = styled.div`
-    width: 100%;
-    padding: 1rem;
-    border: black solid 2px;
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 `
-// const fakeFetch = (delay = 1000) => new Promise(res => setTimeout(res(tradeDummy), delay));
 
-const Component = ({fetcher, drawer}) => {
+const Loadding = styled.div`
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: ${props => `url(${props.src})`} center no-repeat;
+`
 
-    const [list, setList] = useState([])
+const NotFoundDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
 
-    /* initial fetch */
-    useEffect(() => {
-        (async () => {
-            const data = await fetcher()
-            const initComponents = drawer(data)
-            setList(prev => ([...initComponents]))
-        })()
-    }, []);
+const NotFoundSpan = styled.span`
+  font-weight: "BMJUA";
+  font-size: 1rem;
+  font-weight: bold;
+`
 
-    const [_, setRef] = useIntersect(async (entry, observer) => {
-        observer.unobserve(entry.target);
-        const nextData = await fetcher()
-        const nextComponents = drawer(nextData)
-        setList(prev => ( [...prev, ...nextComponents ] ))
-        observer.observe(entry.target);
-    }, {});
+const renderNotFound = () => {
+  return (
+    <NotFoundDiv>
+      <img src={NotFoundImage} />
+      <NotFoundSpan>검색 기록이 없습니다 ㅠㅠ</NotFoundSpan>
+    </NotFoundDiv>
+  )
+}
 
-    return (
-        <Container className={'hide-scroll'}>
-            { list.map(value => value) }
-            <div ref={setRef} />
-        </Container>
-    )
+const Component = ({ fetcher, drawer }) => {
+  const [loadding, setLoadding] = useState(true)
+  const [list, setList] = useState([])
+
+  useEffect(() => {
+    ;(async () => {
+      const data = await fetcher()
+      const initComponents = drawer(data)
+      setLoadding(false)
+      setList(prev => [...initComponents])
+    })()
+  }, [])
+
+  const [_, setRef] = useIntersect(async (entry, observer) => {
+    observer.unobserve(entry.target)
+
+    const nextData = await fetcher()
+    const nextComponents = drawer(nextData)
+    setList(prev => [...prev, ...nextComponents])
+
+    if (nextData.length) observer.observe(entry.target)
+  }, {})
+
+  return (
+    <Container className={"hide-scroll"}>
+      {loadding ? (
+        <Loadding src={loaddingGIF} />
+      ) : list.length ? (
+        list.map(value => value)
+      ) : (
+        renderNotFound()
+      )}
+      <div ref={setRef} />
+    </Container>
+  )
 }
 
 export default Component
