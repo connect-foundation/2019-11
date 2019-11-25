@@ -16,15 +16,15 @@ const Button = styled.button`
     }
 `
 
-const Components = props => {
+const Component = props => {
 
     const { selected, onClick } = props 
 
-    const handle = event => onClick()
+    const handle = e => onClick()
 
     return (
         <Button selected={selected} onClick={handle}>{props.text}</Button>
     )
 }
 
-export default Components;
+export default Component;

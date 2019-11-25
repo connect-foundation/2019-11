@@ -75,35 +75,53 @@ function TradeList(props) {
     const [data, setData] = useState([]);
     const [isSale, setIsSale] = useState(true);
     const [isBuy, setIsBuy] = useState(true);
-    const [isAll, setisAll] = useState(true);
     const [dayago, setDayago] = useState(1);
     const [page, setPage] = useState(1);
+    const [allPage, setAllPage] = useState(1);
 
     const getData = (sale,buy,day) => {
-        fetch('mock/trade_mock/trade_dummy_data.json'
+        fetch('http://localhost:3000/api/log/filter',{
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userid":2,
+                "dayago":day,
+                "isSale":sale,
+                "isBuy":buy,
+                "page":page,
+                "limit":10
+            })
+        }
         ).then(result => {
             return result.json();
         }).then(result => {
             setData([]);
-            setData(
-                // 서버 에서 필터를 처리후 받기
-                // 페이지시 전체갯수 + 1페이지 보일것 두개의 데이터를 받아오는방식
-
-                // result.reduce((acc,ele,i)=>{
-                // let today = new Date();
-                // let check_day= new Date(ele["거래일"]);
-                // let day_check = (today-check_day)/1000/60/60/24;
-                // if(dayago>=day_check){
-                //     if(ele["판매"]===1&&isSale){
-                //         acc.push(ele);
-                //     }
-                //     if(ele["구매"]===1&&isBuy){
-                //         acc.push(ele);
-                //     }
-                // }
-                // return acc;
-                // },[])
-            );
+            //임시로 판매, 구매 분기 처리/ 페이지 제작중
+            if(sale&&buy){
+                setData([]);
+            }else if(sale||buy){
+                if(buy){
+                    let refactor = result[0].reduce((acc,ele,i)=>{
+                        acc.push({
+                            "title": ele.product.title,
+                            "register_date": ele.product.registerDate,
+                            "auction_price": ele.auctionPrice,
+                            "auction_date": ele.auctionDate,
+                            "is_winning": 1
+                        });
+                        return acc;
+                    },[]);
+                    setData(refactor);
+                }else{
+                    setData(result[0]);
+                }
+                result[1] = Number(result[1]);
+                setAllPage(result[1]);//형변환이 안되고있는 문제가 생김
+            }else{
+                setData([]);
+            }
             setLoading(false);
         })
     }
@@ -163,19 +181,20 @@ function TradeList(props) {
                 </TableHeadWrap>
                 <tbody>
                     {loading ? <div>데이터 로딩중...</div> : data.map((item) => {
-                        let category="판매";
-                        if(item["판매"]===0){
-                            category="구매"
+                        let category="분류";//분류에 대해 페이지 제작중
+                        let deviation =0;
+                        if(item["hope_price"]!==undefined){
+                            deviation= Math.floor((item["auction_price"]/item["hope_price"])*100);
                         }
                         return (
                         <tr>
-                            <TdCategory isSaleElement={item["판매"]}>{category}</TdCategory>
-                            <td>{item["상품제목"]}</td>
-                            <td>{item["등록일"]}</td>
-                            <td>{item["거래일"]}</td>
-                            <TdDeviation isPlus={item["편차"]>=0}>{item["편차"]}</TdDeviation>
-                            <td>{item["희망가격"]}</td>
-                            <td>{item["거래가격"]}</td>
+                            {<TdCategory>{category}</TdCategory>}
+                            <td>{item["title"]}</td>
+                            <td>{item["register_date"]}</td>
+                            <td>{item["auction_date"]}</td>
+                            <TdDeviation isPlus={deviation>=0}>{deviation}</TdDeviation>
+                            <td>{item["hope_price"]}</td>
+                            <td>{item["auction_price"]}</td>
                         </tr>
                         );
                     })}
@@ -185,19 +204,10 @@ function TradeList(props) {
         <PageWrap>
             <ButtonPage>&lt;</ButtonPage>
             <ButtonPage page_num={1} onClick={()=>pageclick(1)} selected_num={page}>1</ButtonPage>
-            <ButtonPage page_num={2} onClick={()=>pageclick(2)} selected_num={page}>2</ButtonPage>
-            <ButtonPage page_num={3} onClick={()=>pageclick(3)} selected_num={page}>3</ButtonPage>
-            <ButtonPage page_num={4} onClick={()=>pageclick(4)} selected_num={page}>4</ButtonPage>
-            <ButtonPage page_num={5} onClick={()=>pageclick(5)} selected_num={page}>5</ButtonPage>
-            <ButtonPage page_num={6} onClick={()=>pageclick(6)} selected_num={page}>6</ButtonPage>
-            <ButtonPage page_num={7} onClick={()=>pageclick(7)} selected_num={page}>7</ButtonPage>
-            <ButtonPage page_num={8} onClick={()=>pageclick(8)} selected_num={page}>8</ButtonPage>
-            <ButtonPage page_num={9} onClick={()=>pageclick(9)} selected_num={page}>9</ButtonPage>
-            <ButtonPage page_num={10} onClick={()=>pageclick(10)} selected_num={page}>10</ButtonPage>
             <ButtonPage>&gt;</ButtonPage>
         </PageWrap>
       </TradeWrap>
-    );
+    );//page부분 전체 페이지수(pageall)에 대해 반복으로 버튼 생성이 필요
   }
   
   export default TradeList;

@@ -13,6 +13,8 @@ const MessengerDiv= styled.div`
     border-color:#FEAA6E;
     background-color:white;
 
+    z-index:10000;
+
     &::after{
         content: '';
         position: absolute;

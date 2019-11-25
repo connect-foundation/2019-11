@@ -19,6 +19,7 @@ const ShowButton= styled.button`
     width:4rem;
     height:4rem;
    
+    z-index:10000;
     &:hover{
         cursor:pointer;
     }

@@ -30,5 +30,13 @@ services:
     depends_on:
       - mysql-server
 
+  chat-server:
+    build:
+      context: ./chat-server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
 volumes:
   mysql:

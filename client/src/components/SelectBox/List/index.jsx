@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import ListItem from './ListItem'
+import ListItem from '../ListItem'
 
 const Container = styled.div`
     width: 100%;
