@@ -20,14 +20,13 @@ const ProfileContainer = styled.div`
   }
 `;
 
-const Profile = ({active, onClick}) => {
+const Profile = ({onClick}) => {
   const [picture, setPicture] = useState(null);
   return (
     <ProfileContainer>
       <img
         src={picture === null ? DefaultProfileIcon : null}
         onClick={onClick}
-        active={active}
         data-idx={0}
       />
     </ProfileContainer>
