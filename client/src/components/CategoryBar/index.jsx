@@ -50,12 +50,16 @@ const Components = () => {
         }
     }
 
+    const handleClickProfile = () => {
+        
+    }
+
     return (
         <Container ref={node}>
             <OriginWrapper>
                 <Logo />
                 <Bar>
-                    { isLogin === true ? <Profile active={open}/> : <LoginButton onClick={handleLoginClick}/> }
+                    { isLogin === false ? <Profile onClick={handleClickProfile}/> : <LoginButton onClick={handleLoginClick}/> }
                     <DivisionLine/>
                     <List>
                         <CategoryIcon
