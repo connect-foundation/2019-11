@@ -83,7 +83,3 @@ input {
 button {
   cursor: pointer;
 }
-
-.hide-scroll::-webkit-scrollbar {
-  display:none;
-}
