@@ -4,7 +4,7 @@ import CategoryIcon from './CategoryIcon'
 import ExpandList from './ExpandList'
 import LoginButton from './LoginButton'
 import Profile from './Profile'
-import { LoginModal } from '../'
+import { MainModal } from '../'
 
 import Cloth from '../../assets/cloth.svg'
 import Electronic from '../../assets/television.svg'
@@ -92,7 +92,7 @@ const Components = () => {
                     details={detailCategoryList[selectIdx - 1]}
                 />
             </ListWrapper>
-            <LoginModal onClose={handleLoginClose} open={loginOpen}/>
+            <MainModal onClose={handleLoginClose} open={loginOpen}/>
         </Container>
     )
 }

@@ -1,5 +1,5 @@
 import Card from './Card';
 import CardContainer from './CardContainer';
-import LoginModal from './LoginModal';
+import MainModal from './MainModal';
 
-export { Card, CardContainer, LoginModal }
+export { Card, CardContainer, MainModal }
