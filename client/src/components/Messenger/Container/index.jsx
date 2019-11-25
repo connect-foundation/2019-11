@@ -10,7 +10,7 @@ const MessengerDiv= styled.div`
     width:20rem;
     height:25rem;
     border:solid 0.1rem;
-    border-color:#FEAA6E;
+    border-color:var(--color-primary);
     background-color:white;
 
     z-index:10000;
@@ -18,7 +18,7 @@ const MessengerDiv= styled.div`
     &::after{
         content: '';
         position: absolute;
-        border-top: 1rem solid #FEAA6E;
+        border-top: 1rem solid var(--color-primary);
         border-right: 0.5rem solid transparent;
         border-left: 0.5rem solid transparent;
         bottom: -1rem;

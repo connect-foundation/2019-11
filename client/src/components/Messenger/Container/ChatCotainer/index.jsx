@@ -11,7 +11,7 @@ overflow-y:auto;
 const MessengerChatHead = styled.div`
 position:relative;
 
-background-color:#FEF2C7;
+background-color:var(--color-primary-minus0);
 
 margin:0.05rem 0.05rem;
 
@@ -46,7 +46,7 @@ left:0;
 const MessengerChatFoot = styled.div`
 display:flex;
 
-background-color:#FEF2C7;
+background-color:var(--color-primary-minus0);
 
 margin:0 0.05rem;
 
@@ -79,7 +79,7 @@ text-align:center;
 height:2rem;
 width:3.4rem;
 
-background-color:#FEAA6E;
+background-color:var(--color-primary);
 color:white;
 
 border-radius:0.5rem;
