@@ -40,6 +40,7 @@ export class LogController {
     @BodyParam('dayago') dayago: number,
     @BodyParam('isSale') isSale: boolean,
     @BodyParam('isBuy') isBuy: boolean,
+    @BodyParam('isAll') isAll: boolean,
 
     @BodyParam('page') page: number,
     @BodyParam('limit') limit: number){
@@ -51,6 +52,9 @@ export class LogController {
     //구매만
     if(isBuy){
       return this.logService.findBuyLogs(userid,dayago,page,limit);
+    }
+    if(isAll){
+      return this.logService.findAllLogs(userid,dayago,page,limit);
     }
   }
 
