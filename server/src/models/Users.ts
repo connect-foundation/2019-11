@@ -28,6 +28,9 @@ export class Users {
   @Column()
   isDelete: boolean;
 
+  @Column()
+  email: string;
+
   @OneToMany(type => Products, Products => Products.id)
   products: Products[];
 
