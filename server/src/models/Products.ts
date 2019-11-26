@@ -1,49 +1,58 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from 'typeorm';
-import { Images } from './Images';
-import { Users } from './Users';
-import { AuctionLogs } from './AuctionLogs';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm"
+import { Images } from "./Images"
+import { Users } from "./Users"
+import { AuctionLogs } from "./AuctionLogs"
 
 @Entity()
 export class Products {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  title: string;
+  title: string
 
   @Column()
-  contents: string;
+  contents: string
 
   @Column()
-  immediatePrice: number;
+  immediatePrice: number
 
   @Column()
-  hopePrice: number;
+  hopePrice: number
 
   @Column()
-  minAuctionPrice: number;
+  minAuctionPrice: number
 
   @Column()
-  registerDate: Date;
+  registerDate: Date
 
   @Column()
-  productDeadline: Date;
+  productDeadline: Date
 
   @Column()
-  categoryCode: number;
+  categoryCode: number
 
   @Column()
-  isAuction: boolean;
+  isAuction: boolean
 
   @Column()
-  isSale: boolean;
+  isSale: boolean
 
-  @OneToMany(type => Images, images => images.id)
-  images: Images[];
+  @OneToMany(
+    type => Images,
+    images => images.id
+  )
+  images: Images[]
 
-  @ManyToOne(type => Users, users => users.id)
-  user: Users;
+  @ManyToOne(
+    type => Users,
+    users => users.id
+  )
+  user: Users
 
-  @OneToMany(type => AuctionLogs, auctionlogs => auctionlogs.id)
-  auctionLogs: AuctionLogs[];
+  @OneToMany(
+    type => AuctionLogs,
+    auctionlogs => auctionlogs.id
+  )
+  auctionLogs: AuctionLogs[]
 }

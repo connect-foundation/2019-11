@@ -42,7 +42,7 @@ width: 15rem;
 text-align:left;
 `;
 
-function MessengerRoom(props) {
+function RoomElement(props) {
 
     return (
       <Wrap onClick={()=>props.clickroom()}>
@@ -61,4 +61,4 @@ function MessengerRoom(props) {
     );
   }
   
-  export default MessengerRoom;
+  export default RoomElement;

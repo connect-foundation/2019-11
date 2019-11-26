@@ -7,6 +7,7 @@ import CategoryBar from "./components/CategoryBar";
 import Register from "./pages/Register";
 import Messenger from "./components/Messenger";
 import ProductPage from "./components/Product/ProductPage";
+import MyItem from './pages/MyItems'
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route path="/tradelist" component={TradeList}></Route>
         <Route path="/register" exact component={Register}></Route>
         <Route path="/products" component={ProductPage}></Route>
+        <Route path="/myItems" component={MyItem}></Route>
       </Switch>
       <Messenger />
     </>

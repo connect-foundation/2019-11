@@ -27,6 +27,9 @@ export class LogService {
     return this.logRepository.findSaleLogs(user_id,dayago,page,limit);
   }
 
+  public findAllLogs(user_id : number,dayago:number,page:number,limit:number) {
+    return this.logRepository.findAllLogs(user_id,dayago,page,limit);
+  }
 
   /** POST */
   public create(auctionLogs: AuctionLogs) {
