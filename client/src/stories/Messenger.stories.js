@@ -1,70 +1,55 @@
 import React from 'react';
-import MessengerButton from '../components/Messenger/MessengerButton';
-import MessengerWrap from '../components/Messenger/MessengerWrap';
-import MessengerRoom from '../components/Messenger/MessengerWrap/MessengerRoom';
-import MessengerReceive from '../components/Messenger/MessengerWrap/MessengerChat/MessengerReceive';
-import MessengerSend from '../components/Messenger/MessengerWrap/MessengerChat/MessengerSend';
-import MessengerChat from '../components/Messenger/MessengerWrap/MessengerChat';
-import MessengerCreateButton from '../components/Messenger/MessengerCreateButton';
+import CreateButton from '../components/Messenger/CreateButton';
+import MainButton from '../components/Messenger/MainButton';
+import RoomElement from '../components/Messenger/Container/RoomElement';
+import ChatMessage from '../components/Messenger/Container/ChatCotainer/ChatMessage';
+import ChatCotainer from '../components/Messenger/Container/ChatCotainer';
 import Messenger from '../components/Messenger'
 export default {
   title: 'Messenger',
 };
 
-
-export const CreateButton = () => (
-  <>
-  <MessengerCreateButton>
-  </MessengerCreateButton>
-  </>
+//방만들기 버튼
+export const MessengerCreateButton = () => (
+  <CreateButton>
+  </CreateButton>
 );
 
-
-
-export const MainButton = () => {
+//메인 버튼
+export const MessengerMainButton = () => {
   return(
-      <>
-      <MessengerButton>
-      </MessengerButton>
-      </>
+      <MainButton>
+      </MainButton>
   )
 }
 
-export const MessengerContents = () => {
-  return(
-      <>
-      <MessengerWrap>
-      </MessengerWrap>
-      </>
-  )
-}
+//메시지 목록 요소
 
 export const  MessengerRoomElement = () => {
   return(
-  <>
-    <MessengerRoom Img={"A"} Name={"과장님"} RecentMsg={"test"}/>
-  </>
+    <RoomElement Img={"A"} Name={"과장님"} RecentMsg={"test"}>
+    </RoomElement>
   )
 }
 export const  MessengerRoomElementBigmessage = () => {
   return(
-  <>
-    <MessengerRoom Img={"A"} Name={"과장님"} RecentMsg={"ㅇ야ㅑ야야야야ㅑ야야야야ㅑ야야야ㅑ야야야야ㅑ양"}/>
-  </>
+    <RoomElement Img={"A"} Name={"과장님"} RecentMsg={"ㅇ야ㅑ야야야야ㅑ야야야야ㅑ야야야ㅑ야야야야ㅑ양"}>
+    </RoomElement>
   )
 }
 
+//메시지 요소
 export const  MessengerReceiveElement = () => {
   return(
   <div>
-    <MessengerReceive ReceiveText={"test입니다. 아아아아아아아아아"}/>
+    <ChatMessage isSend={false} Text={"받은거"}/>
   </div>
   )
 }
 export const  MessengerSendElement = () => {
   return(
   <div>
-    <MessengerSend SendText={"test입니다. 아아아아아아아아아"}/>
+    <ChatMessage isSend={true} Text={"보낸거"}/>
   </div>
   )
 }
@@ -72,7 +57,7 @@ export const  MessengerSendElement = () => {
 export const  MessengerChatDummy = () => {
   return(
   <>
-    <MessengerChat/>
+    <ChatCotainer/>
   </>
   )
 }
