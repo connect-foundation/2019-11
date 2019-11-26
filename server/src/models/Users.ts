@@ -26,7 +26,10 @@ export class Users {
   mannerPoint: number
 
   @Column()
-  isDelete: boolean
+  isDelete: boolean;
+
+  @Column()
+  email: string;
 
   @OneToMany(
     type => Products,
