@@ -1,13 +1,35 @@
 import React from "react";
-import Thumbnail from "./Thumbnail";
-import TagContainer from "./TagContainer";
-import Bids from "./Bids";
 import PriceContainer from "./PriceContainer";
-import { CardStyle, CardTitle, InfoContainer, StyledLink } from "./CardStyles";
+import {
+  CardStyle,
+  CardTitle,
+  InfoContainer,
+  StyledLink,
+  BidsStyle,
+  TagContainerStyle,
+  IsAuctionTag,
+  DDayTag,
+  ThumbnailStyle
+} from "./CardStyles";
+
+import { getDDay } from "../../utils/stringUtils";
+
+import personIcon from "../../assets/person.svg";
 
 const Card = ({ item }) => {
-  const { thumbnail, isAuction, date, title, bids, buyNowPrice, topBid, id } = item;
+  const {
+    thumbnail,
+    isAuction,
+    date,
+    title,
+    bids,
+    buyNowPrice,
+    topBid,
+    id
+  } = item;
+
   const link = `/products/${id}`;
+
   return (
     <StyledLink to={link}>
       <CardStyle>
@@ -20,6 +42,34 @@ const Card = ({ item }) => {
         </InfoContainer>
       </CardStyle>
     </StyledLink>
+  );
+};
+
+const Bids = ({ bids }) => {
+  return (
+    <BidsStyle>
+      <img src={personIcon} />
+      {bids}
+    </BidsStyle>
+  );
+};
+
+const TagContainer = ({ isAuction, date }) => {
+  const day = getDDay(date);
+
+  return (
+    <TagContainerStyle>
+      {isAuction === true && <IsAuctionTag>경매중</IsAuctionTag>}
+      <DDayTag>D - {day}</DDayTag>
+    </TagContainerStyle>
+  );
+};
+
+const Thumbnail = ({ thumbnail }) => {
+  return (
+    <ThumbnailStyle>
+      <img src={thumbnail} />
+    </ThumbnailStyle>
   );
 };
 
