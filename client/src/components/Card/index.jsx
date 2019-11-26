@@ -12,7 +12,7 @@ import {
   ThumbnailStyle
 } from "./CardStyles";
 
-import getDDay from "../../../utils/getDDay";
+import { getDDay } from "../../utils/stringUtils";
 
 import personIcon from "../../assets/person.svg";
 
