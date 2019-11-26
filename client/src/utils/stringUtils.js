@@ -7,4 +7,4 @@ const getDDay = date => {
   return result;
 };
 
-export default { getDDay };
+export { getDDay };

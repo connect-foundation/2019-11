@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import BuyNowPrice from "../BuyNowPrice";
-import TopBid from "../TopBid";
 
 const PriceContainerStyle = styled.div`
   display: flex;
