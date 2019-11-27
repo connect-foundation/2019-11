@@ -10,15 +10,17 @@ server.listen(4000, () => {
 const rooms = {};
 
 io.on("connection", function(socket) {
-  socket.on("message", ({ roomId, sessionId, userId, text }) => {
+  socket.on("message", ({ roomId, sessionId, userId, text, createdAt }) => {
     console.log(
       `##### USER(${sessionId}, ${userId})가 ${roomId}방에 ${text} 문자 전송 #####`
     );
-    io.to(roomId).emit("message", { sessionId, userId, text });
+    io.to(roomId).emit("message", { sessionId, userId, text, createdAt });
   });
 
   socket.on("joinRoom", ({ roomId, sessionId, userId }) => {
-    console.log(`##### USER(sessionId, userId)가 ${roomId}방에 접속 #####`);
+    console.log(
+      `##### USER(${sessionId}, ${userId})가 ${roomId}방에 접속 #####`
+    );
     //해당 socket(client)를 특정 room에 Join 시킨다.
     socket.join(roomId, () => {
       // 특정 room에 입장해있는 user를 전역객체에 저장한다.
@@ -33,7 +35,9 @@ io.on("connection", function(socket) {
   });
 
   socket.on("leaveRoom", (roomId, sessionId, userId) => {
-    console.log(`##### USER(sessionId, userId)가 ${roomId}방에서 나감 #####`);
+    console.log(
+      `##### USER(${sessionId}, ${userId})가 ${roomId}방에서 나감 #####`
+    );
     socket.leave(roomId, () => {
       //rooms 정보에서 삭제한다.
       delete rooms[roomId][sessionId];

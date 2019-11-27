@@ -29,9 +29,9 @@ const ChatSend = ({ message, onSubmit, onChange }) => {
   return (
     <ChatSendStyle onSubmit={onSubmit}>
       <ChatInput
+        name="message"
         placeholder="메세지를 입력하세요"
         onChange={onChange}
-        value={message}
       />
       <SendButton>전송</SendButton>
     </ChatSendStyle>
