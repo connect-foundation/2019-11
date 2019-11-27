@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import path from "path";
-import cors from "cors";
+import cors from "cors";=
 import passport from "passport";
 // import session from "express-session";
 

@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - 12.13
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - state: "Deploy"
+      name: "Deploy Front"
+      before_script:
+        - cd client
+        - yarn
+      script:
+        - yarn build
+        - sudo rm -rf /home/palda/build
+        - sudo mv -f build /home/palda/build

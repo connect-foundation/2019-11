@@ -26,6 +26,7 @@ const IdText = styled.div`
 
 const MessageText = styled.div`
   font-size: 0.8rem;
+  word-break: break-all;
 `;
 
 const Chat = ({ chat }) => {

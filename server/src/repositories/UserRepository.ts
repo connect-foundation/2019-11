@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, EntityManager } from "typeorm";
+import { EntityRepository, EntityManager } from "typeorm";
 import { Users } from "../models/Users";
 /** Entity Manager - Constructor Injecction
  *  1. TypeOrm 역시 TypeDI의 Container를 사용한다.(server.ts 참조)
