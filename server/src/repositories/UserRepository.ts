@@ -15,17 +15,13 @@ export class UserRepository {
     return this.em.find(Users);
   }
 
-  public findOne(id: number) {
-    return this.em.findOne(Users, id);
+  public findOne(loginId: string) {
+    return this.em.findOne(Users, {
+      where: { loginId }
+    });
   }
 
   public save(user: Users) {
     return this.em.save(user);
-  }
-
-  public login(loginId: string, password: string) {
-    return this.em.findOne(Users, {
-      where: { loginId, password }
-    });
   }
 }

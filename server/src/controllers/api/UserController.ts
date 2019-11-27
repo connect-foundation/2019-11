@@ -4,6 +4,7 @@ import {
   Param,
   Post,
   Body,
+  BodyParam,
   Patch,
   Put,
   Delete,
@@ -27,14 +28,19 @@ export class UserController {
   }
 
   @Get("/:id")
-  public findOne(@Param("id") id: string) {
-    return this.userService.findOne(parseInt(id));
+  public findOne(@Param("id") loginId: string) {
+    return this.userService.findOne(loginId);
   }
 
   @Post()
-  public create(@Body() user: Users) {
+  public create(
+    @BodyParam("id") loginId: string,
+    @BodyParam("password") password: string,
+    @BodyParam("name") name: string,
+    @BodyParam("email") email: string
+  ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
-    return this.userService.create(user);
+    return this.userService.create(loginId, password, name, email);
   }
 
   @Put("/:id")
