@@ -1,18 +1,18 @@
 import {
-  Controller,
   Post,
   HeaderParam,
   ForbiddenError,
   ContentType,
   OnUndefined,
   OnNull,
+  JsonController,
   BodyParam
 } from "routing-controllers"
 
 import AWS from "aws-sdk"
 AWS.config.update({})
 
-@Controller("/downloader")
+@JsonController("/downloader")
 @ContentType("image/*")
 @OnUndefined(403)
 @OnNull(403)
@@ -25,6 +25,8 @@ export class StoreageController {
   ) {
     if (uid === undefined || timestamp === undefined) return new ForbiddenError()
 
-    const rawData = atob(data)
+    const rawData = new Buffer(data, "base64")
+
+    return rawData
   }
 }
