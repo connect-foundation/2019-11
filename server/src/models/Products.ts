@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { Images } from "./Images";
 import { Users } from "./Users";
-import { AuctionLogs } from "./AuctionLogs";
+import { Bids } from "./Bids";
 
 @Entity()
 export class Products {
@@ -17,23 +17,35 @@ export class Products {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ type: "text" })
   contents: string;
 
   @Column()
   immediatePrice: number;
 
-  @Column()
+  @Column({ nullable: true })
   hopePrice: number;
 
-  @Column()
-  minAuctionPrice: number;
+  @Column({ nullable: true })
+  startBidPrice: number;
 
   @Column()
   registerDate: Date;
 
+  @Column({ nullable: true })
+  auctionDeadline: Date;
+
+  @Column({ nullable: true })
+  extensionDate: Date;
+
+  @Column({ nullable: true })
+  soldPrice: number;
+
+  @Column({ nullable: true })
+  soldDate: Date;
+
   @Column()
-  productDeadline: Date;
+  thumbnailUrl: string;
 
   @Column()
   categoryCode: number;
@@ -41,24 +53,24 @@ export class Products {
   @Column()
   isAuction: boolean;
 
-  @Column()
-  isSale: boolean;
-
   @OneToMany(
     type => Images,
-    images => images.id
+    image => image.product
   )
   images: Images[];
 
+  @Column({ nullable: true })
+  buyerId: number;
+
   @ManyToOne(
     type => Users,
-    users => users.id
+    user => user.products
   )
-  user: Users;
+  seller: Users;
 
   @OneToMany(
-    type => AuctionLogs,
-    auctionlogs => auctionlogs.id
+    type => Bids,
+    bid => bid.product
   )
-  auctionLogs: AuctionLogs[];
+  bids: Bids[];
 }

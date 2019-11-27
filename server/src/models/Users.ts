@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Products } from "./Products";
-import { AuctionLogs } from "./AuctionLogs";
+import { Bids } from "./Bids";
 
 @Entity()
 export class Users {
@@ -20,7 +20,7 @@ export class Users {
   name: string;
 
   @Column()
-  profileImage: string;
+  profileUrl: string;
 
   @Column()
   mannerPoint: number;
@@ -33,13 +33,13 @@ export class Users {
 
   @OneToMany(
     type => Products,
-    Products => Products.id
+    product => product.seller
   )
   products: Products[];
 
   @OneToMany(
-    type => AuctionLogs,
-    auctionlogs => auctionlogs.id
+    type => Bids,
+    bid => bid.user
   )
-  auctionLogs: AuctionLogs[];
+  bids: Bids[];
 }

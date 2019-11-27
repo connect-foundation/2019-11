@@ -3,27 +3,25 @@ import { Products } from "./Products";
 import { Users } from "./Users";
 
 @Entity()
-export class AuctionLogs {
-  @PrimaryGeneratedColumn()
+export class Bids {
+  @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
   @Column()
-  auctionPrice: number;
+  bidPrice: number;
 
   @Column()
-  auctionDate: Date;
-
-  @Column()
-  isWinning: boolean;
+  bidDate: Date;
 
   @ManyToOne(
     type => Products,
-    products => products.id
+    product => product.bids
   )
   product: Products;
+
   @ManyToOne(
     type => Users,
-    users => users.id
+    user => user.bids
   )
   user: Users;
 }
