@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import DefaultProfileIcon from '../../../assets/default-profile.svg'
+import React, { useState } from "react";
+import styled from "styled-components";
+import DefaultProfileIcon from "../../../assets/default-profile.svg";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const ProfileContainer = styled.div`
   }
 `;
 
-const Profile = ({onClick}) => {
+const Profile = ({ onClick }) => {
   const [picture, setPicture] = useState(null);
   return (
     <ProfileContainer>
@@ -30,7 +30,7 @@ const Profile = ({onClick}) => {
         data-idx={0}
       />
     </ProfileContainer>
-  )
-}
+  );
+};
 
 export default Profile;
