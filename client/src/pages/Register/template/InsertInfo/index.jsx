@@ -12,9 +12,7 @@ import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
-import { randomFileName } from "../../../../utils/stringUtils.js"
-
-import S3 from "../../../../services/objectStoreage.js"
+import { jsonFetch } from "../../../../services/fetchService"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -125,6 +123,7 @@ const Component = props => {
   const [buyNow, setBuyNow] = useState(obj.buyNow)
   const [minPrice, setMinPrice] = useState(obj.minPrice)
   const [predictPrice, setPredictPrice] = useState(obj.predictPrice)
+  const [imgList, setImageList] = useState([])
   const [dayIdx, setDayIdx] = useState(-1)
   const [focusItem, setFocus] = useState(-1)
   const [isAuction, setIsAuction] = useState(true)
@@ -137,11 +136,17 @@ const Component = props => {
     strEmpty(buyNow),
     isAuction && strEmpty(minPrice),
     isAuction && strEmpty(predictPrice),
-    strEmpty(description)
+    strEmpty(description),
+    isArrayEmpty(imgList)
   ]
 
   const successCallback = async () => {
-    next()
+    for (let i = 0; i < imgList.length; i++) {
+      const uri = imgList[i].split(",")[1]
+      const headerOption = { "x-auth": "user", "x-timeStamp": Date.now() }
+      const body = { uri }
+      jsonFetch("http://localhost:3000/api/downloader", headerOption, body)
+    }
   }
 
   const failCallback = () => {
@@ -153,7 +158,7 @@ const Component = props => {
       <ContentDiv>
         <TopContentDiv>
           <CarouselDiv>
-            <Carousel />
+            <Carousel list={imgList} handler={setImageList} />
           </CarouselDiv>
           <InputDiv
             onBlur={event => {
