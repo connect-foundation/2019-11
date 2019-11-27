@@ -38,18 +38,18 @@ export class LogController {
     @BodyParam("dayago") dayago: number,
     @BodyParam("isSale") isSale: boolean,
     @BodyParam("isBuy") isBuy: boolean,
-    @BodyParam("isAll") isAll: boolean,
     @BodyParam("page") page: number,
     @BodyParam("limit") limit: number
   ) {
-    if (isBuy) {
-      return this.logService.findBuyLog(userid, dayago, page, limit)
-    }
-    if (isSale) {
-      return this.logService.findSellLog(userid, dayago, page, limit)
-    }
-    if (isAll) {
+    if (isBuy && isSale) {
       return this.logService.findAllLog(userid, dayago, page, limit)
+    } else {
+      if (isBuy) {
+        return this.logService.findBuyLog(userid, dayago, page, limit)
+      }
+      if (isSale) {
+        return this.logService.findSellLog(userid, dayago, page, limit)
+      }
     }
   }
 
