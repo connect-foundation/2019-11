@@ -1,11 +1,13 @@
-import express, { Request, Response } from 'express';
-import path from 'path';
-import cors from 'cors';
+import express, { Request, Response } from "express";
+import path from "path";
+import cors from "cors";
+import passport from "passport";
+// import session from "express-session";
 
 /**
  * middlewares
  */
-import morganLogger from 'morgan';
+import morganLogger from "morgan";
 
 const app = express();
 
@@ -15,18 +17,20 @@ const app = express();
  *  2. multer
  */
 app.use(cors());
-app.use(morganLogger('dev'));
-app.use(express.static(path.resolve('src', 'public')));
+app.use(morganLogger("dev"));
+app.use(express.static(path.resolve("src", "public")));
+app.use(passport.initialize());
+app.use(passport.session());
 // app.use(express.static(path.resolve(__dirname, 'public')));
 
 /**
  * View EJS 설정
  */
-app.set('views', path.join('views'));
-app.set('view engine', 'ejs');
+app.set("views", path.join("views"));
+app.set("view engine", "ejs");
 
-app.get('/login', (req, res) => {
-  res.render('login');
+app.get("/login", (req, res) => {
+  res.render("login");
 });
 
 export default app;

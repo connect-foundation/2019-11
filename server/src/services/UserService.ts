@@ -1,7 +1,7 @@
-import { Service } from 'typedi';
-import { UserRepository } from '../repositories/UserRepository';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Users } from '../models/Users';
+import { Service } from "typedi";
+import { UserRepository } from "../repositories/UserRepository";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { Users } from "../models/Users";
 
 /** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
@@ -32,5 +32,9 @@ export class UserService {
   /** DELETE */
   public delete(id: number) {
     /**TODO: 해당 id값으로 Enitity 삭제 */
+  }
+
+  public checkLogin(loginId: string, password: string) {
+    return this.userRepository.login(loginId, password);
   }
 }
