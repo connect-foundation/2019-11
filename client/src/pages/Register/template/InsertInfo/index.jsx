@@ -4,7 +4,7 @@ import styled from "styled-components"
 import PageBase from "../../../../components/PageBase"
 import Button from "../../../../components/BoxButton"
 import Carousel from "../../../../components/Molecules/Carousel"
-import InputBox from "../../../../components/InputBox"
+import TitleBox from "../../../../components/Atoms/InputWithLimit"
 import MoneyBox from "../../../../components/Molecules/MoneyBox"
 import ItemDescription from "../../../../components/Atoms/TextareaWithLength"
 import TermSelector from "../../../../components/RegisterTermSelector"
@@ -12,6 +12,9 @@ import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
+import { randomFileName } from "../../../../utils/stringUtils.js"
+
+import S3 from "../../../../services/objectStoreage.js"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -137,7 +140,7 @@ const Component = props => {
     strEmpty(description)
   ]
 
-  const successCallback = () => {
+  const successCallback = async () => {
     next()
   }
 
@@ -157,13 +160,12 @@ const Component = props => {
               setFocus(-1)
             }}
           >
-            <InputBox
-              font={1.25}
-              placeholder={"상품 제목"}
+            <TitleBox
+              size={1.25}
+              hint={"상품 제목"}
               value={title}
-              onChange={ev => {
-                setTitle(ev.target.value)
-              }}
+              limit={50}
+              onChange={v => setTitle(v)}
             />
             <SelectorDiv>
               <TermSelector
