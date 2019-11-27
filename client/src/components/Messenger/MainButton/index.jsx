@@ -7,12 +7,12 @@ const ShowButton= styled.button`
     bottom:1rem;
     right:1rem;
 
-    background-color:#FEAA6E;
+    background-color:var(--color-primary);
     color:white;
 
     border-radius:4rem;
     border-style: solid;
-    border-color: #FEAA6E;;
+    border-color: var(--color-primary);
 
     font-weight:bold;
     text-align:center;
@@ -25,11 +25,11 @@ const ShowButton= styled.button`
     }
 `;
 
-function MessengerButton(props) {
+function MainButton(props) {
 
     return (
         <ShowButton onClick={props.select}>메신저</ShowButton>
     );
   }
   
-  export default MessengerButton;
+  export default MainButton;

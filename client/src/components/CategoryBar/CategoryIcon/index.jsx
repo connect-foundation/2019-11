@@ -14,22 +14,12 @@ const Wrapper = styled.li`
 `;
 
 const Components = props => {
-  const { color,
-          img,
-          active,
-          onClick, 
-          text,
-          idx } = props
+  const { color, img, active, onClick, text, idx } = props;
 
   return (
     <Wrapper color={color}>
       <ImgIcon img={img} color={color}></ImgIcon>
-      <TextIcon
-        color={color}
-        active={active}
-        onClick={onClick}
-        data-idx={idx}
-      >
+      <TextIcon color={color} active={active} onClick={onClick} data-idx={idx}>
         {text}
       </TextIcon>
     </Wrapper>
