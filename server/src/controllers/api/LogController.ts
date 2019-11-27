@@ -48,6 +48,9 @@ export class LogController {
     if (isSale) {
       return this.logService.findSellLog(userid, dayago, page, limit)
     }
+    if (isAll) {
+      return this.logService.findAllLog(userid, dayago, page, limit)
+    }
   }
 
   @Put("/:id")
