@@ -22,4 +22,10 @@ export class UserRepository {
   public save(user: Users) {
     return this.em.save(user);
   }
+
+  public login(loginId: string, password: string) {
+    return this.em.findOne(Users, {
+      where: { loginId, password }
+    });
+  }
 }
