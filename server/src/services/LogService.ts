@@ -21,6 +21,10 @@ export class LogService {
     return this.LogRepository.findBuy(userid, dayago, page, limit)
   }
 
+  public findSellLog(userid: number, dayago: number, page: number, limit: number) {
+    return this.LogRepository.findSell(userid, dayago, page, limit)
+  }
+
   /** PUT, PATCH */
   public update(id: number, product: Products) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */

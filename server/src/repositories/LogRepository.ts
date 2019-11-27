@@ -26,6 +26,22 @@ export class LogRepository {
     })
   }
 
+  public findSell(userid: number, dayago: number, page: number, limit: number) {
+    return this.em.findAndCount(Products, {
+      relations: ["seller"],
+      where: {
+        soldDate: MoreThanOrEqual(prevDay(dayago)),
+        seller: { id: userid }
+      },
+      order: {
+        soldDate: "DESC"
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      cache: true
+    })
+  }
+
   public findOne(id: number) {
     return this.em.findOne(Products, id)
   }
