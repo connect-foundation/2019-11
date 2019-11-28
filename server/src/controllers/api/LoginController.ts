@@ -1,20 +1,46 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as NaverStrategy } from "passport-naver";
-import { Strategy as KakaoStrategy } from "passport-kakao";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { JsonController, Post, Body, BodyParam } from "routing-controllers";
+import {
+  JsonController,
+  Post,
+  BodyParam,
+  Req,
+  Res,
+  Get
+} from "routing-controllers";
 import { UserService } from "../../services/UserService";
+import { Users } from "../../models/Users";
 
-@JsonController("/login")
+@JsonController("/sign")
 export class LoginController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  public login(
-    @BodyParam("id") loginId: string,
-    @BodyParam("password") password: string
+  @Post("/login")
+  public async login(
+    @BodyParam("username") loginId: string,
+    @BodyParam("password") password: string,
+    @Req() req: any
   ) {
-    return this.userService.checkLogin(loginId, password);
+    const { msg, result } = await this.userService.checkLogin(
+      loginId,
+      password
+    );
+    if (msg) {
+      const session = req.session;
+      session.username = result.loginId;
+      session.name = result.name;
+      return msg;
+    }
+    return false;
+  }
+
+  @Get("/logout")
+  public async logout(@Req() req: any, @Res() res: any) {
+    const sess = req.session;
+    console.log(sess.username);
+    if (sess.username) {
+      sess.destroy();
+      res.clearCookie("connect.sid");
+      return true;
+    }
+    return false;
   }
 }
