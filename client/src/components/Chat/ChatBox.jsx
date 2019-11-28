@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Chat from "./Chat";
 import ChatSend from "./ChatSend";
 import io from "socket.io-client";
-import BuyNowPrice from "../Card/BuyNowPrice";
 
 const ChatBoxStyle = styled.div`
   display: flex;
