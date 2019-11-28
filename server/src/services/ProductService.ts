@@ -10,6 +10,11 @@ export class ProductsService {
     @InjectRepository() private readonly imageRepo: ImageRepository
   ) {}
 
+  /** Post */
+  public async getOwnSale(userId: number) {
+    return await this.productRepo.onlyOwnSale(userId)
+  }
+
   /** PUT */
   public async create(
     userId: number,

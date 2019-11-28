@@ -1,4 +1,4 @@
-import { JsonController, Put, BodyParam } from "routing-controllers"
+import { JsonController, Put, BodyParam, Post } from "routing-controllers"
 import { ProductsService } from "../../services/ProductService"
 
 @JsonController("/products")
@@ -36,5 +36,10 @@ export class ProductController {
       isAuction
     )
     return result
+  }
+
+  @Post("/onlySale")
+  public async sale(@BodyParam("id") userId: number) {
+    return await this.service.getOwnSale(userId)
   }
 }

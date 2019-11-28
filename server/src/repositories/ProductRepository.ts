@@ -1,10 +1,22 @@
 import { EntityRepository, EntityManager } from "typeorm"
 import { ProductsDTO } from "../dto/ProductDTO"
+import { Products } from "../models/Products"
 
 @EntityRepository()
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
 
+  /*GET*/
+  public async onlyOwnSale(userId: number) {
+    return await this.em.findAndCount(Products, {
+      relations: ["seller"],
+      select: ["id", "thumbnailUrl", "immediatePrice", "registerDate"],
+      where: {
+        seller: { id: userId },
+        buyerId: null
+      }
+    })
+  }
   /* PUT */
   public async create(
     userId: number,
