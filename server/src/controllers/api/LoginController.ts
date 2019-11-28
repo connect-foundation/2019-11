@@ -27,6 +27,7 @@ export class LoginController {
       const session = req.session;
       session.username = result.loginId;
       session.name = result.name;
+      session.id = result.id;
       return msg;
     }
     return false;
