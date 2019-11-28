@@ -8,9 +8,12 @@ const Container = styled.div`
   width: 100%;
   height: 5rem;
   text-align: left;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 0.5rem;
 `
 
-const Text = styled.div`
+const Text = styled.span`
   font-size: var(--font-size-xxl);
   font-weight: 700;
   color: var(--color-secondary);
