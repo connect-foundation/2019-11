@@ -15,10 +15,14 @@ export class ProductRepository {
     minPrice: number,
     registerDate: Date,
     endDate: Date,
+    thumbnail: string,
     categoryCode: number,
     isAuction: boolean
   ) {
     const dto = new ProductsDTO()
+
+    console.log("Repo" + isAuction)
+
     const product = dto.create(
       userId,
       title,
@@ -28,6 +32,7 @@ export class ProductRepository {
       minPrice,
       registerDate,
       endDate,
+      thumbnail,
       categoryCode,
       isAuction
     )

@@ -21,6 +21,7 @@ export class ProductsService {
     minPrice: number,
     registerDate: Date,
     deadline: Date,
+    thumbnail: string,
     category: number,
     isAuction: boolean
   ) {
@@ -33,6 +34,7 @@ export class ProductsService {
       minPrice,
       registerDate,
       deadline,
+      thumbnail,
       category,
       isAuction
     )
