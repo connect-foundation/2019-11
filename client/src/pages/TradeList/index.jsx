@@ -28,122 +28,86 @@ const RightAlign = styled.div`
 const TradeContents = styled.div`
   height: 100%;
   overflow: auto;
+  border: solid 1px;
+  border-radius: 5px;
+  &::-webkit-scrollbar {
+    display: none !important; // 윈도우 크롬 등
+  }
+  margin-bottom: 0.5rem;
 `
-let count = 1
 function TradeList(props) {
-  const [data, setData] = useState([])
   const [isSale, setIsSale] = useState(true)
   const [isBuy, setIsBuy] = useState(true)
   const [dayago, setDayago] = useState(1)
   const [page, setPage] = useState(1)
-  const getData = (sale, buy, day, page) => {
-    //http://honeybee.palda.shop/api/log/filter
-    fetch("http://localhost:3000/api/log/filter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        userid: 2, //임시 userid 고정
-        dayago: day,
-        isSale: sale,
-        isBuy: buy,
-        page: page,
-        limit: 10
-      })
-    })
-      .then(result => {
-        return result.json()
-      })
-      .then(result => {
-        let resultDatassss = result[0].reduce((acc, ele) => {
-          acc.push({
-            title: ele.title,
-            thumbnail: ele.thumbnailUrl,
-            status: "ㅅㄷㅅ",
-            soldprice: ele.soldPrice,
-            solddate: ele.soldDate,
-            registdate: ele.registerDate,
-            hopeprice: ele.hopePrice,
-            deviation: 1111
+  const [reset, setReset] = useState(false)
+  const [userid, setUserid] = useState(2) //임시 userid 고정
+
+  async function getData(sale, buy, day, page) {
+    try {
+      let resultFetch = await fetch(
+        `http://${
+          process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
+        }/api/log/filter`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userid: userid,
+            dayago: day,
+            isSale: sale,
+            isBuy: buy,
+            page: page,
+            limit: 10
           })
-          return acc
-        }, [])
-        console.log(count)
-        setData(resultDatassss)
-      })
+        }
+      )
+      let resultJson = await resultFetch.json()
+      let resultData = await resultJson[0].reduce((acc, ele) => {
+        let data = {
+          title: ele.title,
+          thumbnail: ele.thumbnailUrl,
+          status: ele.seller.id === userid ? "판매" : "구매",
+          soldprice: ele.soldPrice,
+          solddate: ele.soldDate,
+          registdate: ele.registerDate,
+          hopeprice: ele.hopePrice,
+          deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
+        }
+        acc.push(data)
+        return acc
+      }, [])
+
+      setPage(page++)
+
+      return resultData
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  useEffect(() => {
-    getData(isSale, isBuy, dayago, page)
-  }, [isSale, isBuy, dayago])
-
   function setSale() {
-    console.log("test")
     setPage(1)
-    count++
-    console.log(count)
     setIsSale(!isSale)
+    setReset(!reset)
   }
 
   function setBuy() {
     setPage(1)
-    count++
     setIsBuy(!isBuy)
+    setReset(!reset)
   }
 
   function setDay(day) {
     setPage(1)
-    count++
     setDayago(day)
-  }
-
-  const fakeFetch = () => {
-    // console.log(count)
-    return test() //tradeDummy/data
-  }
-  //에러 부분입니다.
-  function test() {
-    if (count < 10) {
-      return [1]
-    } else {
-      return tradeDummy
-    }
+    setReset(!reset)
   }
 
   const drawer = item => item.map(value => <TradeListBox {...value} />)
   //랜더링.
-
-  const tradeDummy = [
-    {
-      title: "임시데이터1",
-      thumbnail:
-        "https://post-phinf.pstatic.net/MjAxODA0MDNfMjgy/MDAxNTIyNjgxNjQzMTc2.9zObByVQ-Az9SuNbnhDA34JAkBHBgBL0zh2xjibG8cIg.s9M1q3XTHMUBXLY1RuDZ7h40YZGu8RpXAEcTk4lKCxog.JPEG/bjsn-20171130-195451-000-resize.jpg?type=w1200",
-      status: "경매중",
-      price: 3000
-    },
-    {
-      title: "임시데이터2",
-      thumbnail:
-        "https://post-phinf.pstatic.net/MjAxODA0MDNfMjgy/MDAxNTIyNjgxNjQzMTc2.9zObByVQ-Az9SuNbnhDA34JAkBHBgBL0zh2xjibG8cIg.s9M1q3XTHMUBXLY1RuDZ7h40YZGu8RpXAEcTk4lKCxog.JPEG/bjsn-20171130-195451-000-resize.jpg?type=w1200",
-      status: "경매중",
-      price: 3000
-    },
-    {
-      title: "임시데이터3",
-      thumbnail:
-        "https://post-phinf.pstatic.net/MjAxODA0MDNfMjgy/MDAxNTIyNjgxNjQzMTc2.9zObByVQ-Az9SuNbnhDA34JAkBHBgBL0zh2xjibG8cIg.s9M1q3XTHMUBXLY1RuDZ7h40YZGu8RpXAEcTk4lKCxog.JPEG/bjsn-20171130-195451-000-resize.jpg?type=w1200",
-      status: "경매중",
-      price: 3000
-    },
-    {
-      title: "임시데이터4",
-      thumbnail:
-        "https://post-phinf.pstatic.net/MjAxODA0MDNfMjgy/MDAxNTIyNjgxNjQzMTc2.9zObByVQ-Az9SuNbnhDA34JAkBHBgBL0zh2xjibG8cIg.s9M1q3XTHMUBXLY1RuDZ7h40YZGu8RpXAEcTk4lKCxog.JPEG/bjsn-20171130-195451-000-resize.jpg?type=w1200",
-      status: "경매중",
-      price: 3000
-    }
-  ]
 
   return (
     <Wraper>
@@ -163,7 +127,11 @@ function TradeList(props) {
           />
         </RightAlign>
         <TradeContents>
-          <InfiniteScroll fetcher={fakeFetch} drawer={drawer} />
+          <InfiniteScroll
+            reset={reset}
+            fetcher={() => getData(isSale, isBuy, dayago, page)}
+            drawer={drawer}
+          />
         </TradeContents>
       </TradeWrap>
       <Footer />

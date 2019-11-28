@@ -60,8 +60,6 @@ const Date = styled.span`
 `
 
 const Component = ({ title, thumbnail, status, price, time }) => {
-  console.dir(time)
-
   return (
     <Container>
       <Thumbnail src={thumbnail} />
