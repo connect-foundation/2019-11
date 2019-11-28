@@ -10,7 +10,7 @@ export const jsonFetch = async (url, headerOption, body) => {
 }
 
 export const putJsonFetch = async (url, headerOption, body) => {
-    const option = Option.putJsonFetch
+    const option = Option.putJson
     option.body = JSON.stringify(body)
     option.headers = Object.assign(option.headers, headerOption)
     const result = await Await(url, option)
