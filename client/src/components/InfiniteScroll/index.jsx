@@ -44,7 +44,7 @@ const renderNotFound = () => {
   )
 }
 
-const Component = ({ fetcher, drawer }) => {
+const Component = ({ fetcher, drawer, reset }) => {
   const [loadding, setLoadding] = useState(true)
   const [list, setList] = useState([])
 
@@ -55,7 +55,7 @@ const Component = ({ fetcher, drawer }) => {
       setLoadding(false)
       setList(prev => [...initComponents])
     })()
-  }, [])
+  }, [reset])
 
   const [_, setRef] = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target)
