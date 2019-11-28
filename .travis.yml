@@ -6,6 +6,7 @@ node_js:
 branches:
   only:
     - master
+    - develop
 
 jobs:
   include:
@@ -21,3 +22,5 @@ jobs:
       before_script:
         - cd server
         - npm install
+      script:
+        - npm build
