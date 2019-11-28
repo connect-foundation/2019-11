@@ -10,7 +10,7 @@ export class ProductRepository {
   public async onlyOwnSale(userId: number) {
     return await this.em.findAndCount(Products, {
       relations: ["seller"],
-      select: ["id", "thumbnailUrl", "immediatePrice", "registerDate"],
+      select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
       where: {
         seller: { id: userId },
         buyerId: null
