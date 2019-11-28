@@ -24,3 +24,12 @@ jobs:
         - npm install
       script:
         - npm build
+
+  jobs:
+    include:
+      - state: "Build Chat"
+        name: "Build Chat"
+        before_script:
+          - cd chat-server
+        script:
+          - npm start
