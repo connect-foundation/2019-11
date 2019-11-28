@@ -50,8 +50,10 @@ export class UserService {
 
   public async checkLogin(loginId: string, password: string) {
     const user = await this.userRepository.findOne(loginId);
-    if (user === undefined) return false;
+    if (user === undefined) return { msg: false, result: new Users() };
     const result = checkPassword(password, user.password, user.salt);
-    return result === true && user;
+    return result === true
+      ? { msg: true, result: user }
+      : { msg: false, result: new Users() };
   }
 }

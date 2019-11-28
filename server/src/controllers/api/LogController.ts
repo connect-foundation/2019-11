@@ -9,9 +9,9 @@ import {
   Delete,
   BodyParam,
   OnUndefined
-} from "routing-controllers"
-import { LogService } from "../../services/LogService"
-import { Products } from "../../models/Products"
+} from "routing-controllers";
+import { LogService } from "../../services/LogService";
+import { Products } from "../../models/Products";
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -24,12 +24,12 @@ export class LogController {
 
   @Get()
   public find() {
-    return this.logService.find()
+    return this.logService.find();
   }
 
   @Get("/:id")
   public findOne(@Param("id") id: string) {
-    return this.logService.findOne(parseInt(id))
+    return this.logService.findOne(parseInt(id));
   }
 
   @Post("/filter")
@@ -42,13 +42,13 @@ export class LogController {
     @BodyParam("limit") limit: number
   ) {
     if (isBuy && isSale) {
-      return this.logService.findAllLog(userid, dayago, page, limit)
+      return this.logService.findAllLog(userid, dayago, page, limit);
     } else {
       if (isBuy) {
-        return this.logService.findBuyLog(userid, dayago, page, limit)
+        return this.logService.findBuyLog(userid, dayago, page, limit);
       }
       if (isSale) {
-        return this.logService.findSellLog(userid, dayago, page, limit)
+        return this.logService.findSellLog(userid, dayago, page, limit);
       }
     }
   }
@@ -57,11 +57,11 @@ export class LogController {
   @Patch("/:id")
   public update(@Param("id") id: string, @Body() product2: Products) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
-    return this.logService.update(parseInt(id), product2)
+    return this.logService.update(parseInt(id), product2);
   }
 
   @Delete("/:id")
   public delete(@Param("id") id: string) {
-    return this.logService.delete(parseInt(id))
+    return this.logService.delete(parseInt(id));
   }
 }
