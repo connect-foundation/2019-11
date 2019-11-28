@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
+import Header from "../../components/Header"
 import TradeBox from "../../components/Molecules/TradeBox"
 import InfiniteScroll from "../../components/InfiniteScroll"
 import Footer from "../../components/Footer"
@@ -24,7 +25,6 @@ const ContentContainer = styled.div`
   margin: 5px auto;
   border-radius: 30px;
   overflow-y: auto;
-  border: #dfdfdf solid 1px;
 `
 
 const ScrollFrame = styled.div`
@@ -35,13 +35,6 @@ const ScrollFrame = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`
-
-const TabContatiner = styled.div`
-  width: 100%;
-  height: 1rem;
-  padding: 5px;
-  margin: 5px 0;
 `
 
 const Page = props => {
@@ -57,6 +50,7 @@ const Page = props => {
   return (
     <Container>
       <ContentContainer>
+        <Header text={"경매중인 내 상품"} />
         <ScrollFrame>
           <InfiniteScroll fetcher={fetcher} drawer={drawer} />
         </ScrollFrame>
