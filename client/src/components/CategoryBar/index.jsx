@@ -55,7 +55,13 @@ const Components = () => {
     }
   };
 
-  const handleClickProfile = () => {};
+  const setLoginStatus = () => {
+    setIsLogin(!isLogin);
+  };
+
+  const handleClickProfile = () => {
+    fetch("http://localhost:3000/api/sign/check").then(result => alert(result));
+  };
 
   return (
     <Container ref={node}>
@@ -63,7 +69,7 @@ const Components = () => {
         <Logo />
         <Bar>
           {isLogin === true ? (
-            <Profile onClick={handleClickProfile} />
+            <Profile onClick={handleClickProfile} logout={setLoginStatus} />
           ) : (
             <LoginButton onClick={handleLoginClick} />
           )}
@@ -103,7 +109,11 @@ const Components = () => {
           details={detailCategoryList[selectIdx - 1]}
         />
       </ListWrapper>
-      <MainModal onClose={handleLoginClose} open={loginOpen} />
+      <MainModal
+        onClose={handleLoginClose}
+        open={loginOpen}
+        login={setLoginStatus}
+      />
     </Container>
   );
 };
