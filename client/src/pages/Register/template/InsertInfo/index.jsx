@@ -12,7 +12,8 @@ import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
-import { jsonFetch } from "../../../../services/fetchService"
+import { jsonFetch, putJsonFetch } from "../../../../services/fetchService"
+import { createThumbnail } from "../../../../services/imageService"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -119,10 +120,10 @@ const Component = props => {
   const dayList = generateDayList()
 
   const [title, setTitle] = useState(obj.title)
-  const [description, setDescription] = useState(obj.description)
-  const [buyNow, setBuyNow] = useState(obj.buyNow)
+  const [description, setDescription] = useState(obj.content)
+  const [buyNow, setBuyNow] = useState(obj.nowPrice)
   const [minPrice, setMinPrice] = useState(obj.minPrice)
-  const [predictPrice, setPredictPrice] = useState(obj.predictPrice)
+  const [predictPrice, setPredictPrice] = useState(obj.hopePrice)
   const [imgList, setImageList] = useState([])
   const [dayIdx, setDayIdx] = useState(-1)
   const [focusItem, setFocus] = useState(-1)
@@ -141,12 +142,35 @@ const Component = props => {
   ]
 
   const successCallback = async () => {
+    const productsHeader = { "x-timeStamp": Date.now() }
+    const imageHeader = Object.assign(productsHeader, { "x-auth": "user" })
+    const imageUrl = "http://localhost:3000/api/downloader"
+    const apiUrl = "http://localhost:3000/api/products"
+
+    const deadLine = new Date()
+    deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
+
+    obj.userId = 1
+    obj.title = title
+    obj.contents = description
+    obj.nowPrice = buyNow
+    obj.minPrice = isAuction ? minPrice : null
+    obj.hopePrice = isAuction ? predictPrice : null
+    obj.isAution = isAuction
+    obj.endDate = deadLine
+    // obj.thumbnail = await createThumbnail(await fetch(imgList[0]))
+    // obj.thumbnail = await jsonFetch(imageUrl, imageHeader, { uri: obj.thumbnail })
+
     for (let i = 0; i < imgList.length; i++) {
       const uri = imgList[i].split(",")[1]
-      const headerOption = { "x-auth": "user", "x-timeStamp": Date.now() }
       const body = { uri }
-      jsonFetch("http://localhost:3000/api/downloader", headerOption, body)
+      obj.images.push(await jsonFetch(imageUrl, imageHeader, body))
     }
+
+    console.dir(obj)
+
+    const result = await putJsonFetch(apiUrl, productsHeader, obj)
+    console.dir(result)
   }
 
   const failCallback = () => {
