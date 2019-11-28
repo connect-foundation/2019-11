@@ -15,7 +15,7 @@ const app = express();
  *  1. body-parser
  *  2. multer
  */
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(morganLogger("dev"));
 app.use(express.static(path.resolve("src", "public")));
 app.use(
