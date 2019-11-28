@@ -150,14 +150,17 @@ const Component = props => {
     const deadLine = new Date()
     deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
 
+    // 임시 사용자 번호 필히 변경 할것
     obj.userId = 1
     obj.title = title
     obj.contents = description
-    obj.nowPrice = buyNow
-    obj.minPrice = isAuction ? minPrice : null
-    obj.hopePrice = isAuction ? predictPrice : null
-    obj.isAution = isAuction
+    obj.nowPrice = parseInt(buyNow)
+    obj.minPrice = isAuction ? parseInt(minPrice) : undefined
+    obj.hopePrice = isAuction ? parseInt(predictPrice) : undefined
+    obj.timestamp = Date.now()
     obj.endDate = deadLine
+    obj.isAuction = isAuction
+
     // obj.thumbnail = await createThumbnail(await fetch(imgList[0]))
     // obj.thumbnail = await jsonFetch(imageUrl, imageHeader, { uri: obj.thumbnail })
 
@@ -167,10 +170,15 @@ const Component = props => {
       obj.images.push(await jsonFetch(imageUrl, imageHeader, body))
     }
 
-    console.dir(obj)
+    obj.thumbnail = obj.images[0]
 
     const result = await putJsonFetch(apiUrl, productsHeader, obj)
-    console.dir(result)
+
+    if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
+    else {
+      obj.productId = result
+      next()
+    }
   }
 
   const failCallback = () => {

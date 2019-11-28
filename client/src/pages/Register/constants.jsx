@@ -32,7 +32,7 @@ export const notice = {
 }
 
 export const shareConfig = {
-  url: `http://palda.shop`
+  url: `http://palda.shop/products`
 }
 
 export const defaultData = {
@@ -42,7 +42,7 @@ export const defaultData = {
   images: [],
   nowPrice: undefined,
   hopePrice: undefined,
-  minPirce: undefined,
+  minPrice: undefined,
   endDate: "",
   categoryCode: undefined
 }
