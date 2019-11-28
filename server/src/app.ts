@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import path from "path";
 import cors from "cors";
+import passport from "passport";
+// import session from "express-session";
 
 /**
  * middlewares
@@ -17,6 +19,8 @@ const app = express();
 app.use(cors());
 app.use(morganLogger("dev"));
 app.use(express.static(path.resolve("src", "public")));
+app.use(passport.initialize());
+app.use(passport.session());
 // app.use(express.static(path.resolve(__dirname, 'public')));
 
 /**

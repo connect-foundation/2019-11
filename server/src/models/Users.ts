@@ -19,13 +19,13 @@ export class Users {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   profileUrl: string;
 
-  @Column()
+  @Column({ default: 10 })
   mannerPoint: number;
 
-  @Column()
+  @Column({ default: false })
   isDelete: boolean;
 
   @Column()

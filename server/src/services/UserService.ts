@@ -1,7 +1,8 @@
-import { Service } from 'typedi';
-import { UserRepository } from '../repositories/UserRepository';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Users } from '../models/Users';
+import { Service } from "typedi";
+import { UserRepository } from "../repositories/UserRepository";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { Users } from "../models/Users";
+import { encryptPassword, checkPassword } from "../util/passwordUtils";
 
 /** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
@@ -15,12 +16,25 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  public findOne(id: number) {
-    return this.userRepository.findOne(id);
+  public findOne(loginId: string) {
+    return this.userRepository.findOne(loginId);
   }
 
   /** POST */
-  public create(user: Users) {
+  public create(
+    loginId: string,
+    password: string,
+    name: string,
+    email: string
+  ) {
+    const user = new Users();
+    const { salt, result } = encryptPassword(password);
+    user.loginId = loginId;
+    user.salt = salt;
+    user.password = result;
+    user.name = name;
+    user.email = email;
+
     return this.userRepository.save(user);
   }
 
@@ -32,5 +46,12 @@ export class UserService {
   /** DELETE */
   public delete(id: number) {
     /**TODO: 해당 id값으로 Enitity 삭제 */
+  }
+
+  public async checkLogin(loginId: string, password: string) {
+    const user = await this.userRepository.findOne(loginId);
+    if (user === undefined) return false;
+    const result = checkPassword(password, user.password, user.salt);
+    return result === true && user;
   }
 }
