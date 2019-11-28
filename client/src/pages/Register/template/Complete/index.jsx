@@ -63,9 +63,7 @@ const NoticeText = styled.div`
   word-break: keep-all;
 `
 
-const Component = props => {
-  const { width, obj } = props
-
+const Component = ({ width, obj }) => {
   return (
     <PageBase width={width}>
       <ContentDiv>
@@ -73,7 +71,7 @@ const Component = props => {
           <NoticeText>{notice.successRegister}</NoticeText>
         </NoticeDiv>
         <ShareDiv>
-          <ShareBox url={shareConfig.url + `/${obj.productId}`} />
+          <ShareBox url={shareConfig.url + `/${obj.productId}`} object={obj} />
         </ShareDiv>
         <ButtonDiv>
           <LinkBox href={`/products/${obj.productId}`}>상품 확인</LinkBox>
