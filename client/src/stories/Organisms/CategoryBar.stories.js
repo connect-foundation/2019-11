@@ -1,11 +1,11 @@
 import React from "react";
 
-import CategoryIcon from "../components/CategoryBar/CategoryIcon";
-import TextIcon from "../components/CategoryBar/CategoryIcon/TextIcon";
-import ImageIcon from "../components/CategoryBar/CategoryIcon/ImageIcon";
+import CategoryIcon from "../../components/Organisim/CategoryBar/CategoryIcon"
+import TextIcon from "../../components/Organisim/CategoryBar/CategoryIcon/TextIcon";
+import ImageIcon from "../../components/Organisim/CategoryBar/CategoryIcon/ImageIcon";
 
 export default {
-  title: "Category"
+  title: "Atoms|Category"
 };
 
 export const texticon = () => {

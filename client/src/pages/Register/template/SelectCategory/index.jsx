@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
-import Button from "../../../../components/BoxButton"
+import Button from "../../../../components/Atoms/BoxButton"
 import CategorySelector from "../../../../components/Organisim/ItemCategorySelector"
 
 import { categoryList } from "../../constants.jsx"

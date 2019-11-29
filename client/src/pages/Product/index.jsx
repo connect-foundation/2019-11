@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import ProductInfo from "../../components/Product/ProductInfo";
-import ChatBox from "../../components/Chat/ChatBox";
-import AuctionGraph from "../../components/Product/AuctionGraph";
+import React from "react"
+import styled from "styled-components"
+import ProductInfo from "../../components/Organisim/ProductInfo"
+import ChatBox from "../../components/Organisim/Chat/ChatBox"
+import AuctionGraph from "../../components/Organisim/AuctionGraph"
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -10,28 +10,28 @@ const ProductPageStyle = styled.div`
   width: 100%;
   max-width: 1440px;
   padding: var(--padding-md);
-`;
+`
 
 const MainColumn = styled.div`
   flex: 1;
   overflow-x: auto;
   overflow-x: hidden;
-`;
+`
 
 const TextStyle = styled.p`
   font-size: ${props => props.size};
-`;
+`
 
 const Section = styled.section`
   min-height: 400px;
   margin-bottom: var(--margin-xl);
   display: flex;
   ${props => (props.center ? "justify-content: center" : undefined)}
-`;
+`
 
 const ChatColumn = styled.div`
   width: 400px;
-`;
+`
 
 const product = {
   id: "12",
@@ -41,12 +41,12 @@ const product = {
   seller: "최성찬",
   due: "1일 6시간 27분",
   price: "45,000"
-};
+}
 
 const user = {
   id: "chsch1028",
   src: "https://i.pravatar.cc/150?img=4"
-};
+}
 
 const ProductPage = () => {
   return (
@@ -63,7 +63,7 @@ const ProductPage = () => {
         <ChatBox productId={product.id} user={user}></ChatBox>
       </ChatColumn>
     </ProductPageStyle>
-  );
-};
+  )
+}
 
-export default ProductPage;
+export default ProductPage

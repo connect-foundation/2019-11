@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import useIntersect from "./useIntersect"
-import loaddingGIF from "../../assets/loadding.gif"
-import NotFoundImage from "../../assets/notFound.png"
+import loaddingGIF from "../../../assets/loadding.gif"
+import NotFoundImage from "../../../assets/notFound.png"
 
 const Container = styled.div`
   position: relative;
