@@ -39,6 +39,7 @@
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.0",
+    "ts-node": "^8.5.4",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.19",
     "typeorm-seeding": "^1.0.0-rc.3",
