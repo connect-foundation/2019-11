@@ -3,7 +3,10 @@ version: "3"
 services:
   mysql-server:
     image: mysql:5.7.28
-    command: --lower_case_table_names=1 --default-authentication-plugin=mysql_native_password
+    command: --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --lower_case_table_names=1
+      --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql:/var/lib/mysql
     ports:
