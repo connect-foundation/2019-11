@@ -1,4 +1,4 @@
-import { JsonController, Put, BodyParam } from "routing-controllers"
+import { JsonController, Put, BodyParam, Post } from "routing-controllers"
 import { ProductsService } from "../../services/ProductService"
 
 @JsonController("/products")
@@ -10,6 +10,7 @@ export class ProductController {
     @BodyParam("userId") userId: number,
     @BodyParam("title") title: string,
     @BodyParam("contents") contents: string,
+    @BodyParam("thumbnail") thumbnail: string,
     @BodyParam("images") images: string[],
     @BodyParam("nowPrice") nowPrice: number,
     @BodyParam("hopePrice") hopePrice: number,
@@ -17,8 +18,9 @@ export class ProductController {
     @BodyParam("timestamp") registerDate: Date,
     @BodyParam("endDate") endDate: Date,
     @BodyParam("categoryCode") categoryCode: number,
-    @BodyParam("isAuction") isAcution: boolean
+    @BodyParam("isAuction") isAuction: boolean
   ) {
+    console.log("Control" + isAuction)
     const result = await this.service.create(
       userId,
       title,
@@ -29,9 +31,15 @@ export class ProductController {
       minPrice,
       registerDate,
       endDate,
+      thumbnail,
       categoryCode,
-      isAcution
+      isAuction
     )
     return result
+  }
+
+  @Post("/onlySale")
+  public async sale(@BodyParam("id") userId: number) {
+    return await this.service.getOwnSale(userId)
   }
 }

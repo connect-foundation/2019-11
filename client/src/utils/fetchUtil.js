@@ -20,7 +20,9 @@ export const Await = async (url, option) => {
 export const Option = {
     get: { method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0' } },
     post: { method: 'POST', headers: { 'User-Agent': 'Mozilla/5.0' } },
-    postJson: { method: 'POST', headers: { 'User-Agent': 'Mozilla/5.0', 'Content-Type': 'application/json' } }
+    put: { methoe: 'PUT', headers: { 'User-Agent': 'Mozilla/5.0' } },
+    postJson: { method: 'POST', headers: { 'User-Agent': 'Mozilla/5.0', 'Content-Type': 'application/json' } },
+    putJson: { method: 'PUT', headers: { 'User-Agent': 'Mozilla/5.0', 'Content-Type': 'application/json' } }
 }
 
 

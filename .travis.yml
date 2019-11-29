@@ -6,6 +6,7 @@ node_js:
 branches:
   only:
     - master
+    - develop
 
 jobs:
   include:
@@ -21,3 +22,14 @@ jobs:
       before_script:
         - cd server
         - npm install
+      script:
+        - npm build
+
+  jobs:
+    include:
+      - state: "Build Chat"
+        name: "Build Chat"
+        before_script:
+          - cd chat-server
+        script:
+          - npm start
