@@ -10,8 +10,8 @@ export class Bids {
   @Column()
   bidPrice: number;
 
-  @Column()
-  bidDate: Date;
+  @Column({ type: "datetime" })
+  bidDate: string;
 
   @ManyToOne(
     type => Products,
