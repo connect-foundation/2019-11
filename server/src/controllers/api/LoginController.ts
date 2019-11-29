@@ -24,19 +24,23 @@ export class LoginController {
       password
     );
     if (msg) {
+      const user = {
+        id: result.id,
+        username: result.loginId,
+        name: result.name,
+        email: result.email
+      };
       const session = req.session;
       session.username = result.loginId;
       session.name = result.name;
-      session.id = result.id;
-      return msg;
+      return { msg, user };
     }
-    return false;
+    return { msg, user: null };
   }
 
   @Get("/logout")
   public async logout(@Req() req: any, @Res() res: any) {
     const sess = req.session;
-    console.log(sess.username);
     if (sess.username) {
       sess.destroy();
       res.clearCookie("connect.sid");
