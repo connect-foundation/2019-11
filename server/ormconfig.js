@@ -2,7 +2,7 @@ var CustomNamingStrategy_1 = require("./src/custom/CustomNamingStrategy");
 
 module.exports = {
   type: "mysql",
-  host: "mysql-server",
+  host: "localhost",
   port: 3306,
   username: "boost",
   password: "boost",

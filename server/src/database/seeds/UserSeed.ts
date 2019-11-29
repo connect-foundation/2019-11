@@ -1,29 +1,35 @@
-// import { Factory, Seeder, times } from 'typeorm-seeding';
-// import { Connection } from 'typeorm';
-// import { Users } from '../../models/Users';
+import { Images } from "./../../models/Images";
+import { Products } from "./../../models/Products";
+import { Factory, Seeder, times } from "typeorm-seeding";
+import { Connection } from "typeorm";
+import { Users } from "../../models/Users";
 
-// import { Rooms } from '../../models/Rooms';
-// import { Files } from '../../models/Files';
+export class UserSeed implements Seeder {
+  async run(factory: Factory, connection: Connection): Promise<void> {
+    const em = connection.createEntityManager();
 
-// export class UserSeed implements Seeder {
-//   async run(factory: Factory, connection: Connection): Promise<void> {
-//     const em = connection.createEntityManager();
-//     let fileId = 0;
-//     await times(20, async userCount => {
-//       const user = await factory(Users)().seed();
+    let productId = 1;
+    let imageId = 20 * 10 + 1; // userCount * productCount
+    await times(20, async userCount => {
+      const user = await factory(Users)({ index: userCount }).seed();
 
-//       const rooms = await times(8, async roomCount => {
-//         const room = await factory(Rooms)().seed();
-//         const files = await times(4, async fileCount => {
-//           return await factory(Files)({ id: fileId++ }).seed();
-//         });
+      const products = await times(10, async productCount => {
+        const product = await factory(Products)({
+          userCount: 20,
+          index: productId++
+        }).seed();
 
-//         room.files = files;
-//         return await em.save(room);
-//       });
+        const images = await times(5, async imageCount => {
+          const image = factory(Images)({ index: imageId++ }).seed();
+          return image;
+        });
 
-//       user.rooms = rooms;
-//       return await em.save(user);
-//     });
-//   }
-// }
+        product.images = images;
+        return await em.save(product);
+      });
+
+      user.products = products;
+      return await em.save(user);
+    });
+  }
+}
