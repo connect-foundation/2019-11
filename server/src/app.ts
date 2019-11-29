@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import path from "path";
 import cors from "cors";
+import session from "express-session";
 
 /**
  * middlewares
@@ -14,9 +15,16 @@ const app = express();
  *  1. body-parser
  *  2. multer
  */
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(morganLogger("dev"));
 app.use(express.static(path.resolve("src", "public")));
+app.use(
+  session({
+    secret: "#%*_#$(_#$()*%dapalda####!#!@%#$##@#",
+    resave: false,
+    saveUninitialized: true
+  })
+);
 // app.use(express.static(path.resolve(__dirname, 'public')));
 
 /**

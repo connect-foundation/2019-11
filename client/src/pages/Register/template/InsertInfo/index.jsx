@@ -4,7 +4,7 @@ import styled from "styled-components"
 import PageBase from "../../../../components/PageBase"
 import Button from "../../../../components/BoxButton"
 import Carousel from "../../../../components/Molecules/Carousel"
-import InputBox from "../../../../components/InputBox"
+import TitleBox from "../../../../components/Atoms/InputWithLimit"
 import MoneyBox from "../../../../components/Molecules/MoneyBox"
 import ItemDescription from "../../../../components/Atoms/TextareaWithLength"
 import TermSelector from "../../../../components/RegisterTermSelector"
@@ -12,6 +12,8 @@ import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
+import { jsonFetch, putJsonFetch } from "../../../../services/fetchService"
+import { createThumbnail } from "../../../../services/imageService"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -118,10 +120,11 @@ const Component = props => {
   const dayList = generateDayList()
 
   const [title, setTitle] = useState(obj.title)
-  const [description, setDescription] = useState(obj.description)
-  const [buyNow, setBuyNow] = useState(obj.buyNow)
+  const [description, setDescription] = useState(obj.content)
+  const [buyNow, setBuyNow] = useState(obj.nowPrice)
   const [minPrice, setMinPrice] = useState(obj.minPrice)
-  const [predictPrice, setPredictPrice] = useState(obj.predictPrice)
+  const [predictPrice, setPredictPrice] = useState(obj.hopePrice)
+  const [imgList, setImageList] = useState([])
   const [dayIdx, setDayIdx] = useState(-1)
   const [focusItem, setFocus] = useState(-1)
   const [isAuction, setIsAuction] = useState(true)
@@ -134,11 +137,48 @@ const Component = props => {
     strEmpty(buyNow),
     isAuction && strEmpty(minPrice),
     isAuction && strEmpty(predictPrice),
-    strEmpty(description)
+    strEmpty(description),
+    isArrayEmpty(imgList)
   ]
 
-  const successCallback = () => {
-    next()
+  const successCallback = async () => {
+    const productsHeader = { "x-timeStamp": Date.now() }
+    const imageHeader = Object.assign(productsHeader, { "x-auth": "user" })
+    const imageUrl = "http://localhost:3000/api/downloader"
+    const apiUrl = "http://localhost:3000/api/products"
+
+    const deadLine = new Date()
+    deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
+
+    // 임시 사용자 번호 필히 변경 할것
+    obj.userId = 1
+    obj.title = title
+    obj.contents = description
+    obj.nowPrice = parseInt(buyNow)
+    obj.minPrice = isAuction ? parseInt(minPrice) : undefined
+    obj.hopePrice = isAuction ? parseInt(predictPrice) : undefined
+    obj.timestamp = Date.now()
+    obj.endDate = deadLine
+    obj.isAuction = isAuction
+
+    // obj.thumbnail = await createThumbnail(await fetch(imgList[0]))
+    // obj.thumbnail = await jsonFetch(imageUrl, imageHeader, { uri: obj.thumbnail })
+
+    for (let i = 0; i < imgList.length; i++) {
+      const uri = imgList[i].split(",")[1]
+      const body = { uri }
+      obj.images.push(await jsonFetch(imageUrl, imageHeader, body))
+    }
+
+    obj.thumbnail = obj.images[0]
+
+    const result = await putJsonFetch(apiUrl, productsHeader, obj)
+
+    if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
+    else {
+      obj.productId = result
+      next()
+    }
   }
 
   const failCallback = () => {
@@ -150,20 +190,19 @@ const Component = props => {
       <ContentDiv>
         <TopContentDiv>
           <CarouselDiv>
-            <Carousel />
+            <Carousel list={imgList} handler={setImageList} />
           </CarouselDiv>
           <InputDiv
             onBlur={event => {
               setFocus(-1)
             }}
           >
-            <InputBox
-              font={1.25}
-              placeholder={"상품 제목"}
+            <TitleBox
+              size={1.25}
+              hint={"상품 제목"}
               value={title}
-              onChange={ev => {
-                setTitle(ev.target.value)
-              }}
+              limit={50}
+              onChange={v => setTitle(v)}
             />
             <SelectorDiv>
               <TermSelector
