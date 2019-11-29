@@ -58,8 +58,6 @@ const ProductPage = () => {
         <Section center>
           <AuctionGraph />
         </Section>
-        <Section>상품 상세 정보</Section>
-        <Section>댓글 정보</Section>
       </MainColumn>
       <ChatColumn>
         <ChatBox productId={product.id} user={user}></ChatBox>
