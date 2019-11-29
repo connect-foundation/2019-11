@@ -8,7 +8,8 @@ import {
   Patch,
   Put,
   Delete,
-  OnUndefined
+  OnUndefined,
+  Req
 } from "routing-controllers";
 import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
@@ -33,14 +34,29 @@ export class UserController {
   }
 
   @Post()
-  public create(
+  public async create(
     @BodyParam("id") loginId: string,
     @BodyParam("password") password: string,
     @BodyParam("name") name: string,
-    @BodyParam("email") email: string
+    @BodyParam("email") email: string,
+    @Req() req: any
   ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
-    return this.userService.create(loginId, password, name, email);
+    if (this.userService.checkDuplicate(loginId)) {
+      return false;
+    }
+    const result = await this.userService.create(
+      loginId,
+      password,
+      name,
+      email
+    );
+    console.log(result);
+    const session = req.session;
+    session.username = result.loginId;
+    session.name = result.name;
+    session.id = result.id;
+    return true;
   }
 
   @Put("/:id")
