@@ -36,6 +36,7 @@ createConnection({
   logging: true,
   entities: [__dirname + "/models/*.js"],
   synchronize: process.env.NODE_ENV === "development" ? true : false,
+  charset: "utf8mb4",
   namingStrategy: new CustomNamingStrategy()
 })
   .then()

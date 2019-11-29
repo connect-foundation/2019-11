@@ -12,5 +12,6 @@ module.exports = {
   seeds: ["src/database/seeds/*.ts"],
   factories: ["src/database/factories/*.ts"],
   synchronize: true,
+  charset: "utf8mb4",
   namingStrategy: new CustomNamingStrategy_1.CustomNamingStrategy()
 };

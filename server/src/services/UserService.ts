@@ -38,6 +38,14 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  public checkDuplicate(loginId: string) {
+    const result = this.userRepository.findOne(loginId);
+    if (result === undefined) {
+      return false;
+    }
+    return true;
+  }
+
   /** PUT, PATCH */
   public update(id: number, user: Users) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
@@ -50,8 +58,10 @@ export class UserService {
 
   public async checkLogin(loginId: string, password: string) {
     const user = await this.userRepository.findOne(loginId);
-    if (user === undefined) return false;
+    if (user === undefined) return { msg: false, result: new Users() };
     const result = checkPassword(password, user.password, user.salt);
-    return result === true && user;
+    return result === true
+      ? { msg: true, result: user }
+      : { msg: false, result: new Users() };
   }
 }
