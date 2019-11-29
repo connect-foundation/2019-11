@@ -3,7 +3,7 @@ import React from 'react'
 import Textarea from '../../components/Atoms/TextareaWithLength'
 
 export default ({
-    title: 'Component|TextareaWithLength'
+    title: 'Atoms|TextareaWithLength'
 })
 
 export const itemDescription = () => {

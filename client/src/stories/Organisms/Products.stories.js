@@ -3,8 +3,8 @@ import React from "react";
 import "../../style/App.css";
 import "../../style/index.css";
 
-import AuctionGraph from "../../components/Product/AuctionGraph";
-import ProductInfo from "../../components/Product/ProductInfo";
+import AuctionGraph from "../../components/Organisim/AuctionGraph";
+import ProductInfo from "../../components/Organisim/ProductInfo";
 import ShareCollection from "../../components/Product/ShareCollection";
 
 export default {
