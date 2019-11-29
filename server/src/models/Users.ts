@@ -1,31 +1,31 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
-import { Products } from "./Products"
-import { AuctionLogs } from "./AuctionLogs"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Products } from "./Products";
+import { Bids } from "./Bids";
 
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  loginId: string
+  loginId: string;
 
   @Column()
-  password: string
+  password: string;
 
   @Column()
-  salt: string
+  salt: string;
 
   @Column()
-  name: string
+  name: string;
 
-  @Column()
-  profileImage: string
+  @Column({ nullable: true, default: null })
+  profileUrl: string;
 
-  @Column()
-  mannerPoint: number
+  @Column({ default: 10 })
+  mannerPoint: number;
 
-  @Column()
+  @Column({ default: false })
   isDelete: boolean;
 
   @Column()
@@ -33,13 +33,13 @@ export class Users {
 
   @OneToMany(
     type => Products,
-    Products => Products.id
+    product => product.seller
   )
-  products: Products[]
+  products: Products[];
 
   @OneToMany(
-    type => AuctionLogs,
-    auctionlogs => auctionlogs.id
+    type => Bids,
+    bid => bid.user
   )
-  auctionLogs: AuctionLogs[]
+  bids: Bids[];
 }

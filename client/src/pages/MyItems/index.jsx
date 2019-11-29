@@ -1,10 +1,12 @@
 import React from "react"
 import styled from "styled-components"
 
+import Header from "../../components/Header"
 import TradeBox from "../../components/Molecules/TradeBox"
 import InfiniteScroll from "../../components/InfiniteScroll"
 import Footer from "../../components/Footer"
-import dummy from "../../mock/myitems/myitems"
+
+import { jsonFetch } from "../../services/fetchService"
 
 const Container = styled.div`
   width: 100%;
@@ -24,7 +26,6 @@ const ContentContainer = styled.div`
   margin: 5px auto;
   border-radius: 30px;
   overflow-y: auto;
-  border: #dfdfdf solid 1px;
 `
 
 const ScrollFrame = styled.div`
@@ -37,26 +38,29 @@ const ScrollFrame = styled.div`
   }
 `
 
-const TabContatiner = styled.div`
-  width: 100%;
-  height: 1rem;
-  padding: 5px;
-  margin: 5px 0;
-`
-
 const Page = props => {
-  const fetcher = (delay = 1000) =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(dummy)
-      }, delay)
+  const fetcher = async () => {
+    const url = "http://localhost:3000/api/products/onlySale"
+
+    const [list, count] = await jsonFetch(url, {}, { id: 1 })
+
+    return list.map(value => {
+      return {
+        title: value.title,
+        status: "경매중",
+        thumbnail: value.thumbnailUrl,
+        price: value.immediatePrice,
+        time: new window.Date(value.registerDate)
+      }
     })
+  }
 
   const drawer = item => item.map(value => <TradeBox {...value} />)
 
   return (
     <Container>
       <ContentContainer>
+        <Header text={"경매중인 내 상품"} />
         <ScrollFrame>
           <InfiniteScroll fetcher={fetcher} drawer={drawer} />
         </ScrollFrame>

@@ -1,43 +1,36 @@
-import { Service } from 'typedi';
-import { LogReporsitory } from '../repositories/LogRepository';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { AuctionLogs } from '../models/AuctionLogs';
+import { Service } from "typedi"
+import { LogRepository } from "../repositories/LogRepository"
+import { InjectRepository } from "typeorm-typedi-extensions"
+import { Products } from "../models/Products"
 
 /** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
 export class LogService {
-  constructor(
-    @InjectRepository() private readonly logRepository: LogReporsitory
-  ) {}
+  constructor(@InjectRepository() private readonly LogRepository: LogRepository) {}
 
   /** GET */
   public find() {
-    return this.logRepository.find();
+    return this.LogRepository.find()
   }
 
   public findOne(id: number) {
-    return this.logRepository.findOne(id);
+    return this.LogRepository.findOne(id)
   }
 
-  public findBuyLogs(user_id : number,dayago:number,page:number,limit:number) {
-    return this.logRepository.findBuyLogs(user_id,dayago,page,limit);
+  public findBuyLog(userid: number, dayago: number, page: number, limit: number) {
+    return this.LogRepository.findBuy(userid, dayago, page, limit)
   }
 
-  public findSaleLogs(user_id : number,dayago:number,page:number,limit:number) {
-    return this.logRepository.findSaleLogs(user_id,dayago,page,limit);
+  public findSellLog(userid: number, dayago: number, page: number, limit: number) {
+    return this.LogRepository.findSell(userid, dayago, page, limit)
   }
 
-  public findAllLogs(user_id : number,dayago:number,page:number,limit:number) {
-    return this.logRepository.findAllLogs(user_id,dayago,page,limit);
-  }
-
-  /** POST */
-  public create(auctionLogs: AuctionLogs) {
-    return this.logRepository.save(auctionLogs);
+  public findAllLog(userid: number, dayago: number, page: number, limit: number) {
+    return this.LogRepository.findAll(userid, dayago, page, limit)
   }
 
   /** PUT, PATCH */
-  public update(id: number, auctionLogs: AuctionLogs) {
+  public update(id: number, product: Products) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
   }
 
