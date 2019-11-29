@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ProductInfo from "../components/Product/ProductInfo";
-import ChatBox from "../components/Chat/ChatBox";
-import AuctionGraph from "../components/Product/AuctionGraph";
+import ProductInfo from "../../components/Product/ProductInfo";
+import ChatBox from "../../components/Chat/ChatBox";
+import AuctionGraph from "../../components/Product/AuctionGraph";
 
 const ProductPageStyle = styled.div`
   display: flex;
