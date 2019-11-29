@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import ProductInfo from "../components/Product/ProductInfo";
-import ChatBox from "../components/Chat/ChatBox";
-import AuctionGraph from "../components/Product/AuctionGraph";
+import ProductInfo from "../../components/Product/ProductInfo";
+import ChatBox from "../../components/Chat/ChatBox";
+import AuctionGraph from "../../components/Product/AuctionGraph";
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -58,8 +58,6 @@ const ProductPage = () => {
         <Section center>
           <AuctionGraph />
         </Section>
-        <Section>상품 상세 정보</Section>
-        <Section>댓글 정보</Section>
       </MainColumn>
       <ChatColumn>
         <ChatBox productId={product.id} user={user}></ChatBox>
