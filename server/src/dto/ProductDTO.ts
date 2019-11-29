@@ -8,27 +8,33 @@ export class ProductsDTO {
     contents: string,
     immediatePrice: number,
     hopePrice: number,
-    minAuctionPrice: number,
+    startBidPrice: number,
     registerDate: Date,
-    productDeadline: Date,
+    endDate: Date,
+    thumbnail: string,
     categoryCode: number,
-    isAuction: boolean
+    isAution: boolean
   ) {
     const products = new Products()
 
-    // User Id 설정
-    const user = new Users()
-    user.id = userId
-
+    // NotNull Field
     products.title = title
     products.contents = contents
     products.immediatePrice = immediatePrice
-    products.hopePrice = hopePrice
-    products.startBidPrice = minAuctionPrice
     products.registerDate = registerDate
-    products.auctionDeadline = productDeadline
+    products.auctionDeadline = endDate
+    products.thumbnailUrl = thumbnail
     products.categoryCode = categoryCode
-    products.isAuction = isAuction
+    products.isAuction = isAution
+
+    // Nullable Field
+    products.hopePrice = hopePrice
+    products.startBidPrice = startBidPrice
+
+    // 외래키
+    // 물건을 등록하는 사람은 판매자가 된다.
+    const user = new Users()
+    user.id = userId
     products.seller = user
 
     return products

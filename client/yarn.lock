@@ -10472,6 +10472,11 @@ react-hotkeys@2.0.0-pre4:
   dependencies:
     prop-types "^15.6.1"
 
+react-image-file-resizer@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-image-file-resizer/-/react-image-file-resizer-0.2.1.tgz#ee081bd41798ff960eea1a56b1a86ba317fecf11"
+  integrity sha512-uvhNj2NKMUraVKIrsmPNZgWn34b7fjEcuWAyMXUrVb06gedNtOalOBxVwXYocd4KnZRFv2/ilmAE4KEzIkj4aA==
+
 react-inspector@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-3.0.2.tgz#c530a06101f562475537e47df428e1d7aff16ed8"

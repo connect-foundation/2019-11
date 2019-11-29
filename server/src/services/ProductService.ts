@@ -10,6 +10,11 @@ export class ProductsService {
     @InjectRepository() private readonly imageRepo: ImageRepository
   ) {}
 
+  /** Post */
+  public async getOwnSale(userId: number) {
+    return await this.productRepo.onlyOwnSale(userId)
+  }
+
   /** PUT */
   public async create(
     userId: number,
@@ -21,6 +26,7 @@ export class ProductsService {
     minPrice: number,
     registerDate: Date,
     deadline: Date,
+    thumbnail: string,
     category: number,
     isAuction: boolean
   ) {
@@ -33,6 +39,7 @@ export class ProductsService {
       minPrice,
       registerDate,
       deadline,
+      thumbnail,
       category,
       isAuction
     )
