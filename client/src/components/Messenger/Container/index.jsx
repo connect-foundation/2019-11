@@ -13,7 +13,7 @@ const MessengerDiv = styled.div`
   border-color: var(--color-primary);
   background-color: white;
 
-  z-index: 10000;
+  z-index: 30;
 
   &::after {
     content: "";
