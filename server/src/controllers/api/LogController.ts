@@ -45,10 +45,11 @@ export class LogController {
       return this.logService.findAllLog(userid, dayago, page, limit);
     } else {
       if (isBuy) {
-        return this.logService.findBuyLog(userid, dayago, page, limit);
-      }
-      if (isSale) {
-        return this.logService.findSellLog(userid, dayago, page, limit);
+        return this.logService.findBuyLog(userid, dayago, page, limit)
+      } else if (isSale) {
+        return this.logService.findSellLog(userid, dayago, page, limit)
+      } else {
+        return [[], [0]]
       }
     }
   }
