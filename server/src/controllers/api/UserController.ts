@@ -42,8 +42,8 @@ export class UserController {
     @Req() req: any
   ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
-    if (this.userService.checkDuplicate(loginId)) {
-      return false;
+    if (await this.userService.checkDuplicate(loginId)) {
+      return { msg: false, user: null };
     }
     const result = await this.userService.create(
       loginId,
@@ -51,12 +51,16 @@ export class UserController {
       name,
       email
     );
-    console.log(result);
+    const user = {
+      id: result.id,
+      username: result.loginId,
+      name: result.name,
+      email: result.email
+    };
     const session = req.session;
     session.username = result.loginId;
     session.name = result.name;
-    session.id = result.id;
-    return true;
+    return { msg: true, user };
   }
 
   @Put("/:id")

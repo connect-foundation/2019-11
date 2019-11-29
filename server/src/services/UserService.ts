@@ -38,8 +38,8 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  public checkDuplicate(loginId: string) {
-    const result = this.userRepository.findOne(loginId);
+  public async checkDuplicate(loginId: string) {
+    const result = await this.userRepository.findOne(loginId);
     if (result === undefined) {
       return false;
     }
