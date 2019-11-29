@@ -56,15 +56,17 @@ const SignUpDialog = ({ close, login }) => {
         name,
         email
       })
-    }).then(result => {
-      if (result) {
-        alert("회원가입 완료");
-        login();
-      } else {
-        alert("회원가입에 실패하였습니다.");
-      }
-      close();
-    });
+    })
+      .then(result => result.json())
+      .then(result => {
+        if (result.msg) {
+          alert("회원가입 완료");
+          login();
+        } else {
+          alert("회원가입에 실패하였습니다.");
+        }
+        close();
+      });
     e.preventDefault();
   };
 
