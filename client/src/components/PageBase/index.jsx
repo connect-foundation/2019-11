@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 const Component = styled.div`
-    width: ${props=>props.width}rem;
-    height:100%;
-
-    overflow-y: auto;
+    width: 100%; 
+    
+    box-sizing:border-box;
 `
 
 export default Component

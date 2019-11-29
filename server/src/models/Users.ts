@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Rooms } from './Rooms';
-import { Reservations } from './Reservations';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Products } from "./Products";
+import { Bids } from "./Bids";
 
 @Entity()
 export class Users {
@@ -14,14 +14,32 @@ export class Users {
   password: string;
 
   @Column()
-  name: string;
+  salt: string;
 
   @Column()
-  super: boolean;
+  name: string;
 
-  @OneToMany(type => Rooms, room => room.user)
-  rooms: Rooms[];
+  @Column({ nullable: true, default: null })
+  profileUrl: string;
 
-  @OneToMany(type => Reservations, reservation => reservation.user)
-  reservations: Reservations[];
+  @Column({ default: 10 })
+  mannerPoint: number;
+
+  @Column({ default: false })
+  isDelete: boolean;
+
+  @Column()
+  email: string;
+
+  @OneToMany(
+    type => Products,
+    product => product.seller
+  )
+  products: Products[];
+
+  @OneToMany(
+    type => Bids,
+    bid => bid.user
+  )
+  bids: Bids[];
 }

@@ -5,7 +5,7 @@ import ProgressButton from './ProgressButton'
 
 const Container = styled.div`
     width: 100%;
-    height: 10em;
+    height: 7em;
     display:flex;
     flex-direction:column;
     position: relative;
@@ -34,19 +34,34 @@ const CenterLine = styled.div`
     box-sizing:border-box;
 `
 
-const Components = ( props ) => {
+const renderProgress = (show, component) => {
+    if (!show) return;
+    return component
+}
 
-    const { phase, list } = props
+const Components = (props) => {
 
-    return(
-        <>
-            <Container>
-                <ButtonDiv>
-                    {list.map((value, idx) => <ProgressButton text={value} active={phase===idx}/>)}
-                </ButtonDiv>
-                <CenterLine/>
-            </Container>
-        </>
+    const { phase, maxPhase, list, event } = props
+    let show = phase !== list.length - 1;
+
+    return (
+        <Container>
+            {
+                renderProgress(show, <>
+                    <ButtonDiv>
+                    {
+                        list.map((value, idx) => {
+                            return <ProgressButton disabled={idx > maxPhase} text={value} active={phase === idx} onClick={ev => { 
+                                if (idx <= maxPhase) event(idx);
+                                else alert('작성되지 않은 정보가 있습니다.')
+                            }} />
+                        })
+                    }
+                    </ButtonDiv>
+                    <CenterLine /></>)
+            }
+
+        </Container>
     )
 }
 

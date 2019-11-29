@@ -1,26 +1,46 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
-    display: flex;
-    width: 15em;
-    height: 100%;
-    overflow-y: auto;
-    background: #FFA626;
-    border:none;
-    z-index: 1;
-
-    transform: translateX(${props => props.open ? '0' : '-15em'});
-    transition: all .35s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  width: 15em;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #ffe1a2;
+  box-sizing: border-box;
+  z-index: 1;
 `;
 
+const DetailCategory = styled.div`
+  font-family: "BMJUA";
+  font-size: large;
+  text-align: center;
+  padding: 1em;
+  cursor: pointer;
 
-const Components = (props) => {
-    return (
-        <Container open={props.open}>
-            
-        </Container>
-    )
-}
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: #ec8852;
+  }
 
-export default Components
+  label {
+    cursor: pointer;
+  }
+`;
+
+const Components = ({ idx, open, details }) => {
+  const detailCategoryList = details.details;
+
+  return (
+    <Container idx={idx} open={open}>
+      {detailCategoryList.map(category => (
+        <DetailCategory>
+          <label>{category.title}</label>
+        </DetailCategory>
+      ))}
+    </Container>
+  );
+};
+
+export default Components;

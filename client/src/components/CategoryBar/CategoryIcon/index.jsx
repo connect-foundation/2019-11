@@ -1,26 +1,29 @@
-import React from 'react';
-import styled from 'styled-components'
-import ImgIcon from './ImageIcon'
-import TextIcon from './TextIcon'
+import React from "react";
+import styled from "styled-components";
+import ImgIcon from "./ImageIcon";
+import TextIcon from "./TextIcon";
 
 const Wrapper = styled.li`
-    display: flex;
-    position: relative;
-    width: 100%;
-    padding-top: 100%;
-    margin-bottom: 0.5em;
-    background: ${props => props.color};
-    border-radius: 20%;
-`
+  display: flex;
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  margin-bottom: 0.5em;
+  border-radius: 20%;
+  overflow: hidden;
+`;
 
-const Components = (props) => {
-    
-    return (
-        <Wrapper color={props.color}>
-            <ImgIcon img={props.img}></ImgIcon>
-            <TextIcon color={props.color} active={props.active} onClick={props.onClick}>{props.text}</TextIcon>
-        </Wrapper>
-    );
-}
+const Components = props => {
+  const { color, img, active, onClick, text, idx } = props;
 
-export default Components
+  return (
+    <Wrapper color={color}>
+      <ImgIcon img={img} color={color}></ImgIcon>
+      <TextIcon color={color} active={active} onClick={onClick} data-idx={idx}>
+        {text}
+      </TextIcon>
+    </Wrapper>
+  );
+};
+
+export default Components;

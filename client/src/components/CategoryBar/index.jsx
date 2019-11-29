@@ -1,72 +1,121 @@
-import React, {useState} from 'react'
-import styled from 'styled-components'
-import Logo from './Logo'
-import CategoryIcon from './CategoryIcon'
-import Cloth from '../../assets/cloth.svg'
-import Electronic from '../../assets/television.svg'
-import ExpandList from './ExpandList'
+import React, { useState, useRef, useEffect } from "react";
+import Logo from "./Logo";
+import CategoryIcon from "./CategoryIcon";
+import ExpandList from "./ExpandList";
+import LoginButton from "./LoginButton";
+import Profile from "./Profile";
+import { MainModal } from "../";
 
-const Container = styled.div`
-    display:flex;
-`
+import Cloth from "../../assets/cloth.svg";
+import Electronic from "../../assets/television.svg";
+import LifeStyle from "../../assets/geek.svg";
 
-const OriginWrapper = styled.div`
-    width: 5em;
-    display:flex;
-    flex-direction:column;
-    z-index: 2;
-    background: white;
-    border-right: #FEF2C7 0.2rem solid;
-`
+import detailCategoryList from "../../data/detail-category-list";
 
-const Bar = styled.div`
-    height: 100%;
-    width: 5em;
-    overflow-y: auto;
-    box-sizing: border-box;
-    padding: 0.5em 1em;
-`
-
-const List = styled.ul`
-    list-style: none;
-    padding: 0;
-    margin: 0;
-`
+import {
+  Container,
+  OriginWrapper,
+  ListWrapper,
+  Bar,
+  List,
+  DivisionLine
+} from "./CategoryBarStyle";
 
 const Components = () => {
+  const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [selectIdx, setSelectIdx] = useState(1);
 
-    const [open, setOpen] = useState(false);
+  const node = useRef();
 
-    const handleClick = (event) => setOpen(!open)
-    
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOnBlur);
+  }, []);
 
-    return (
-        <Container>
-            <OriginWrapper>
-            <Logo />
-            <Bar>
-                <List>
-                    <CategoryIcon
-                        color="#FFE1A2"
-                        img={Cloth}
-                        text="의류"
-                        active={open}
-                        onClick={handleClick}
-                    />
-                    <CategoryIcon
-                        color="#BEDDBF"
-                        img={Electronic}
-                        text="가전"
-                        active={open}
-                        onClick={handleClick}
-                    />
-                </List>
-            </Bar>
-            </OriginWrapper>
-            <ExpandList open={open}/>
-        </Container>
-    )
-}
+  const handleClick = e => {
+    const { idx } = e.target.dataset;
+    if (selectIdx === idx || open === false) {
+      setOpen(!open);
+    }
+    setSelectIdx(idx);
+  };
 
-export default Components
+  const handleLoginClick = () => {
+    setLoginOpen(!loginOpen);
+  };
 
+  const handleLoginClose = () => {
+    loginOpen === true && setLoginOpen(!loginOpen);
+  };
+
+  const handleOnBlur = e => {
+    if (!node.current.contains(e.target)) {
+      setOpen(false);
+    }
+  };
+
+  const setLoginStatus = () => {
+    setIsLogin(!isLogin);
+  };
+
+  const handleClickProfile = () => {
+    fetch("http://localhost:3000/api/sign/check").then(result => alert(result));
+  };
+
+  return (
+    <Container ref={node}>
+      <OriginWrapper>
+        <Logo />
+        <Bar>
+          {isLogin === true ? (
+            <Profile onClick={handleClickProfile} logout={setLoginStatus} />
+          ) : (
+            <LoginButton onClick={handleLoginClick} />
+          )}
+          <DivisionLine />
+          <List>
+            <CategoryIcon
+              color="#FFE1A2"
+              img={Cloth}
+              text="의류"
+              active={open}
+              onClick={handleClick}
+              idx={1}
+            />
+            <CategoryIcon
+              color="#BEDDBF"
+              img={Electronic}
+              text="가전"
+              active={open}
+              onClick={handleClick}
+              idx={2}
+            />
+            <CategoryIcon
+              color="#5C5749"
+              img={LifeStyle}
+              text="생활"
+              active={open}
+              onClick={handleClick}
+              idx={3}
+            />
+          </List>
+        </Bar>
+      </OriginWrapper>
+      <ListWrapper open={open}>
+        <ExpandList
+          open={open}
+          idx={selectIdx}
+          details={detailCategoryList[selectIdx - 1]}
+        />
+      </ListWrapper>
+      <MainModal
+        onClose={handleLoginClose}
+        open={loginOpen}
+        login={setLoginStatus}
+      />
+    </Container>
+  );
+};
+
+export default Components;
