@@ -6,8 +6,12 @@ import { Products } from "../models/Products";
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
 
-  public async find() {
-    return this.em.find(Products);
+  public async find(start?: number, limit?: number) {
+    return this.em
+      .createQueryBuilder(Products, "products")
+      .skip(start)
+      .take(limit)
+      .getMany();
   }
 
   public async findOne(productId: number) {

@@ -10,8 +10,8 @@ export class ProductsService {
     @InjectRepository() private readonly imageRepository: ImageRepository
   ) {}
 
-  public async find() {
-    return this.productRepository.find();
+  public async find(start?: number, limit?: number) {
+    return this.productRepository.find(start, limit);
   }
 
   public async findOne(productId: number) {

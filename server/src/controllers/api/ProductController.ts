@@ -4,17 +4,24 @@ import {
   BodyParam,
   Post,
   Get,
-  Param
+  Param,
+  QueryParam
 } from "routing-controllers";
 import { ProductsService } from "../../services/ProductService";
+
+const startDefault = 0;
+const limitDefault = 50;
 
 @JsonController("/products")
 export class ProductController {
   constructor(private readonly productService: ProductsService) {}
 
   @Get()
-  public async find() {
-    return this.productService.find();
+  public async find(
+    @QueryParam("start") start = startDefault,
+    @QueryParam("limit") limit = limitDefault
+  ) {
+    return this.productService.find(Number(start), Number(limit));
   }
 
   @Get("/:id")
