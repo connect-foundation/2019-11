@@ -1,18 +1,26 @@
-import { Service } from "typedi"
-import { InjectRepository } from "typeorm-typedi-extensions"
-import { ProductRepository } from "../repositories/ProductRepository"
-import { ImageRepository } from "../repositories/ImageRepository"
+import { Service } from "typedi";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { ProductRepository } from "../repositories/ProductRepository";
+import { ImageRepository } from "../repositories/ImageRepository";
 
 @Service()
 export class ProductsService {
   constructor(
-    @InjectRepository() private readonly productRepo: ProductRepository,
-    @InjectRepository() private readonly imageRepo: ImageRepository
+    @InjectRepository() private readonly productRepository: ProductRepository,
+    @InjectRepository() private readonly imageRepository: ImageRepository
   ) {}
+
+  public async find() {
+    return this.productRepository.find();
+  }
+
+  public async findOne(productId: number) {
+    return this.productRepository.findOne(productId);
+  }
 
   /** Post */
   public async getOwnSale(userId: number) {
-    return await this.productRepo.onlyOwnSale(userId)
+    return await this.productRepository.onlyOwnSale(userId);
   }
 
   /** PUT */
@@ -30,7 +38,7 @@ export class ProductsService {
     category: number,
     isAuction: boolean
   ) {
-    const product = await this.productRepo.create(
+    const product = await this.productRepository.create(
       userId,
       title,
       contents,
@@ -42,10 +50,10 @@ export class ProductsService {
       thumbnail,
       category,
       isAuction
-    )
+    );
 
-    const image = await this.imageRepo.create(product.id, images)
+    const image = await this.imageRepository.create(product.id, images);
 
-    return product.id
+    return product.id;
   }
 }

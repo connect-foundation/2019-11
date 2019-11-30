@@ -1,10 +1,18 @@
-import { EntityRepository, EntityManager } from "typeorm"
-import { ProductsDTO } from "../dto/ProductDTO"
-import { Products } from "../models/Products"
+import { EntityRepository, EntityManager } from "typeorm";
+import { ProductsDTO } from "../dto/ProductDTO";
+import { Products } from "../models/Products";
 
 @EntityRepository()
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
+
+  public async find() {
+    return this.em.find(Products);
+  }
+
+  public async findOne(productId: number) {
+    return this.em.findOne(Products, productId);
+  }
 
   /*GET*/
   public async onlyOwnSale(userId: number) {
@@ -15,7 +23,7 @@ export class ProductRepository {
         seller: { id: userId },
         buyerId: null
       }
-    })
+    });
   }
   /* PUT */
   public async create(
@@ -31,9 +39,9 @@ export class ProductRepository {
     categoryCode: number,
     isAuction: boolean
   ) {
-    const dto = new ProductsDTO()
+    const dto = new ProductsDTO();
 
-    console.log("Repo" + isAuction)
+    console.log("Repo" + isAuction);
 
     const product = dto.create(
       userId,
@@ -47,8 +55,8 @@ export class ProductRepository {
       thumbnail,
       categoryCode,
       isAuction
-    )
+    );
 
-    return await this.em.save(product)
+    return await this.em.save(product);
   }
 }

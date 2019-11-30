@@ -1,9 +1,26 @@
-import { JsonController, Put, BodyParam, Post } from "routing-controllers"
-import { ProductsService } from "../../services/ProductService"
+import {
+  JsonController,
+  Put,
+  BodyParam,
+  Post,
+  Get,
+  Param
+} from "routing-controllers";
+import { ProductsService } from "../../services/ProductService";
 
 @JsonController("/products")
 export class ProductController {
-  constructor(private readonly service: ProductsService) {}
+  constructor(private readonly productService: ProductsService) {}
+
+  @Get()
+  public async find() {
+    return this.productService.find();
+  }
+
+  @Get("/:id")
+  public async findOne(@Param("id") productId: string) {
+    return this.productService.findOne(Number(productId));
+  }
 
   @Put()
   public async create(
@@ -20,8 +37,8 @@ export class ProductController {
     @BodyParam("categoryCode") categoryCode: number,
     @BodyParam("isAuction") isAuction: boolean
   ) {
-    console.log("Control" + isAuction)
-    const result = await this.service.create(
+    console.log("Control" + isAuction);
+    const result = await this.productService.create(
       userId,
       title,
       contents,
@@ -34,12 +51,12 @@ export class ProductController {
       thumbnail,
       categoryCode,
       isAuction
-    )
-    return result
+    );
+    return result;
   }
 
   @Post("/onlySale")
   public async sale(@BodyParam("id") userId: number) {
-    return await this.service.getOwnSale(userId)
+    return await this.productService.getOwnSale(userId);
   }
 }
