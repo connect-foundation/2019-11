@@ -2,6 +2,7 @@ import styled from "styled-components"
 import React, { useState, useEffect } from "react"
 import RoomElement from "./RoomElement"
 import ChatCotainer from "./ChatCotainer"
+import firebase from "../../../shared/firebase"
 
 const MessengerDiv = styled.div`
   position: fixed;
@@ -48,10 +49,15 @@ function Container(props) {
   function clickRoomList(flag) {
     setIsRoomList(flag)
   }
-
+  const writeChat = e => {
+    e.preventDefault()
+    firebase.writeChat(1, 1, e.target.messengerText.value)
+    e.target.messengerText.value = ""
+  }
   let initMessenger = () => {
     return isRoomList ? (
       <MessengerScroll>
+        <div>{() => firebase.getRoomData(1)}</div>
         <RoomElement
           clickroom={() => {
             setRoomNumber(1)
@@ -80,6 +86,7 @@ function Container(props) {
         }}
         roomNumber={RoomNumber}
         roomUser={RoomUser}
+        writeChat={writeChat}
       ></ChatCotainer>
     )
   }

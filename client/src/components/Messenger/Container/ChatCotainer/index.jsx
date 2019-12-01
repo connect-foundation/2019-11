@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import React from "react"
 import ChatMessage from "./ChatMessage"
+import firebase from "../../../../shared/firebase"
 const MessengerChatScroll = styled.div`
   width: 100%;
   height: 80%;
@@ -53,31 +54,43 @@ const MessengerChatFoot = styled.div`
   width: 19.9rem;
   height: 10%;
 `
+const MessengerChatForm = styled.form`
+  width: 100%;
+  height: 100%;
+`
+const SendData = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+`
 const InputWrap = styled.div`
-  padding: 0.2rem;
-  width: 16rem;
-  height: 2rem;
+  display: flex;
+  flex-grow: 1;
+  width: 13rem;
+  height: 1.8rem;
+  margin: auto 0.2rem auto 0.4rem;
 `
 const ButtonWrap = styled.div`
-  padding: 0.2rem;
-
-  width: 3.6rem;
-  height: 2rem;
+  display: flex;
+  width: 3rem;
+  height: 1.8rem;
+  margin: auto 0.4rem auto 0.2rem;
 `
 const Input = styled.input`
   all: unset;
   text-align: left;
   background-color: white;
 
-  height: 2rem;
-  width: 15.6rem;
+  height: 100%;
+  width: 100%;
+  padding: 0 0.5rem;
   border-radius: 0.5rem;
 `
 const InputButton = styled.button`
   all: unset;
   text-align: center;
-  height: 2rem;
-  width: 3.4rem;
+  height: 100%;
+  width: 100%;
 
   background-color: var(--color-primary);
   color: white;
@@ -112,13 +125,18 @@ function ChatContainer(props) {
           </>
         )}
       </MessengerChatScroll>
+
       <MessengerChatFoot>
-        <InputWrap>
-          <Input type="text" placeholder="메시지를 입력하세요."></Input>
-        </InputWrap>
-        <ButtonWrap>
-          <InputButton>입력</InputButton>
-        </ButtonWrap>
+        <MessengerChatForm onSubmit={props.writeChat}>
+          <SendData>
+            <InputWrap>
+              <Input name="messengerText" type="text" placeholder="메시지를 입력하세요."></Input>
+            </InputWrap>
+            <ButtonWrap>
+              <InputButton>입력</InputButton>
+            </ButtonWrap>
+          </SendData>
+        </MessengerChatForm>
       </MessengerChatFoot>
     </>
   )
