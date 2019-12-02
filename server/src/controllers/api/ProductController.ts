@@ -39,8 +39,8 @@ export class ProductController {
     @BodyParam("nowPrice") nowPrice: number,
     @BodyParam("hopePrice") hopePrice: number,
     @BodyParam("minPrice") minPrice: number,
-    @BodyParam("timestamp") registerDate: Date,
-    @BodyParam("endDate") endDate: Date,
+    @BodyParam("timestamp") registerDate: string,
+    @BodyParam("endDate") endDate: string,
     @BodyParam("categoryCode") categoryCode: number,
     @BodyParam("isAuction") isAuction: boolean
   ) {

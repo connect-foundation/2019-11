@@ -15,7 +15,11 @@ export class ProductRepository {
   }
 
   public async findOne(productId: number) {
-    return this.em.findOne(Products, productId);
+    return this.em
+      .createQueryBuilder(Products, "products")
+      .leftJoinAndSelect("products.images", "images")
+      .where("products.id = :id", { id: productId })
+      .getOne();
   }
 
   /*GET*/
@@ -37,8 +41,8 @@ export class ProductRepository {
     nowPrice: number,
     hopePrice: number,
     minPrice: number,
-    registerDate: Date,
-    endDate: Date,
+    registerDate: string,
+    endDate: string,
     thumbnail: string,
     categoryCode: number,
     isAuction: boolean

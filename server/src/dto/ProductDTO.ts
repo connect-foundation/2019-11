@@ -9,8 +9,8 @@ export class ProductsDTO {
     immediatePrice: number,
     hopePrice: number,
     startBidPrice: number,
-    registerDate: Date,
-    endDate: Date,
+    registerDate: string,
+    endDate: string,
     thumbnail: string,
     categoryCode: number,
     isAution: boolean

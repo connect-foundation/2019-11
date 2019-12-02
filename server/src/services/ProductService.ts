@@ -32,8 +32,8 @@ export class ProductsService {
     nowPrice: number,
     hopePrice: number,
     minPrice: number,
-    registerDate: Date,
-    deadline: Date,
+    registerDate: string,
+    deadline: string,
     thumbnail: string,
     category: number,
     isAuction: boolean
