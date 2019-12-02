@@ -9,7 +9,6 @@ const Container = styled.div`
   width: 20em;
   height: 20em;
   box-sizing: border-box;
-  background-color: #e0e0e0;
   position: relative;
 
   opacity: ${props => (props.dragOn ? 0.6 : 1)};

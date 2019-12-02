@@ -43,7 +43,7 @@ const CarouselDiv = styled.div`
   justify-content: center;
   box-sizing: border-box;
   border-radius: 10px;
-  border: #dfdfdf solid 1px;
+  border: var(--color-gray) solid 1px;
 `
 
 const InputDiv = styled.div`

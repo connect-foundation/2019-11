@@ -28,7 +28,7 @@ const ButtonDiv = styled.div`
 const CenterLine = styled.div`
   width: 100%;
   height: 1.5px;
-  border: #ffaf6e dashed 0.75px;
+  border: var(--color-primary) dashed 0.75px;
   position: absolute;
   line-height: 50%;
   box-sizing: border-box;
