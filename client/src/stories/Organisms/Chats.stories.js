@@ -1,6 +1,6 @@
 import React from "react";
-import ChatSend from "../../components/Chat/ChatSend";
-import Chat from "../../components/Chat/Chat";
+import ChatSend from "../../components/Organisim/Chat/ChatSend";
+import Chat from "../../components/Organisim/Chat/Chat";
 
 export default {
   title: "Organisms|Chats"

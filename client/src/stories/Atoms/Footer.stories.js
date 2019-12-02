@@ -1,13 +1,13 @@
 import React from 'react'
 
-import Footer from '../components/Footer'
+import Footer from '../../components/Atoms/Footer'
 
 export default {
-    title: 'Footer',
+    title: 'Atoms|Footer',
 };
 
 export const footer = () => {
     return (
-        <Footer/>
+        <Footer />
     )
 }

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 
 import styled from "styled-components"
-import KakaoLogo from "../../assets/kakaoShareIcon.svg"
-import FacebookLogo from "../../assets/fbShareIcon.svg"
-import TwitterLogo from "../../assets/twitterShareIcon.svg"
-import URLLogo from "../../assets/urlShareIcon.svg"
+import KakaoLogo from "../../../assets/kakaoShareIcon.svg"
+import FacebookLogo from "../../../assets/fbShareIcon.svg"
+import TwitterLogo from "../../../assets/twitterShareIcon.svg"
+import URLLogo from "../../../assets/urlShareIcon.svg"
 
 const Container = styled.div`
   position: relative;

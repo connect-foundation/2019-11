@@ -3,7 +3,7 @@ import React from 'react'
 import RegisterTermSelector from '../../components/RegisterTermSelector'
 
 export default ({
-    title: 'Component|RegisterTermSelector'
+    title: 'Organisms|RegisterTermSelector'
 })
 
 export const itemDescription = () => {
@@ -11,6 +11,6 @@ export const itemDescription = () => {
     const data = [['Hello', 'Hallo', 'Aloha']]
 
     return (
-        <RegisterTermSelector data={data} selectedIdx={0}/>
+        <RegisterTermSelector data={data} selectedIdx={0} />
     )
 }

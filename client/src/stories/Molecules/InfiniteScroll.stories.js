@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 
 import TradeBox from '../../components/Molecules/TradeBox'
-import InfiniteScroll from '../../components/InfiniteScroll'
+import InfiniteScroll from '../../components/Molecules/InfiniteScroll'
 
 export default {
     title: 'Molecules|InfiniteScroll'
 }
-
 
 const tradeDummy =
     [
@@ -44,11 +43,11 @@ export const infiniteScroll = () => {
         }, delay)
     });
 
-    const drawer = item => item.map(value => <TradeBox {...value} /> )
+    const drawer = item => item.map(value => <TradeBox {...value} />)
 
     return (
         <>
-            <InfiniteScroll fetcher={fakeFetch} drawer={drawer}/>
+            <InfiniteScroll fetcher={fakeFetch} drawer={drawer} />
         </>
     )
 

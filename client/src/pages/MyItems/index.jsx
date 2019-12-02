@@ -1,10 +1,10 @@
 import React from "react"
 import styled from "styled-components"
 
-import Header from "../../components/Header"
+import Header from "../../components/Atoms/Header"
 import TradeBox from "../../components/Molecules/TradeBox"
-import InfiniteScroll from "../../components/InfiniteScroll"
-import Footer from "../../components/Footer"
+import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
+import Footer from "../../components/Atoms/Footer"
 
 import { jsonFetch } from "../../services/fetchService"
 

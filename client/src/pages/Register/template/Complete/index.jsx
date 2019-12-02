@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
-import ShareBox from "../../../../components/ShareBox"
+import ShareBox from "../../../../components/Molecules/ShareBox"
 import { notice, shareConfig } from "../../constants"
 
 const ContentDiv = styled.div`

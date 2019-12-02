@@ -2,10 +2,10 @@ import styled from "styled-components"
 import React, { useState, useEffect } from "react"
 import ButtonSelect from "../../components/TradeList/ButtonSelect"
 import ButtonDays from "../../components/TradeList/ButtonDays"
-import Header from "../../components/Header"
-import Footer from "../../components/Footer"
+import Header from "../../components/Atoms/Header"
+import Footer from "../../components/Atoms/Footer"
 import TradeListBox from "../../components/Molecules/TradeListBox"
-import InfiniteScroll from "../../components/InfiniteScroll"
+import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 const Wraper = styled.div`
   display: flex;
   flex-direction: column;

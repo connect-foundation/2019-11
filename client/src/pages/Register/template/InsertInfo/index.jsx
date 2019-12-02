@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
-import Button from "../../../../components/BoxButton"
+import Button from "../../../../components/Atoms/BoxButton"
 import Carousel from "../../../../components/Molecules/Carousel"
 import TitleBox from "../../../../components/Atoms/InputWithLimit"
 import MoneyBox from "../../../../components/Molecules/MoneyBox"

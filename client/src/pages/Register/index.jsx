@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 
-import Footer from "../../components/Footer"
+import Footer from "../../components/Atoms/Footer"
 import Progress from "../../components/RegisterProgress"
 import SelectCategory from "./template/SelectCategory"
 import InsertInfo from "./template/InsertInfo"

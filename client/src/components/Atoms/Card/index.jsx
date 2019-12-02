@@ -1,5 +1,5 @@
-import React from "react";
-import PriceContainer from "./PriceContainer";
+import React from "react"
+import PriceContainer from "./PriceContainer"
 import {
   CardStyle,
   CardTitle,
@@ -10,25 +10,16 @@ import {
   IsAuctionTag,
   DDayTag,
   ThumbnailStyle
-} from "./CardStyles";
+} from "./CardStyles"
 
-import { getDDay } from "../../utils/stringUtils";
+import { getDDay } from "../../../utils/stringUtils"
 
-import personIcon from "../../assets/person.svg";
+import personIcon from "../../../assets/person.svg"
 
 const Card = ({ item }) => {
-  const {
-    thumbnail,
-    isAuction,
-    date,
-    title,
-    bids,
-    buyNowPrice,
-    topBid,
-    id
-  } = item;
+  const { thumbnail, isAuction, date, title, bids, buyNowPrice, topBid, id } = item
 
-  const link = `/products/${id}`;
+  const link = `/products/${id}`
 
   return (
     <StyledLink to={link}>
@@ -42,8 +33,8 @@ const Card = ({ item }) => {
         </InfoContainer>
       </CardStyle>
     </StyledLink>
-  );
-};
+  )
+}
 
 const Bids = ({ bids }) => {
   return (
@@ -51,26 +42,26 @@ const Bids = ({ bids }) => {
       <img src={personIcon} />
       {bids}
     </BidsStyle>
-  );
-};
+  )
+}
 
 const TagContainer = ({ isAuction, date }) => {
-  const day = getDDay(date);
+  const day = getDDay(date)
 
   return (
     <TagContainerStyle>
       {isAuction === true && <IsAuctionTag>경매중</IsAuctionTag>}
       <DDayTag>D - {day}</DDayTag>
     </TagContainerStyle>
-  );
-};
+  )
+}
 
 const Thumbnail = ({ thumbnail }) => {
   return (
     <ThumbnailStyle>
       <img src={thumbnail} />
     </ThumbnailStyle>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card
