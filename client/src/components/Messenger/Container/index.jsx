@@ -51,13 +51,13 @@ function Container(props) {
   }
 
   let MessengerRoomList = () => {
-    firebase.getRoomList(String(USERID)).then(result => {
-      if (result !== null) {
-        let roomNumbers = Object.keys(result).reduce((acc, ele) => {
+    firebase.getRoomList(String(USERID), function(result) {
+      if (result.val() !== null) {
+        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
           acc.push({
             RoomNumber: ele,
-            RecentMeg: result[ele]["recent"]["text"],
-            opponentUserName: getOpponentUserId(result[ele])
+            RecentMeg: result.val()[ele]["recent"]["text"],
+            opponentUserName: getOpponentUserId(result.val()[ele])
             // opponentUserImg:0,
           })
           return acc

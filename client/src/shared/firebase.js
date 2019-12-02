@@ -2,14 +2,14 @@ import * as firebase from "firebase"
 import "firebase/database"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAHSM3f4Y4c8Kozd0Pg9hiu-5_nfH_vsco",
-  authDomain: "palda-df880.firebaseapp.com",
-  databaseURL: "https://palda-df880.firebaseio.com",
-  projectId: "palda-df880",
-  storageBucket: "palda-df880.appspot.com",
-  messagingSenderId: "394836051912",
-  appId: "1:394836051912:web:40109fba8a83287b47a2fd",
-  measurementId: "G-5QB5V3XCBN"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDERID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
 }
 
 function Firebase() {
@@ -21,38 +21,21 @@ function Firebase() {
   this.database = firebase.database()
 
   /**
-   * 해당 채팅 방의 정보조회
+   * 채팅 방 리스너
    */
-  this.getRoomData = roomnumber => {
-    return this.database.ref("/rooms/" + roomnumber + "/").once("value")
+  this.getRoomChat = (roomnumber, func) => {
+    return this.database.ref("/messages/" + roomnumber + "/").on("value", func)
   }
 
   /**
-   * 해당 채팅 방의 최근 메시지 조회
+   * 유저가 참여한 채팅방 목록 리스너
    */
-  this.getRoomRecentMsg = roomnumber => {
-    return this.database
-      .ref("/messages/" + roomnumber + "/")
-      .orderByChild("time")
-      .limitToLast(1)
-      .once("value")
-      .then(msg => {
-        return msg.val()
-      })
-  }
-
-  /**
-   * 유저가 참여한 채팅방 조회
-   */
-  this.getRoomList = userid => {
+  this.getRoomList = (userid, func) => {
     return this.database
       .ref("/rooms/")
       .orderByChild(userid)
       .equalTo(true)
-      .once("value")
-      .then(list => {
-        return list.val()
-      })
+      .on("value", func)
   } //query: room에서 1:true인것을 찾아라
 
   /**

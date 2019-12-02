@@ -111,7 +111,7 @@ function ChatContainer(props) {
   })
 
   useEffect(() => {
-    firebase.database.ref("/messages/" + props.roomNumber + "/").on("value", function(snapshot) {
+    firebase.getRoomChat(props.roomNumber, function(snapshot) {
       setChat(snapshot.val())
     })
   }, [])
