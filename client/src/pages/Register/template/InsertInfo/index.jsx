@@ -12,8 +12,6 @@ import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
-import { jsonFetch, putJsonFetch } from "../../../../services/fetchService"
-import { createThumbnail } from "../../../../services/imageService"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -116,7 +114,7 @@ const validation = (result, successCallback, failCallback) => {
 }
 
 const Component = props => {
-  const { width, next, obj } = props
+  const { width, next, obj, registItem } = props
   const dayList = generateDayList()
 
   const [title, setTitle] = useState(obj.title)
@@ -142,11 +140,6 @@ const Component = props => {
   ]
 
   const successCallback = async () => {
-    const productsHeader = { "x-timeStamp": Date.now() }
-    const imageHeader = Object.assign(productsHeader, { "x-auth": "user" })
-    const imageUrl = "http://localhost:3000/api/downloader"
-    const apiUrl = "http://localhost:3000/api/products"
-
     const deadLine = new Date()
     deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
 
@@ -157,22 +150,12 @@ const Component = props => {
     obj.nowPrice = parseInt(buyNow)
     obj.minPrice = isAuction ? parseInt(minPrice) : undefined
     obj.hopePrice = isAuction ? parseInt(predictPrice) : undefined
-    obj.timestamp = Date.now()
-    obj.endDate = deadLine
+    obj.endDate = deadLine.toString()
     obj.isAuction = isAuction
 
-    // obj.thumbnail = await createThumbnail(await fetch(imgList[0]))
-    // obj.thumbnail = await jsonFetch(imageUrl, imageHeader, { uri: obj.thumbnail })
+    for (let i = 0; i < imgList.length; i++) obj.images.push(imgList[i].split(",")[1])
 
-    for (let i = 0; i < imgList.length; i++) {
-      const uri = imgList[i].split(",")[1]
-      const body = { uri }
-      obj.images.push(await jsonFetch(imageUrl, imageHeader, body))
-    }
-
-    obj.thumbnail = obj.images[0]
-
-    const result = await putJsonFetch(apiUrl, productsHeader, obj)
+    const result = await registItem(obj)
 
     if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
     else {
