@@ -43,8 +43,11 @@ html {
   --color-quaternary: #5c5749;
 
   --color-success: #5cb85c;
-  --color-wraning: #f0ad4e;
+  --color-success-lighter: #6cbf6c;
+  --color-warning: #f0ad4e;
+  --color-warning-lighter: #f1b55f;
   --color-danger: #d9534f;
+  --color-danger-lighter: #dc6460;
 
   --color-gray-lighter: #f9f9f9;
   --color-gray-lighter-plus: #d0d0d0;
@@ -86,4 +89,28 @@ input {
 
 button {
   cursor: pointer;
+}
+
+.danger {
+  background-color: var(--color-danger-lighter);
+}
+
+.danger:hover {
+  background-color: var(--color-danger);
+}
+
+.warning {
+  background-color: var(--color-warning-lighter);
+}
+
+.warning:hover {
+  background-color: var(--color-warning);
+}
+
+.success {
+  background: var(--color-success-lighter);
+}
+
+.success:hover {
+  background: var(--color-success);
 }
