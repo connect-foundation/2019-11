@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import React from "react"
+import React, { useState, useEffect, useRef } from "react"
 import ChatMessage from "./ChatMessage"
 import firebase from "../../../../shared/firebase"
 const MessengerChatScroll = styled.div`
@@ -101,6 +101,21 @@ const InputButton = styled.button`
   }
 `
 function ChatContainer(props) {
+  const [chat, setChat] = useState({})
+
+  let USERID = 1 //임시 나의 유저 id
+
+  const messengerBodyRef = useRef()
+  useEffect(() => {
+    messengerBodyRef.current.scrollTo(0, messengerBodyRef.current.scrollHeight)
+  })
+
+  useEffect(() => {
+    firebase.database.ref("/messages/" + props.roomNumber + "/").on("value", function(snapshot) {
+      setChat(snapshot.val())
+    })
+  }, [])
+
   return (
     <>
       <MessengerChatHead>
@@ -109,20 +124,19 @@ function ChatContainer(props) {
           <span>{props.roomUser}</span>
         </HostName>
       </MessengerChatHead>
-      <MessengerChatScroll>
-        {props.roomNumber === 1 ? (
-          <>
-            <ChatMessage isSend={false} Text={"경매를 쉽고 재밌게 즐길수 있는 팔다입니다!"} />
-            <ChatMessage isSend={false} Text={"회원가입을 환영합니다!"} />
-          </>
+      <MessengerChatScroll ref={messengerBodyRef}>
+        {chat === null ? (
+          <div>인사를 나눠봐요!</div>
         ) : (
-          <>
-            <ChatMessage isSend={true} Text={"안녕하세요"} />
-            <ChatMessage isSend={false} Text={"안녕하세요"} />
-            <ChatMessage isSend={true} Text={"양파볶음 맛있겠네요"} />
-            <ChatMessage isSend={false} Text={"그지요?"} />
-            <ChatMessage isSend={false} Text={"양파 볶음 1박스 50000원입니다."} />
-          </>
+          Object.keys(chat).map(key => {
+            return (
+              <ChatMessage
+                isSend={chat[key].userid === USERID}
+                Text={chat[key].text}
+                Time={chat[key].time}
+              />
+            )
+          })
         )}
       </MessengerChatScroll>
 
@@ -136,6 +150,7 @@ function ChatContainer(props) {
               <InputButton>입력</InputButton>
             </ButtonWrap>
           </SendData>
+          <input type="hidden" name="roomNumber" value={props.roomNumber}></input>
         </MessengerChatForm>
       </MessengerChatFoot>
     </>

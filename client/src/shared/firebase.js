@@ -19,32 +19,57 @@ function Firebase() {
   }
   firebase.analytics()
   this.database = firebase.database()
-  this.getChatReceive = this.database.ref("messenger/") //데이터 리스너
 
-  this.getRoomData = roomNumber => {
-    return this.database.ref("messeger/" + roomNumber).once("value")
+  /**
+   * 해당 채팅 방의 정보조회
+   */
+  this.getRoomData = roomnumber => {
+    return this.database.ref("/rooms/" + roomnumber + "/").once("value")
   }
 
-  this.getChatReceive.on("value", function(snapshot) {
-    // updateStarCount(postElement, snapshot.val())
-    return snapshot.val()
-  })
-
-  this.getChatAll = roomNumber => {
-    return this.database.ref("messeger/" + roomNumber).on("value", function(text) {
-      return text.val()
-    })
+  /**
+   * 해당 채팅 방의 최근 메시지 조회
+   */
+  this.getRoomRecentMsg = roomnumber => {
+    return this.database
+      .ref("/messages/" + roomnumber + "/")
+      .orderByChild("time")
+      .limitToLast(1)
+      .once("value")
+      .then(msg => {
+        return msg.val()
+      })
   }
 
+  /**
+   * 유저가 참여한 채팅방 조회
+   */
+  this.getRoomList = userid => {
+    return this.database
+      .ref("/rooms/")
+      .orderByChild(userid)
+      .equalTo(true)
+      .once("value")
+      .then(list => {
+        return list.val()
+      })
+  } //query: room에서 1:true인것을 찾아라
+
+  /**
+   * 해당 채팅방에 메시지 입력
+   */
   this.writeChat = (roomNumber, userid, text) => {
-    this.database.ref("messenger/" + roomNumber).push({
+    this.database.ref("/messages/" + roomNumber + "/").push({
       userid: userid,
       text: text,
       time: this.now()
     })
+    this.database.ref("/rooms/" + roomNumber + "/recent/").set({
+      text: text
+    })
   }
   this.now = () => {
-    return new Date().toString()
+    return new Date().getTime()
   }
 }
 
