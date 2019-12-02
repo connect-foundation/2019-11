@@ -61,7 +61,19 @@ const Button = styled.button`
   color: white;
 `
 
-export const Components = ({ title, content, cancelAble }) => {
+export const Components = ({ title, content, cancelAble, onCancel, onAccept, onDismiss }) => {
+  const handleSuccess = e => {
+    if (onAccept !== undefined) onAccept()
+    if (onDismiss === undefined) return
+    onDismiss()
+  }
+
+  const handleCancel = e => {
+    if (onCancel !== undefined) onCancel()
+    if (onDismiss === undefined) return
+    onDismiss()
+  }
+
   return (
     <Container>
       <Content>
@@ -72,8 +84,16 @@ export const Components = ({ title, content, cancelAble }) => {
           <Body>{content}</Body>
         </BodyContainer>
         <ButtonContainer>
-          <Button className={"success"}>확인</Button>
-          {cancelAble ? <Button className={"danger"}>취소</Button> : undefined}
+          <Button className={"success"} onClick={handleSuccess}>
+            확인
+          </Button>
+          {cancelAble ? (
+            <Button className={"danger"} onClick={handleCancel}>
+              취소
+            </Button>
+          ) : (
+            undefined
+          )}
         </ButtonContainer>
       </Content>
     </Container>
