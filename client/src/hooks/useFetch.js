@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-export const useFetch = url => {
-  const [response, setResponse] = React.useState();
-  const [error, setError] = React.useState();
-  const [loading, setLoading] = React.useState();
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "http://honeybee.palda.shop";
+
+const initialFetchState = {
+  response: null,
+  error: null,
+  loading: true
+};
+
+export const useFetch = path => {
+  const [fetchState, setFetchState] = React.useState(initialFetchState);
 
   React.useEffect(() => {
+    let isUnmounted = false;
+
     const fetchData = async () => {
-      setLoading(true);
       try {
-        const res = await axios.get(url);
-        setResponse(res);
-        setLoading(false);
+        const response = await axios.get(`${BASE_URL}${path}`);
+        if (!isUnmounted) {
+          setFetchState(state => ({ ...state, response, loading: false }));
+        }
       } catch (error) {
-        setError(error);
+        if (!isUnmounted) {
+          setFetchState(state => ({ ...state, error }));
+        }
       }
     };
     fetchData();
+
+    return () => (isUnmounted = true);
   }, []);
-  return { response, error, loading };
+
+  return fetchState;
 };
