@@ -7,7 +7,7 @@ import Carousel from "../../../../components/Molecules/Carousel"
 import TitleBox from "../../../../components/Atoms/InputWithLimit"
 import MoneyBox from "../../../../components/Molecules/MoneyBox"
 import ItemDescription from "../../../../components/Atoms/TextareaWithLength"
-import TermSelector from "../../../../components/RegisterTermSelector"
+import TermSelector from "../../../../components/Organisim/RegisterTermSelector"
 import ToggleButton from "../../../../components/Atoms/ToggleButton"
 
 import { termList, itemDescription } from "../../constants"
