@@ -1,10 +1,26 @@
-import { EntityRepository, EntityManager } from "typeorm"
-import { ProductsDTO } from "../dto/ProductDTO"
-import { Products } from "../models/Products"
+import { EntityRepository, EntityManager } from "typeorm";
+import { ProductsDTO } from "../dto/ProductDTO";
+import { Products } from "../models/Products";
 
 @EntityRepository()
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
+
+  public async find(start?: number, limit?: number) {
+    return this.em
+      .createQueryBuilder(Products, "products")
+      .skip(start)
+      .take(limit)
+      .getMany();
+  }
+
+  public async findOne(productId: number) {
+    return this.em
+      .createQueryBuilder(Products, "products")
+      .leftJoinAndSelect("products.images", "images")
+      .where("products.id = :id", { id: productId })
+      .getOne();
+  }
 
   /*GET*/
   public async onlyOwnSale(userId: number) {
@@ -15,7 +31,7 @@ export class ProductRepository {
         seller: { id: userId },
         buyerId: null
       }
-    })
+    });
   }
   /* PUT */
   public async create(
@@ -25,15 +41,15 @@ export class ProductRepository {
     nowPrice: number,
     hopePrice: number,
     minPrice: number,
-    registerDate: Date,
-    endDate: Date,
+    registerDate: string,
+    endDate: string,
     thumbnail: string,
     categoryCode: number,
     isAuction: boolean
   ) {
-    const dto = new ProductsDTO()
+    const dto = new ProductsDTO();
 
-    console.log("Repo" + isAuction)
+    console.log("Repo" + isAuction);
 
     const product = dto.create(
       userId,
@@ -47,8 +63,8 @@ export class ProductRepository {
       thumbnail,
       categoryCode,
       isAuction
-    )
+    );
 
-    return await this.em.save(product)
+    return await this.em.save(product);
   }
 }

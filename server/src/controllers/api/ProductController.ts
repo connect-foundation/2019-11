@@ -1,9 +1,33 @@
-import { JsonController, Put, BodyParam, Post } from "routing-controllers"
-import { ProductsService } from "../../services/ProductService"
+import {
+  JsonController,
+  Put,
+  BodyParam,
+  Post,
+  Get,
+  Param,
+  QueryParam
+} from "routing-controllers";
+import { ProductsService } from "../../services/ProductService";
+
+const startDefault = 0;
+const limitDefault = 50;
 
 @JsonController("/products")
 export class ProductController {
-  constructor(private readonly service: ProductsService) {}
+  constructor(private readonly productService: ProductsService) {}
+
+  @Get()
+  public async find(
+    @QueryParam("start") start = startDefault,
+    @QueryParam("limit") limit = limitDefault
+  ) {
+    return this.productService.find(Number(start), Number(limit));
+  }
+
+  @Get("/:id")
+  public async findOne(@Param("id") productId: string) {
+    return this.productService.findOne(Number(productId));
+  }
 
   @Put()
   public async create(
@@ -15,13 +39,13 @@ export class ProductController {
     @BodyParam("nowPrice") nowPrice: number,
     @BodyParam("hopePrice") hopePrice: number,
     @BodyParam("minPrice") minPrice: number,
-    @BodyParam("timestamp") registerDate: Date,
-    @BodyParam("endDate") endDate: Date,
+    @BodyParam("timestamp") registerDate: string,
+    @BodyParam("endDate") endDate: string,
     @BodyParam("categoryCode") categoryCode: number,
     @BodyParam("isAuction") isAuction: boolean
   ) {
-    console.log("Control" + isAuction)
-    const result = await this.service.create(
+    console.log("Control" + isAuction);
+    const result = await this.productService.create(
       userId,
       title,
       contents,
@@ -34,12 +58,12 @@ export class ProductController {
       thumbnail,
       categoryCode,
       isAuction
-    )
-    return result
+    );
+    return result;
   }
 
   @Post("/onlySale")
   public async sale(@BodyParam("id") userId: number) {
-    return await this.service.getOwnSale(userId)
+    return await this.productService.getOwnSale(userId);
   }
 }
