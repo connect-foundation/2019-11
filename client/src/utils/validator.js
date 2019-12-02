@@ -6,7 +6,7 @@ export const isArrayEmpty = (list) => !list.length
 
 export const strLengthCheck = (str, maxLen) => str.length > maxLen
 
-export const isNumber = (key) => ('0' <= key && key <= '9')
+export const isNumber = (key) => key.replace(/[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/g, '').length
 
 export default {
     strEmpty,
