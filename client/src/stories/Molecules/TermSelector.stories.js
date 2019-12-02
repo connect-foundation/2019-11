@@ -1,6 +1,6 @@
 import React from 'react'
 
-import RegisterTermSelector from '../../components/RegisterTermSelector'
+import RegisterTermSelector from '../../components/Organisim/RegisterTermSelector'
 
 export default ({
     title: 'Organisms|RegisterTermSelector'

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import ProgressButton from '../components/RegisterProgress/ProgressButton'
-import RegisterProgress from '../components/RegisterProgress'
+import ProgressButton from '../components/Organisim/RegisterProgress/Button'
+import RegisterProgress from '../components/Organisim/RegisterProgress'
 
 export default {
     title: 'Progress',
@@ -21,6 +21,6 @@ export const activeButton = () => {
 
 export const registerProgress = () => {
     return (
-        <RegisterProgress/>
+        <RegisterProgress />
     )
 }
