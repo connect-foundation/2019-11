@@ -148,11 +148,9 @@ const chatList = [
 //아니면, contextAPI를 통해서 해당 입찰 정보값을 확인해도 될 듯
 const ChatBox = ({ productId, user }) => {
   const [chats, setChats] = useState(chatList);
-  const [message, setMessage] = useState("");
   const [socketClient, setSocketClient] = useState("");
 
   const chatBodyRef = useRef();
-  const chatSendRef = useRef();
 
   useEffect(() => {
     chatBodyRef.current.scrollTo(0, chatBodyRef.current.scrollHeight);
@@ -177,7 +175,6 @@ const ChatBox = ({ productId, user }) => {
     });
 
     socket.on("message", ({ sessionId, userId, text, createdAt }) => {
-      console.log(`${createdAt}.${userId}`);
       setChats(chats => [
         ...chats,
         {
@@ -191,11 +188,11 @@ const ChatBox = ({ productId, user }) => {
     });
 
     socket.on("joinRoom", message => {
-      console.log(message);
+      // console.log(message);
     });
 
     socket.on("disconnect", reason => {
-      console.log(reason);
+      // console.log(reason);
     });
   }, []);
 
@@ -210,10 +207,6 @@ const ChatBox = ({ productId, user }) => {
     });
 
     e.target.message.value = "";
-  };
-
-  const onChange = e => {
-    // setMessage(e.target.value);
   };
 
   return (
@@ -233,7 +226,7 @@ const ChatBox = ({ productId, user }) => {
         })}
       </ChatBody>
       <ChatFooter>
-        <ChatSend message={message} onSubmit={onSubmit} onChange={onChange} />
+        <ChatSend onSubmit={onSubmit} />
       </ChatFooter>
     </ChatBoxStyle>
   );
