@@ -56,7 +56,7 @@ const Date = styled.span`
   margin: auto 0.5rem;
   text-align: end;
   font-weight: 700;
-  color: #dfdfdf;
+  color: var(--color-gray-lighter-plus);
 `
 
 const Component = ({ title, thumbnail, status, price, time }) => {

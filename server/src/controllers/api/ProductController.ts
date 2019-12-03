@@ -5,12 +5,13 @@ import {
   Post,
   Get,
   Param,
-  QueryParam
-} from "routing-controllers";
-import { ProductsService } from "../../services/ProductService";
+  QueryParam,
+  HeaderParam
+} from "routing-controllers"
+import { ProductsService } from "../../services/ProductService"
 
-const startDefault = 0;
-const limitDefault = 50;
+const startDefault = 0
+const limitDefault = 50
 
 @JsonController("/products")
 export class ProductController {
@@ -21,16 +22,17 @@ export class ProductController {
     @QueryParam("start") start = startDefault,
     @QueryParam("limit") limit = limitDefault
   ) {
-    return this.productService.find(Number(start), Number(limit));
+    return this.productService.find(Number(start), Number(limit))
   }
 
   @Get("/:id")
   public async findOne(@Param("id") productId: string) {
-    return this.productService.findOne(Number(productId));
+    return this.productService.findOne(Number(productId))
   }
 
   @Put()
   public async create(
+    @HeaderParam("x-timestamp") registerDate: string,
     @BodyParam("userId") userId: number,
     @BodyParam("title") title: string,
     @BodyParam("contents") contents: string,
@@ -39,12 +41,10 @@ export class ProductController {
     @BodyParam("nowPrice") nowPrice: number,
     @BodyParam("hopePrice") hopePrice: number,
     @BodyParam("minPrice") minPrice: number,
-    @BodyParam("timestamp") registerDate: string,
     @BodyParam("endDate") endDate: string,
     @BodyParam("categoryCode") categoryCode: number,
     @BodyParam("isAuction") isAuction: boolean
   ) {
-    console.log("Control" + isAuction);
     const result = await this.productService.create(
       userId,
       title,
@@ -58,12 +58,12 @@ export class ProductController {
       thumbnail,
       categoryCode,
       isAuction
-    );
-    return result;
+    )
+    return result
   }
 
   @Post("/onlySale")
   public async sale(@BodyParam("id") userId: number) {
-    return await this.productService.getOwnSale(userId);
+    return await this.productService.getOwnSale(userId)
   }
 }

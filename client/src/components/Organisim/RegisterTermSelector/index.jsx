@@ -17,7 +17,7 @@ const ItemDiv = styled.div`
 `
 
 const TermDescription = styled.span`
-  color: #a0a0a0;
+  color: var(--color-darkgray-lighter);
   font-size: 0.85rem;
 `
 

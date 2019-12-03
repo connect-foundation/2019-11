@@ -12,8 +12,8 @@ const Container = styled.div`
   display: flex;
   width: fit-content;
   height: 80px;
-  border: #cccccc solid 1px;
-  background: #f3f3f3;
+  border: var(--color-gray) solid 1px;
+  background: var(--color-gary-lighter);
   padding: 5px 10px;
   justify-content: space-between;
 `
@@ -59,9 +59,6 @@ const ContainerTitle = styled.span`
   font-size: 14px;
   font-weight: bold;
 `
-export const componentDidMount = () => {
-  console.log("Test")
-}
 
 const handleKakao = (url, object) => {
   //const { id , title, description, image } = object
