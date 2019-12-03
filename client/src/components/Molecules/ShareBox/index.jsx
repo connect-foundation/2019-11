@@ -61,8 +61,6 @@ const ContainerTitle = styled.span`
 `
 
 const handleKakao = (url, object) => {
-  //const { id , title, description, image } = object
-
   window.Kakao.Link.sendDefault({
     objectType: "feed",
     content: {
@@ -91,8 +89,6 @@ const Component = ({ url, object }) => {
 
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&amp;src=sdkpreparse`
   const twitterUrl = `https://twitter.com/intent/tweet?text=지금 경매에 참여하세요%0A${url}`
-
-  const [copy, setCopy] = useState(false)
 
   return (
     <Container>
