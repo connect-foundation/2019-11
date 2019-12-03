@@ -54,6 +54,28 @@ function Firebase() {
   this.now = () => {
     return new Date().getTime()
   }
+
+  /**
+   * 유저 신고
+   */
+  this.writeUserReport = (targetid, text) => {
+    this.database.ref("/report/user/").push({
+      targetid: targetid,
+      text: text,
+      time: this.now()
+    })
+  }
+
+  /**
+   * 제품 신고
+   */
+  this.writeProductReport = (targetid, text) => {
+    this.database.ref("/report/product/").push({
+      targetid: targetid,
+      text: text,
+      time: this.now()
+    })
+  }
 }
 
 export default new Firebase()
