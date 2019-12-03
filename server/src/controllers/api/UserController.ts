@@ -8,11 +8,12 @@ import {
   Patch,
   Put,
   Delete,
-  OnUndefined,
-  Req
+  Req,
+  Res
 } from "routing-controllers";
 import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
+import jwt from "jsonwebtoken";
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -24,8 +25,20 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  public find() {
-    return this.userService.find();
+  public async getUser(@Req() req: any, @Res() res: any) {
+    console.log(req.headers);
+    const accessToken = req.headers["access-token"];
+    const decodedAccessToken = await jwt.verify(
+      accessToken,
+      `${process.env.JWT_KEY}`
+    );
+    console.log(decodedAccessToken);
+    const refreshToken = req.headers["refresh-token"];
+    const decodedRefreshToken = await jwt.verify(
+      accessToken,
+      `${process.env.JWT_KEY}`
+    );
+    return this.userService.findOne((<any>decodedAccessToken).loginId);
   }
 
   @Get("/:id")
@@ -45,29 +58,32 @@ export class UserController {
     if (await this.userService.checkDuplicate(loginId)) {
       return { msg: false, user: null };
     }
+
+    const accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
+      expiresIn: "2h"
+    });
+
+    const refreshToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
+      expiresIn: "3 days"
+    });
+
     const result = await this.userService.create(
       loginId,
       password,
       name,
-      email
+      email,
+      accessToken,
+      refreshToken
     );
-    const user = {
-      id: result.id,
-      username: result.loginId,
-      name: result.name,
-      email: result.email
-    };
-    const session = req.session;
-    session.username = result.loginId;
-    session.name = result.name;
-    return { msg: true, user };
+
+    return { msg: true, result };
   }
 
   @Put("/:id")
   @Patch("/:id")
   public update(@Param("id") id: string, @Body() user: Users) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
-    return this.userService.update(parseInt(id), user);
+    // return this.userService.update(parseInt(id), user);
   }
 
   @Delete("/:id")

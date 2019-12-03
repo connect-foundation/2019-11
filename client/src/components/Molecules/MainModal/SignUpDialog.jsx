@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { DialogStyle, Input, SubmitButton } from "./LoginDialogStyles";
+import UserContext from "../../../context/UserContext";
 
 const InputContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const SignUpDialog = ({ close, login }) => {
   const [checkPwd, setCheckPwd] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const userInfo = useContext(UserContext);
 
   const handleIdKeyUp = e => {
     setId(e.target.value);
@@ -59,7 +61,14 @@ const SignUpDialog = ({ close, login }) => {
     })
       .then(result => result.json())
       .then(result => {
-        if (result.msg) {
+        const { msg, user } = result;
+        if (msg) {
+          userInfo.id = user.id;
+          userInfo.username = user.loginId;
+          userInfo.name = user.name;
+          userInfo.email = user.email;
+          localStorage.setItem("access-token", user.accessToken);
+          localStorage.setItem("refresh-token", user.refreshToken);
           alert("회원가입 완료");
           login();
         } else {

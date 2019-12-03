@@ -31,6 +31,12 @@ export class Users {
   @Column()
   email: string;
 
+  @Column()
+  accessToken: string;
+
+  @Column()
+  refreshToken: string;
+
   @OneToMany(
     type => Products,
     product => product.seller

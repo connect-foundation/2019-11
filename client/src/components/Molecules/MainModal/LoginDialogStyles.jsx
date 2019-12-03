@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import KakaoLogin from "react-kakao-login";
 
 const BUTTON_MARGIN = "0.5em";
 
@@ -52,6 +53,16 @@ const OAuthLoginButton = styled.button`
   border-radius: 3px;
 `;
 
+const KakaoButton = styled(KakaoLogin)`
+  width: 80%;
+  background: yellow;
+  margin-bottom: ${BUTTON_MARGIN};
+  font-family: "BMJUA";
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
+  padding: 1em;
+  border-radius: 3px;
+`;
+
 const SignUpButton = styled.button`
   width: 80%;
   color: white;
@@ -71,5 +82,6 @@ export {
   DivisionLine,
   Footer,
   OAuthLoginButton,
-  SignUpButton
+  SignUpButton,
+  KakaoButton
 };
