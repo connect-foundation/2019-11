@@ -25,7 +25,9 @@ export class UserService {
     loginId: string,
     password: string,
     name: string,
-    email: string
+    email: string,
+    accessToken: string,
+    refreshToken: string
   ) {
     const user = new Users();
     const { salt, result } = encryptPassword(password);
@@ -34,6 +36,8 @@ export class UserService {
     user.password = result;
     user.name = name;
     user.email = email;
+    user.accessToken = accessToken;
+    user.refreshToken = refreshToken;
 
     return this.userRepository.save(user);
   }
@@ -47,8 +51,20 @@ export class UserService {
   }
 
   /** PUT, PATCH */
-  public update(id: number, user: Users) {
+  public async updateToken(
+    loginId: string,
+    accessToken: string,
+    refreshToken: string
+  ) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
+    const user = await this.userRepository.findOne(loginId);
+    if (user === undefined) {
+      return false;
+    } else {
+      user.accessToken = accessToken;
+      user.refreshToken = refreshToken;
+      return this.userRepository.save(user);
+    }
   }
 
   /** DELETE */
@@ -60,8 +76,6 @@ export class UserService {
     const user = await this.userRepository.findOne(loginId);
     if (user === undefined) return { msg: false, result: new Users() };
     const result = checkPassword(password, user.password, user.salt);
-    return result === true
-      ? { msg: true, result: user }
-      : { msg: false, result: new Users() };
+    return result === true ? { msg: true } : { msg: false };
   }
 }
