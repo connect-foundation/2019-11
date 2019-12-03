@@ -6,7 +6,7 @@ import { Products } from "../models/Products";
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
 
-  public async find(start?: number, limit?: number) {
+  public find(start?: number, limit?: number) {
     return this.em
       .createQueryBuilder(Products, "products")
       .skip(start)
@@ -14,13 +14,17 @@ export class ProductRepository {
       .getMany();
   }
 
-  public async findOne(productId: number) {
+  public findOne(productId: number) {
     return this.em
       .createQueryBuilder(Products, "products")
       .innerJoinAndSelect("products.seller", "user")
       .innerJoinAndSelect("products.images", "images")
       .where("products.id = :id", { id: productId })
       .getOne();
+  }
+
+  public update(product: Products) {
+    return this.em.save(product);
   }
 
   /*GET*/
