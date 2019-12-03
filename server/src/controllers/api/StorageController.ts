@@ -32,7 +32,7 @@ export class StoreageController {
   @Post()
   public async upload(
     @HeaderParam("x-auth") uid: string,
-    @HeaderParam("x-timestamp") timestamp: number,
+    @HeaderParam("x-timestamp") timestamp: string,
     @BodyParam("uri") data: string
   ) {
     if (uid === undefined || timestamp === undefined) return new ForbiddenError()

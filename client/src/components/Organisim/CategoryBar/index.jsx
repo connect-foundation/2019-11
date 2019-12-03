@@ -20,7 +20,6 @@ import {
   List,
   DivisionLine
 } from "./CategoryBarStyle";
-
 import userContext from "../../../context/UserContext";
 
 const Components = () => {
@@ -28,7 +27,6 @@ const Components = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [selectIdx, setSelectIdx] = useState(1);
-
   const userInfo = useContext(userContext);
 
   const node = useRef();

@@ -35,7 +35,7 @@ const Components = ({ idx, open, details }) => {
   return (
     <Container idx={idx} open={open}>
       {detailCategoryList.map(category => (
-        <DetailCategory>
+        <DetailCategory key={category.title}>
           <label>{category.title}</label>
         </DetailCategory>
       ))}

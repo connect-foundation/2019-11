@@ -5,6 +5,8 @@
   "dependencies": {
     "@material-ui/core": "^4.6.0",
     "@material-ui/icons": "^4.5.1",
+    "axios": "^0.19.0",
+    "firebase": "^7.5.0",
     "react": "^16.11.0",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.11.0",
@@ -12,12 +14,13 @@
     "react-kakao-login": "^1.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-spinners": "^0.6.1",
     "recharts": "^1.8.5",
     "socket.io-client": "^2.3.0",
     "styled-components": "^4.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "firebase deploy && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

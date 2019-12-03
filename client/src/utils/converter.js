@@ -28,4 +28,19 @@ export const dateDiff2Str = (date) => {
     return "방금 전"
 }
 
-export default { dateDiff2Str }
+export const base642Blob = (base64) => {
+    const byteString = window.atob(base64);
+
+    // write the bytes of the string to an ArrayBuffer
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++)
+        ia[i] = byteString.charCodeAt(i);
+
+
+    // write the ArrayBuffer to a blob, and you're done
+    const bb = new Blob([ab]);
+    return bb;
+}
+
+export default { dateDiff2Str, base642Blob }

@@ -2,6 +2,7 @@ import styled from "styled-components"
 import React, { useState, useEffect } from "react"
 import RoomElement from "./RoomElement"
 import ChatCotainer from "./ChatCotainer"
+import firebase from "../../../shared/firebase"
 
 const MessengerDiv = styled.div`
   position: fixed;
@@ -34,44 +35,57 @@ const MessengerScroll = styled.div`
 `
 function Container(props) {
   const [RoomList, setRoomList] = useState([])
-  const [ChatHistory, setChatHistory] = useState([])
   const [isRoomList, setIsRoomList] = useState(true)
   const [RoomNumber, setRoomNumber] = useState(0)
   const [RoomUser, setRoomUser] = useState(0)
 
-  function initRoomList() {
-    setRoomList([])
-  }
-  function initChat() {
-    setChatHistory([])
-  }
+  let USERID = 1 //임시 나의 유저 id
+
   function clickRoomList(flag) {
     setIsRoomList(flag)
   }
+  const writeChat = e => {
+    e.preventDefault()
+    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
+    e.target.messengerText.value = ""
+  }
 
+  let MessengerRoomList = () => {
+    firebase.getRoomList(String(USERID), function(result) {
+      if (result.val() !== null) {
+        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+          acc.push({
+            RoomNumber: ele,
+            RecentMeg: result.val()[ele]["recent"]["text"],
+            opponentUserName: getOpponentUserId(result.val()[ele])
+            // opponentUserImg:0,
+          })
+          return acc
+        }, [])
+        setRoomList(roomNumbers)
+      }
+    })
+  }
+  function getOpponentUserId(object) {
+    return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent")
+  }
   let initMessenger = () => {
     return isRoomList ? (
       <MessengerScroll>
-        <RoomElement
-          clickroom={() => {
-            setRoomNumber(1)
-            setRoomUser("관리자")
-            clickRoomList(false)
-          }}
-          Img={"A"}
-          Name={"관리자"}
-          RecentMsg={"회원가입을 환영합니다!"}
-        />
-        <RoomElement
-          clickroom={() => {
-            setRoomNumber(2)
-            setRoomUser("백종원")
-            clickRoomList(false)
-          }}
-          Img={"B"}
-          Name={"백종원"}
-          RecentMsg={"양파 볶음 1박스 50000원입니다."}
-        />
+        {RoomList.map(value => {
+          return (
+            <RoomElement
+              clickroom={() => {
+                setRoomNumber(value.RoomNumber)
+                setRoomUser(value.opponentUserName)
+                clickRoomList(false)
+              }}
+              Img={"A"}
+              Name={value.opponentUserName}
+              RecentMsg={value.RecentMeg}
+            />
+          )
+        })}
       </MessengerScroll>
     ) : (
       <ChatCotainer
@@ -80,12 +94,13 @@ function Container(props) {
         }}
         roomNumber={RoomNumber}
         roomUser={RoomUser}
+        writeChat={writeChat}
       ></ChatCotainer>
     )
   }
 
   useEffect(() => {
-    initMessenger()
+    MessengerRoomList()
   }, [isRoomList])
 
   return <MessengerDiv>{initMessenger()}</MessengerDiv>

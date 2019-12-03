@@ -1,6 +1,7 @@
 import styled from "styled-components"
-import React from "react"
+import React, { useState, useEffect, useRef } from "react"
 import ChatMessage from "./ChatMessage"
+import firebase from "../../../../shared/firebase"
 const MessengerChatScroll = styled.div`
   width: 100%;
   height: 80%;
@@ -53,31 +54,43 @@ const MessengerChatFoot = styled.div`
   width: 19.9rem;
   height: 10%;
 `
+const MessengerChatForm = styled.form`
+  width: 100%;
+  height: 100%;
+`
+const SendData = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+`
 const InputWrap = styled.div`
-  padding: 0.2rem;
-  width: 16rem;
-  height: 2rem;
+  display: flex;
+  flex-grow: 1;
+  width: 13rem;
+  height: 1.8rem;
+  margin: auto 0.2rem auto 0.4rem;
 `
 const ButtonWrap = styled.div`
-  padding: 0.2rem;
-
-  width: 3.6rem;
-  height: 2rem;
+  display: flex;
+  width: 3rem;
+  height: 1.8rem;
+  margin: auto 0.4rem auto 0.2rem;
 `
 const Input = styled.input`
   all: unset;
   text-align: left;
   background-color: white;
 
-  height: 2rem;
-  width: 15.6rem;
+  height: 100%;
+  width: 100%;
+  padding: 0 0.5rem;
   border-radius: 0.5rem;
 `
 const InputButton = styled.button`
   all: unset;
   text-align: center;
-  height: 2rem;
-  width: 3.4rem;
+  height: 100%;
+  width: 100%;
 
   background-color: var(--color-primary);
   color: white;
@@ -88,6 +101,21 @@ const InputButton = styled.button`
   }
 `
 function ChatContainer(props) {
+  const [chat, setChat] = useState({})
+
+  let USERID = 1 //임시 나의 유저 id
+
+  const messengerBodyRef = useRef()
+  useEffect(() => {
+    messengerBodyRef.current.scrollTo(0, messengerBodyRef.current.scrollHeight)
+  })
+
+  useEffect(() => {
+    firebase.getRoomChat(props.roomNumber, function(snapshot) {
+      setChat(snapshot.val())
+    })
+  }, [])
+
   return (
     <>
       <MessengerChatHead>
@@ -96,29 +124,34 @@ function ChatContainer(props) {
           <span>{props.roomUser}</span>
         </HostName>
       </MessengerChatHead>
-      <MessengerChatScroll>
-        {props.roomNumber === 1 ? (
-          <>
-            <ChatMessage isSend={false} Text={"경매를 쉽고 재밌게 즐길수 있는 팔다입니다!"} />
-            <ChatMessage isSend={false} Text={"회원가입을 환영합니다!"} />
-          </>
+      <MessengerChatScroll ref={messengerBodyRef}>
+        {chat === null ? (
+          <div>인사를 나눠봐요!</div>
         ) : (
-          <>
-            <ChatMessage isSend={true} Text={"안녕하세요"} />
-            <ChatMessage isSend={false} Text={"안녕하세요"} />
-            <ChatMessage isSend={true} Text={"양파볶음 맛있겠네요"} />
-            <ChatMessage isSend={false} Text={"그지요?"} />
-            <ChatMessage isSend={false} Text={"양파 볶음 1박스 50000원입니다."} />
-          </>
+          Object.keys(chat).map(key => {
+            return (
+              <ChatMessage
+                isSend={chat[key].userid === USERID}
+                Text={chat[key].text}
+                Time={chat[key].time}
+              />
+            )
+          })
         )}
       </MessengerChatScroll>
+
       <MessengerChatFoot>
-        <InputWrap>
-          <Input type="text" placeholder="메시지를 입력하세요."></Input>
-        </InputWrap>
-        <ButtonWrap>
-          <InputButton>입력</InputButton>
-        </ButtonWrap>
+        <MessengerChatForm onSubmit={props.writeChat}>
+          <SendData>
+            <InputWrap>
+              <Input name="messengerText" type="text" placeholder="메시지를 입력하세요."></Input>
+            </InputWrap>
+            <ButtonWrap>
+              <InputButton>입력</InputButton>
+            </ButtonWrap>
+          </SendData>
+          <input type="hidden" name="roomNumber" value={props.roomNumber}></input>
+        </MessengerChatForm>
       </MessengerChatFoot>
     </>
   )
