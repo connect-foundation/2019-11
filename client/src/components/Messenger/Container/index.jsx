@@ -5,25 +5,28 @@ import ChatCotainer from "./ChatCotainer"
 import firebase from "../../../shared/firebase"
 
 const MessengerDiv = styled.div`
-  position: fixed;
-  bottom: 7rem;
-  right: 1rem;
-  width: 20rem;
-  height: 25rem;
+  position: absolute;
+  left: 6rem;
+  bottom: 1rem;
+  width: ${props => (props.show ? "20" : 0)}rem;
+  height: ${props => (props.show ? "25" : 0)}rem;
   border: solid 0.1rem;
-  border-color: var(--color-primary);
+  border-color: ${props => (props.show ? "var(--color-primary)" : "white")};
   background-color: white;
 
   z-index: 30;
 
+  transition: all 0.3s ease-in-out;
+
   &::after {
     content: "";
     position: absolute;
-    border-top: 1rem solid var(--color-primary);
-    border-right: 0.5rem solid transparent;
-    border-left: 0.5rem solid transparent;
-    bottom: -1rem;
-    right: 1.5rem;
+    border-right: 1rem solid var(--color-primary);
+    border-top: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid transparent;
+    border: ${props => (props.show ? "" : 0)}rem;
+    bottom: 1rem;
+    left: -1rem;
   }
 `
 
@@ -103,7 +106,7 @@ function Container(props) {
     MessengerRoomList()
   }, [isRoomList])
 
-  return <MessengerDiv>{initMessenger()}</MessengerDiv>
+  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>
 }
 
 export default Container
