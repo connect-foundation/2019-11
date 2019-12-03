@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ProductInfo from "../../components/Organisim/ProductInfo";
 import ChatBox from "../../components/Organisim/Chat/ChatBox";
 import AuctionGraph from "../../components/Organisim/AuctionGraph";
+import Spinner from "../../components/Atoms/Spinner";
 import { useFetch } from "../../hooks/useFetch";
 
 const ProductPageStyle = styled.div`
@@ -43,39 +44,29 @@ const Loading = styled.div`
   border: 1px solid red;
 `;
 
-const product = {
-  id: "12",
-  src:
-    "https://d1rkccsb0jf1bk.cloudfront.net/products/99993547/main/medium/gb05021_04-1454001319-8684.jpg",
-  title: "애플 스마트 워치 3세대",
-  seller: "최성찬",
-  due: "1일 6시간 27분",
-  price: "45,000"
-};
-
 const user = {
   id: "chsch1028",
   src: "https://i.pravatar.cc/150?img=4"
 };
 
 const ProductPage = ({ match }) => {
-  const fetchState = useFetch(`/api/products/${match.params.id}`);
+  const productId = match.params.id;
+  const fetchState = useFetch(`/api/products/${productId}`);
 
-  return <Loading>데이터를 페치하는 처리중입니다.</Loading>;
   return fetchState.loading ? (
-    <Loading>데이터를 페치하는 처리중입니다.</Loading>
+    <Spinner />
   ) : (
     <ProductPageStyle>
       <MainColumn>
         <Section>
-          <ProductInfo product={product} />
+          <ProductInfo product={fetchState.response.data} />
         </Section>
         <Section center>
           <AuctionGraph />
         </Section>
       </MainColumn>
       <ChatColumn>
-        <ChatBox productId={product.id} user={user}></ChatBox>
+        <ChatBox productId={productId} user={user}></ChatBox>
       </ChatColumn>
     </ProductPageStyle>
   );
