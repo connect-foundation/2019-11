@@ -1,10 +1,9 @@
+import { Users } from "./../models/Users";
+import { Products } from "./../models/Products";
+import { Bids } from "./../models/Bids";
 import { BidRepository } from "./../repositories/BidRepository";
-import { BidResponseDTO } from "./../dto/BidResponseDTO";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { ProductResponseDTO } from "../dto/ProductResponseDTO";
-import { UserResponseDTO } from "../dto/UserResponseDTO";
-import { ImageResponseDTO } from "../dto/ImageResponseDTO";
 
 @Service()
 export class BidsService {
@@ -22,5 +21,26 @@ export class BidsService {
 
   public async findByProductId(productId: number) {
     return this.bidRepository.findByProductId(productId);
+  }
+
+  public async create(
+    bidDate: string,
+    bidPrice: number,
+    productId: number,
+    userId: number
+  ) {
+    const bid = new Bids();
+    bid.bidDate = bidDate;
+    bid.bidPrice = bidPrice;
+
+    const product = new Products();
+    product.id = productId;
+    bid.product = product;
+
+    const user = new Users();
+    user.id = userId;
+    bid.user = user;
+
+    return this.bidRepository.create(bid);
   }
 }
