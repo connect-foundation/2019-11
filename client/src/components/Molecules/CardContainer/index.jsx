@@ -1,19 +1,19 @@
-import React, { Component } from "react"
-import styled from "styled-components"
-import Card from "../../Atoms/Card"
+import React, { Component } from "react";
+import styled from "styled-components";
+import Card from "../../Atoms/Card";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 8rem;
-`
+`;
 
 const Title = styled.label`
   display: flex;
   font-size: xx-large;
   justify-content: flex-start;
-`
+`;
 
 const CardContainerStyle = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ const CardContainerStyle = styled.div`
   width: 100%;
   height: 17rem;
   margin-bottom: 2rem;
-`
+`;
 
 const CardContainer = ({ title, items }) => {
   return (
@@ -29,11 +29,11 @@ const CardContainer = ({ title, items }) => {
       <Title>{title}</Title>
       <CardContainerStyle>
         {items.map(item => (
-          <Card item={item} />
+          <Card key={item.id} item={item} />
         ))}
       </CardContainerStyle>
     </Container>
-  )
-}
+  );
+};
 
-export default CardContainer
+export default CardContainer;

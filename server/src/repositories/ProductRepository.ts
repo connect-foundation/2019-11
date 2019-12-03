@@ -17,7 +17,8 @@ export class ProductRepository {
   public async findOne(productId: number) {
     return this.em
       .createQueryBuilder(Products, "products")
-      .leftJoinAndSelect("products.images", "images")
+      .innerJoinAndSelect("products.seller", "user")
+      .innerJoinAndSelect("products.images", "images")
       .where("products.id = :id", { id: productId })
       .getOne();
   }

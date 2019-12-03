@@ -1,8 +1,10 @@
-import React from "react"
-import styled from "styled-components"
-import ProductInfo from "../../components/Organisim/ProductInfo"
-import ChatBox from "../../components/Organisim/Chat/ChatBox"
-import AuctionGraph from "../../components/Organisim/AuctionGraph"
+import React from "react";
+import styled from "styled-components";
+import ProductInfo from "../../components/Organisim/ProductInfo";
+import ChatBox from "../../components/Organisim/Chat/ChatBox";
+import AuctionGraph from "../../components/Organisim/AuctionGraph";
+import Spinner from "../../components/Atoms/Spinner";
+import { useFetch } from "../../hooks/useFetch";
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -10,60 +12,64 @@ const ProductPageStyle = styled.div`
   width: 100%;
   max-width: 1440px;
   padding: var(--padding-md);
-`
+`;
 
 const MainColumn = styled.div`
   flex: 1;
   overflow-x: auto;
   overflow-x: hidden;
-`
+`;
 
 const TextStyle = styled.p`
   font-size: ${props => props.size};
-`
+`;
 
 const Section = styled.section`
   min-height: 400px;
   margin-bottom: var(--margin-xl);
   display: flex;
   ${props => (props.center ? "justify-content: center" : undefined)}
-`
+`;
 
 const ChatColumn = styled.div`
   width: 400px;
-`
+`;
 
-const product = {
-  id: "12",
-  src:
-    "https://d1rkccsb0jf1bk.cloudfront.net/products/99993547/main/medium/gb05021_04-1454001319-8684.jpg",
-  title: "애플 스마트 워치 3세대",
-  seller: "최성찬",
-  due: "1일 6시간 27분",
-  price: "45,000"
-}
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid red;
+`;
 
 const user = {
   id: "chsch1028",
   src: "https://i.pravatar.cc/150?img=4"
-}
+};
 
-const ProductPage = () => {
-  return (
+const ProductPage = ({ match }) => {
+  const productId = match.params.id;
+  const fetchState = useFetch(`/api/products/${productId}`);
+
+  return fetchState.loading ? (
+    <Spinner />
+  ) : (
     <ProductPageStyle>
       <MainColumn>
         <Section>
-          <ProductInfo product={product} />
+          <ProductInfo product={fetchState.response.data} />
         </Section>
         <Section center>
           <AuctionGraph />
         </Section>
       </MainColumn>
       <ChatColumn>
-        <ChatBox productId={product.id} user={user}></ChatBox>
+        <ChatBox productId={productId} user={user}></ChatBox>
       </ChatColumn>
     </ProductPageStyle>
-  )
-}
+  );
+};
 
-export default ProductPage
+export default ProductPage;
