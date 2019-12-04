@@ -1,3 +1,5 @@
+import { Users } from "./../models/Users";
+import { Products } from "./../models/Products";
 import { BidRepository } from "./../repositories/BidRepository";
 import { BidResponseDTO } from "./../dto/BidResponseDTO";
 import { Service } from "typedi";
@@ -79,6 +81,21 @@ export class ProductsService {
   /** Post */
   public async getOwnSale(userId: number) {
     return await this.productRepository.onlyOwnSale(userId);
+  }
+
+  public update(
+    productId: number,
+    soldPrice: number,
+    soldDate: string,
+    buyerId: number
+  ) {
+    const product = new Products();
+    product.id = productId;
+    product.soldPrice = soldPrice;
+    product.soldDate = soldDate;
+    product.buyerId = buyerId;
+
+    return this.productRepository.update(product);
   }
 
   /** PUT */
