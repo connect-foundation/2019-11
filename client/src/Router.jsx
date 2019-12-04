@@ -1,13 +1,12 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React from "react"
+import { Switch, Route } from "react-router-dom"
 
-import Main from "./pages/Main";
-import TradeList from "./pages/TradeList";
-import CategoryBar from "./components/Organisim/CategoryBar";
-import Register from "./pages/Register";
-import Messenger from "./components/Messenger";
-import ProductPage from "./pages/Product/index";
-import MyItem from "./pages/MyItems";
+import Main from "./pages/Main"
+import TradeList from "./pages/TradeList"
+import CategoryBar from "./components/Organisim/CategoryBar"
+import Register from "./pages/Register"
+import ProductPage from "./pages/Product/index"
+import MyItem from "./pages/MyItems"
 
 const Router = () => {
   return (
@@ -21,9 +20,8 @@ const Router = () => {
         <Route path="/products/:id" component={ProductPage}></Route>
         <Route path="/myItems" component={MyItem}></Route>
       </Switch>
-      <Messenger />
     </>
-  );
-};
+  )
+}
 
-export default Router;
+export default Router

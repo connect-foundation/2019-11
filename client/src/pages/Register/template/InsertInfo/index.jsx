@@ -126,8 +126,16 @@ const Component = props => {
   const [dayIdx, setDayIdx] = useState(-1)
   const [focusItem, setFocus] = useState(-1)
   const [isAuction, setIsAuction] = useState(true)
+  const [onRegister, setOnRegister] = useState(false)
 
   const handleAuction = ev => setIsAuction(!isAuction)
+
+  const handleRgister = ev => {
+    if (onRegister) alert("등록 중입니다. 잠시 기다려주세요")
+    setOnRegister(true)
+
+    validation(valiResult, successCallback, failCallback)
+  }
 
   const valiResult = [
     strEmpty(title),
@@ -242,10 +250,7 @@ const Component = props => {
           maxLen={500}
         />
         <ButtonContainer>
-          <Button
-            onClick={ev => validation(valiResult, successCallback, failCallback)}
-            text={"등록"}
-          />
+          <Button onClick={handleRgister} text={"등록"} />
         </ButtonContainer>
       </ContentDiv>
     </PageBase>
