@@ -5,7 +5,6 @@ import { Users } from "../models/Users";
 import { encryptPassword, checkPassword } from "../util/passwordUtils";
 import { UserDTO } from "../dto/UserDTO";
 
-/** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
 export class UserService {
   constructor(
@@ -19,6 +18,23 @@ export class UserService {
 
   public async findOne(loginId: string) {
     const result = await this.userRepository.findOne(loginId);
+    if (result !== undefined) {
+      const userResponse = new UserDTO();
+      userResponse.id = result.id;
+      userResponse.loginId = result.loginId;
+      userResponse.name = result.name;
+      userResponse.email = result.email;
+      userResponse.mannerPoint = result.mannerPoint;
+      userResponse.profileUrl = result.profileUrl;
+      userResponse.accessToken = result.accessToken;
+      userResponse.refreshToken = result.refreshToken;
+      return userResponse;
+    }
+    return result;
+  }
+
+  public async findOneByToken(accessToken: string) {
+    const result = await this.userRepository.findOneByToken(accessToken);
     if (result !== undefined) {
       const userResponse = new UserDTO();
       userResponse.id = result.id;
@@ -67,6 +83,40 @@ export class UserService {
     return userResponse;
   }
 
+  public async createKakao(
+    loginId: string,
+    password: string,
+    name: string,
+    email: string,
+    profileUrl: string,
+    accessToken: string,
+    refreshToken: string
+  ) {
+    const user = new Users();
+    const { salt, result } = encryptPassword(password);
+    user.loginId = loginId;
+    user.salt = salt;
+    user.password = result;
+    user.name = name;
+    user.email = email;
+    user.profileUrl = profileUrl;
+    user.accessToken = accessToken;
+    user.refreshToken = refreshToken;
+
+    const res = await this.userRepository.save(user);
+    const userResponse = new UserDTO();
+    userResponse.id = res.id;
+    userResponse.loginId = res.loginId;
+    userResponse.name = res.name;
+    userResponse.email = res.email;
+    userResponse.mannerPoint = res.mannerPoint;
+    userResponse.profileUrl = res.profileUrl;
+    userResponse.accessToken = res.accessToken;
+    userResponse.refreshToken = res.refreshToken;
+
+    return userResponse;
+  }
+
   public async checkDuplicate(loginId: string) {
     const result = await this.userRepository.findOne(loginId);
     if (result === undefined) {
@@ -88,6 +138,38 @@ export class UserService {
     } else {
       user.accessToken = accessToken;
       user.refreshToken = refreshToken;
+      const result = await this.userRepository.save(user);
+      const userResponse = new UserDTO();
+      userResponse.id = result.id;
+      userResponse.loginId = result.loginId;
+      userResponse.name = result.name;
+      userResponse.email = result.email;
+      userResponse.mannerPoint = result.mannerPoint;
+      userResponse.profileUrl = result.profileUrl;
+      userResponse.accessToken = result.accessToken;
+      userResponse.refreshToken = result.refreshToken;
+
+      return userResponse;
+    }
+  }
+
+  public async updateKakao(
+    loginId: string,
+    name: string,
+    email: string,
+    profileUrl: string,
+    accessToken: string,
+    refreshToken: string
+  ) {
+    const user = await this.userRepository.findOne(loginId);
+    if (user === undefined) {
+      return false;
+    } else {
+      user.accessToken = accessToken;
+      user.refreshToken = refreshToken;
+      user.name = name;
+      user.email = email;
+      user.profileUrl = profileUrl;
       const result = await this.userRepository.save(user);
       const userResponse = new UserDTO();
       userResponse.id = result.id;
