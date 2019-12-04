@@ -128,7 +128,12 @@ const Components = () => {
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open}>
-        <ExpandList open={open} idx={selectIdx} details={detailCategoryList[selectIdx - 1]} />
+        <ExpandList
+          open={open}
+          idx={selectIdx}
+          details={detailCategoryList[selectIdx - 1]}
+          onClick={close}
+        />
       </ListWrapper>
       <MainModal onClose={handleLoginClose} open={loginOpen} login={setLoginStatus} />
     </Container>
