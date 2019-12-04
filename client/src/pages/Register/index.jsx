@@ -6,7 +6,6 @@ import Progress from "../../components/Organisim/RegisterProgress"
 import SelectCategory from "./template/SelectCategory"
 import InsertInfo from "./template/InsertInfo"
 import Complete from "./template/Complete"
-import AlertDialog from "../../components/Molecules/AlertDialog"
 
 import { base642Blob } from "../../utils/converter"
 import { jsonFetch, putJsonFetch } from "../../services/fetchService"
@@ -61,8 +60,7 @@ const registerProduct = async obj => {
 const Page = () => {
   const [phase, setPhase] = useState(0)
   const [maxPhase, setMaxPhase] = useState(0)
-  const [data, setData] = useState(defaultData)
-  const [open, setOpen] = useState(false)
+  const [data] = useState(defaultData)
 
   return (
     <Container>
@@ -92,16 +90,6 @@ const Page = () => {
         </Content>
       </TemplateContainer>
       <Footer />
-      {open ? (
-        <AlertDialog
-          title={"확인"}
-          content={"해당 내용으로 등록하시겠습니까?"}
-          cancleAble={true}
-          onDismiss={setOpen(false)}
-        />
-      ) : (
-        undefined
-      )}
     </Container>
   )
 }
