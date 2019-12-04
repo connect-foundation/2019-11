@@ -134,6 +134,7 @@ function ChatContainer(props) {
           Object.keys(chat).map(key => {
             return (
               <ChatMessage
+                key={chat[key].time}
                 isSend={chat[key].userid === USERID}
                 Text={chat[key].text}
                 Time={chat[key].time}

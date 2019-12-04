@@ -93,6 +93,7 @@ function Container(props) {
         {RoomList.map(value => {
           return (
             <RoomElement
+              key={value.opponentUserName}
               clickroom={() => {
                 setRoomNumber(value.RoomNumber)
                 setRoomUser(value.opponentUserName)
