@@ -111,9 +111,12 @@ function ChatContainer(props) {
   })
 
   useEffect(() => {
-    firebase.getRoomChat(props.roomNumber, function(snapshot) {
+    function listener(snapshot) {
       setChat(snapshot.val())
-    })
+    }
+    firebase.getRoomChat(props.roomNumber).on("value", listener)
+
+    return () => firebase.getRoomChat(props.roomNumber).off("value", listener)
   }, [])
 
   return (

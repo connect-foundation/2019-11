@@ -44,17 +44,8 @@ function Container(props) {
 
   let USERID = 1 //임시 나의 유저 id
 
-  function clickRoomList(flag) {
-    setIsRoomList(flag)
-  }
-  const writeChat = e => {
-    e.preventDefault()
-    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
-    e.target.messengerText.value = ""
-  }
-
-  let MessengerRoomList = () => {
-    firebase.getRoomList(String(USERID), function(result) {
+  useEffect(() => {
+    firebase.getRoomList(String(USERID)).on("value", function listener(result) {
       if (result.val() !== null) {
         let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
           acc.push({
@@ -68,7 +59,31 @@ function Container(props) {
         setRoomList(roomNumbers)
       }
     })
+    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
+      if (result.val() !== null) {
+        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+          acc.push({
+            RoomNumber: ele,
+            RecentMeg: result.val()[ele]["recent"]["text"],
+            opponentUserName: getOpponentUserId(result.val()[ele])
+            // opponentUserImg:0,
+          })
+          return acc
+        }, [])
+        setRoomList(roomNumbers)
+      }
+    })
+  }, [isRoomList])
+
+  function clickRoomList(flag) {
+    setIsRoomList(flag)
   }
+  const writeChat = e => {
+    e.preventDefault()
+    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
+    e.target.messengerText.value = ""
+  }
+
   function getOpponentUserId(object) {
     return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent")
   }
@@ -101,10 +116,6 @@ function Container(props) {
       ></ChatCotainer>
     )
   }
-
-  useEffect(() => {
-    MessengerRoomList()
-  }, [isRoomList])
 
   return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>
 }

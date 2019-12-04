@@ -23,19 +23,18 @@ function Firebase() {
   /**
    * 채팅 방 리스너
    */
-  this.getRoomChat = (roomnumber, func) => {
-    return this.database.ref("/messages/" + roomnumber + "/").on("value", func)
+  this.getRoomChat = roomnumber => {
+    return this.database.ref("/messages/" + roomnumber + "/")
   }
 
   /**
    * 유저가 참여한 채팅방 목록 리스너
    */
-  this.getRoomList = (userid, func) => {
+  this.getRoomList = userid => {
     return this.database
       .ref("/rooms/")
       .orderByChild(userid)
       .equalTo(true)
-      .on("value", func)
   } //query: room에서 1:true인것을 찾아라
 
   /**
