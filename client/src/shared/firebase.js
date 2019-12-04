@@ -21,6 +21,37 @@ function Firebase() {
   this.database = firebase.database()
 
   /**
+   * 채팅 방 생성
+   *
+   */
+  this.makeRoom = (myid, sellerid) => {
+    return this.database
+      .ref("/rooms/")
+      .orderByChild(String(myid))
+      .equalTo(true)
+      .once("value")
+      .then(result => {
+        if (result.val() !== null) {
+          let check = Object.keys(result.val()).reduce((acc, ele) => {
+            if (
+              Object.keys(result.val()[ele]).find(element => element === String(sellerid)) !==
+              undefined
+            ) {
+              acc = false
+            }
+            return acc
+          }, true)
+          if (check) {
+            let temp = {}
+            temp[myid] = true
+            temp[sellerid] = true
+            return this.database.ref("/rooms/").push(temp)
+          }
+        }
+      })
+  }
+
+  /**
    * 채팅 방 리스너
    */
   this.getRoomChat = roomnumber => {
