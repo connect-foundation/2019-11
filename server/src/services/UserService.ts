@@ -3,6 +3,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Users } from "../models/Users";
 import { encryptPassword, checkPassword } from "../util/passwordUtils";
+import { UserDTO } from "../dto/UserDTO";
 
 /** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
@@ -16,12 +17,25 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  public findOne(loginId: string) {
-    return this.userRepository.findOne(loginId);
+  public async findOne(loginId: string) {
+    const result = await this.userRepository.findOne(loginId);
+    if (result !== undefined) {
+      const userResponse = new UserDTO();
+      userResponse.id = result.id;
+      userResponse.loginId = result.loginId;
+      userResponse.name = result.name;
+      userResponse.email = result.email;
+      userResponse.mannerPoint = result.mannerPoint;
+      userResponse.profileUrl = result.profileUrl;
+      userResponse.accessToken = result.accessToken;
+      userResponse.refreshToken = result.refreshToken;
+      return userResponse;
+    }
+    return result;
   }
 
   /** POST */
-  public create(
+  public async create(
     loginId: string,
     password: string,
     name: string,
@@ -39,7 +53,18 @@ export class UserService {
     user.accessToken = accessToken;
     user.refreshToken = refreshToken;
 
-    return this.userRepository.save(user);
+    const res = await this.userRepository.save(user);
+    const userResponse = new UserDTO();
+    userResponse.id = res.id;
+    userResponse.loginId = res.loginId;
+    userResponse.name = res.name;
+    userResponse.email = res.email;
+    userResponse.mannerPoint = res.mannerPoint;
+    userResponse.profileUrl = res.profileUrl;
+    userResponse.accessToken = res.accessToken;
+    userResponse.refreshToken = res.refreshToken;
+
+    return userResponse;
   }
 
   public async checkDuplicate(loginId: string) {
@@ -63,7 +88,18 @@ export class UserService {
     } else {
       user.accessToken = accessToken;
       user.refreshToken = refreshToken;
-      return this.userRepository.save(user);
+      const result = await this.userRepository.save(user);
+      const userResponse = new UserDTO();
+      userResponse.id = result.id;
+      userResponse.loginId = result.loginId;
+      userResponse.name = result.name;
+      userResponse.email = result.email;
+      userResponse.mannerPoint = result.mannerPoint;
+      userResponse.profileUrl = result.profileUrl;
+      userResponse.accessToken = result.accessToken;
+      userResponse.refreshToken = result.refreshToken;
+
+      return userResponse;
     }
   }
 

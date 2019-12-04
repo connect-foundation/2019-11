@@ -19,36 +19,37 @@ import userContext from "../../../context/UserContext"
 import Messenger from "../../Messenger"
 
 const Components = () => {
-  const [open, setOpen] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [isLogin, setIsLogin] = useState(false)
-  const [selectIdx, setSelectIdx] = useState(1)
-  const userInfo = useContext(userContext)
+  const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [selectIdx, setSelectIdx] = useState(1);
+  const [user, setUser] = useContext(userContext);
 
   const node = useRef()
 
   useEffect(async () => {
-    document.addEventListener("mousedown", handleOnBlur)
-    await fetch("http://localhost:3000/api/users/", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": `${localStorage.getItem("access-token")}`,
-        "refresh-token": `${localStorage.getItem("refresh-token")}`
-      }
-    })
-      .then(result => result.json())
-      .then(result => {
-        if (result) {
-          userInfo.id = result.id
-          userInfo.username = result.loginId
-          userInfo.name = result.name
-          userInfo.email = result.email
-        } else alert("세션이 만료되어 로그아웃됩니다.")
+    document.addEventListener("mousedown", handleOnBlur);
+    const refreshToken = localStorage.getItem("refresh-token");
+    const accessToken = localStorage.getItem("access-token");
+    if (refreshToken !== null && accessToken !== null) {
+      await fetch("http://localhost:3000/api/users/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": `${refreshToken}`,
+          "refresh-token": `${accessToken}`
+        }
       })
-    if (userInfo.id !== undefined) {
-      setIsLogin(true)
+        .then(result => result.json())
+        .then(async result => {
+          if (result) {
+            setUser(result);
+            await localStorage.setItem("access-token", result.accessToken);
+            await localStorage.setItem("refresh-token", result.refreshToken);
+            setIsLogin(true);
+          } else alert("세션이 만료되어 로그아웃됩니다.");
+        });
     }
   }, [])
 
