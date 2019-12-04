@@ -47,6 +47,11 @@ function Firebase() {
             temp[sellerid] = true
             return this.database.ref("/rooms/").push(temp)
           }
+        } else {
+          let temp = {}
+          temp[myid] = true
+          temp[sellerid] = true
+          return this.database.ref("/rooms/").push(temp)
         }
       })
   }

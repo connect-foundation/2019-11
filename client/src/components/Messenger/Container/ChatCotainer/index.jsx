@@ -113,9 +113,10 @@ const InputButton = styled.button`
 `
 function ChatContainer(props) {
   const [chat, setChat] = useState({})
+  const [opponentUserName, setOpponentUserName] = useState("unknown")
   const [user, setUser] = useContext(userContext)
 
-  let USERID = user.id //user.id
+  let USERID = user.loginId
 
   const messengerBodyRef = useRef()
   useEffect(() => {
@@ -126,6 +127,18 @@ function ChatContainer(props) {
     function listener(snapshot) {
       setChat(snapshot.val())
     }
+
+    fetch(
+      `http://${
+        process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
+      }/api/users/${props.roomUserId}`
+    )
+      .then(result => {
+        return result.json()
+      })
+      .then(result => {
+        setOpponentUserName(result.name)
+      })
     firebase.getRoomChat(props.roomNumber).on("value", listener)
 
     return () => firebase.getRoomChat(props.roomNumber).off("value", listener)
@@ -136,7 +149,7 @@ function ChatContainer(props) {
       <MessengerChatHead>
         <BackButton onClick={props.clickback}>&lt;</BackButton>
         <HostName>
-          <span>{props.roomUser}</span>
+          <span>{opponentUserName}</span>
         </HostName>
       </MessengerChatHead>
       <MessengerChatScroll ref={messengerBodyRef}>

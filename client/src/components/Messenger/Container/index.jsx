@@ -5,7 +5,8 @@ import ChatCotainer from "./ChatCotainer"
 import firebase from "../../../shared/firebase"
 
 import userContext from "../../../context/UserContext"
-//
+import FoundImg from "../../../assets/found.png"
+
 const MessengerDiv = styled.div`
   position: absolute;
   left: 6rem;
@@ -40,15 +41,28 @@ const MessengerScroll = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
 `
+
+const MessengerInfo = styled.div`
+  display: flex;
+  width: 17rem;
+  flex-direction: column;
+  justify-content: center;
+  margin: 3rem auto;
+  img {
+    margin: 1rem auto;
+    width: 10rem;
+    height: 10rem;
+  }
+`
 function Container(props) {
   const [RoomList, setRoomList] = useState([])
   const [isRoomList, setIsRoomList] = useState(true)
   const [RoomNumber, setRoomNumber] = useState(0)
-  const [RoomUser, setRoomUser] = useState(0)
+  const [RoomUserId, setRoomUserId] = useState(0)
 
   const [user, setUser] = useContext(userContext)
 
-  let USERID = user.id //user.id //임시 나의 유저 id
+  let USERID = user.loginId
 
   useEffect(() => {
     firebase.getRoomList(String(USERID)).on("value", function listener(result) {
@@ -58,15 +72,13 @@ function Container(props) {
             acc.push({
               RoomNumber: ele,
               RecentMeg: result.val()[ele]["recent"]["text"],
-              opponentUserName: getOpponentUserId(result.val()[ele])
-              // opponentUserImg:0,
+              opponentUserId: getOpponentUserId(result.val()[ele])
             })
           } else {
             acc.push({
               RoomNumber: ele,
               RecentMeg: "",
-              opponentUserName: getOpponentUserId(result.val()[ele])
-              // opponentUserImg:0,
+              opponentUserId: getOpponentUserId(result.val()[ele])
             })
           }
           return acc
@@ -77,12 +89,19 @@ function Container(props) {
     return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
       if (result.val() !== null) {
         let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          acc.push({
-            RoomNumber: ele,
-            RecentMeg: result.val()[ele]["recent"]["text"],
-            opponentUserName: getOpponentUserId(result.val()[ele])
-            // opponentUserImg:0,
-          })
+          if (result.val()[ele]["recent"] !== undefined) {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: result.val()[ele]["recent"]["text"],
+              opponentUserId: getOpponentUserId(result.val()[ele])
+            })
+          } else {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: "",
+              opponentUserId: getOpponentUserId(result.val()[ele])
+            })
+          }
           return acc
         }, [])
         setRoomList(roomNumbers)
@@ -105,21 +124,36 @@ function Container(props) {
   let initMessenger = () => {
     return isRoomList ? (
       <MessengerScroll>
-        {RoomList.map(value => {
-          return (
-            <RoomElement
-              key={value.opponentUserName}
-              clickroom={() => {
-                setRoomNumber(value.RoomNumber)
-                setRoomUser(value.opponentUserName)
-                clickRoomList(false)
-              }}
-              Img={"A"}
-              Name={value.opponentUserName}
-              RecentMsg={value.RecentMeg}
-            />
-          )
-        })}
+        {RoomList.length === 0 ? (
+          <MessengerInfo>
+            <div>
+              회원가입을 환영합니다!
+              <br />
+              <br />
+              여기는 중고거래 사이트 팔다입니다!
+              <br />
+              <br />
+              판매자와 소통을 시작해보세요!
+              <br />
+            </div>
+            <img src={FoundImg}></img>
+          </MessengerInfo>
+        ) : (
+          RoomList.map(value => {
+            return (
+              <RoomElement
+                key={value.opponentUserId}
+                clickroom={() => {
+                  setRoomNumber(value.RoomNumber)
+                  setRoomUserId(value.opponentUserId)
+                  clickRoomList(false)
+                }}
+                userLoginId={value.opponentUserId}
+                RecentMsg={value.RecentMeg}
+              />
+            )
+          })
+        )}
       </MessengerScroll>
     ) : (
       <ChatCotainer
@@ -127,7 +161,7 @@ function Container(props) {
           clickRoomList(true)
         }}
         roomNumber={RoomNumber}
-        roomUser={RoomUser}
+        roomUserId={RoomUserId}
         writeChat={writeChat}
       ></ChatCotainer>
     )
