@@ -5,25 +5,28 @@ import ChatCotainer from "./ChatCotainer"
 import firebase from "../../../shared/firebase"
 
 const MessengerDiv = styled.div`
-  position: fixed;
-  bottom: 7rem;
-  right: 1rem;
-  width: 20rem;
-  height: 25rem;
+  position: absolute;
+  left: 6rem;
+  bottom: 1rem;
+  width: ${props => (props.show ? "20" : 0)}rem;
+  height: ${props => (props.show ? "25" : 0)}rem;
   border: solid 0.1rem;
-  border-color: var(--color-primary);
+  border-color: ${props => (props.show ? "var(--color-primary)" : "white")};
   background-color: white;
 
   z-index: 30;
 
+  transition: all 0.3s ease-in-out;
+
   &::after {
     content: "";
     position: absolute;
-    border-top: 1rem solid var(--color-primary);
-    border-right: 0.5rem solid transparent;
-    border-left: 0.5rem solid transparent;
-    bottom: -1rem;
-    right: 1.5rem;
+    border-right: 1rem solid var(--color-primary);
+    border-top: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid transparent;
+    border: ${props => (props.show ? "" : 0)}rem;
+    bottom: 1rem;
+    left: -1rem;
   }
 `
 
@@ -41,17 +44,8 @@ function Container(props) {
 
   let USERID = 1 //임시 나의 유저 id
 
-  function clickRoomList(flag) {
-    setIsRoomList(flag)
-  }
-  const writeChat = e => {
-    e.preventDefault()
-    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
-    e.target.messengerText.value = ""
-  }
-
-  let MessengerRoomList = () => {
-    firebase.getRoomList(String(USERID), function(result) {
+  useEffect(() => {
+    firebase.getRoomList(String(USERID)).on("value", function listener(result) {
       if (result.val() !== null) {
         let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
           acc.push({
@@ -65,7 +59,31 @@ function Container(props) {
         setRoomList(roomNumbers)
       }
     })
+    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
+      if (result.val() !== null) {
+        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+          acc.push({
+            RoomNumber: ele,
+            RecentMeg: result.val()[ele]["recent"]["text"],
+            opponentUserName: getOpponentUserId(result.val()[ele])
+            // opponentUserImg:0,
+          })
+          return acc
+        }, [])
+        setRoomList(roomNumbers)
+      }
+    })
+  }, [isRoomList])
+
+  function clickRoomList(flag) {
+    setIsRoomList(flag)
   }
+  const writeChat = e => {
+    e.preventDefault()
+    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
+    e.target.messengerText.value = ""
+  }
+
   function getOpponentUserId(object) {
     return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent")
   }
@@ -75,6 +93,7 @@ function Container(props) {
         {RoomList.map(value => {
           return (
             <RoomElement
+              key={value.opponentUserName}
               clickroom={() => {
                 setRoomNumber(value.RoomNumber)
                 setRoomUser(value.opponentUserName)
@@ -99,11 +118,7 @@ function Container(props) {
     )
   }
 
-  useEffect(() => {
-    MessengerRoomList()
-  }, [isRoomList])
-
-  return <MessengerDiv>{initMessenger()}</MessengerDiv>
+  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>
 }
 
 export default Container

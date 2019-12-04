@@ -111,9 +111,12 @@ function ChatContainer(props) {
   })
 
   useEffect(() => {
-    firebase.getRoomChat(props.roomNumber, function(snapshot) {
+    function listener(snapshot) {
       setChat(snapshot.val())
-    })
+    }
+    firebase.getRoomChat(props.roomNumber).on("value", listener)
+
+    return () => firebase.getRoomChat(props.roomNumber).off("value", listener)
   }, [])
 
   return (
@@ -131,6 +134,7 @@ function ChatContainer(props) {
           Object.keys(chat).map(key => {
             return (
               <ChatMessage
+                key={chat[key].time}
                 isSend={chat[key].userid === USERID}
                 Text={chat[key].text}
                 Time={chat[key].time}
