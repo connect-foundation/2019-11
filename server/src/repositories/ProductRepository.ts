@@ -1,6 +1,6 @@
-import { EntityRepository, EntityManager } from "typeorm";
-import { ProductsDTO } from "../dto/ProductDTO";
-import { Products } from "../models/Products";
+import { EntityRepository, EntityManager } from "typeorm"
+import { ProductsDTO } from "../dto/ProductDTO"
+import { Products } from "../models/Products"
 
 @EntityRepository()
 export class ProductRepository {
@@ -11,7 +11,7 @@ export class ProductRepository {
       .createQueryBuilder(Products, "products")
       .skip(start)
       .take(limit)
-      .getMany();
+      .getMany()
   }
 
   public findOne(productId: number) {
@@ -20,23 +20,26 @@ export class ProductRepository {
       .innerJoinAndSelect("products.seller", "user")
       .innerJoinAndSelect("products.images", "images")
       .where("products.id = :id", { id: productId })
-      .getOne();
+      .getOne()
   }
 
   public update(product: Products) {
-    return this.em.save(product);
+    return this.em.save(product)
   }
 
   /*GET*/
-  public async onlyOwnSale(userId: number) {
+  public async onlyOwnSale(userId: number, page: number, limits: number) {
     return await this.em.findAndCount(Products, {
       relations: ["seller"],
       select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
       where: {
         seller: { id: userId },
         buyerId: null
-      }
-    });
+      },
+      skip: page * limits,
+      take: limits,
+      cache: true
+    })
   }
   /* PUT */
   public async create(
@@ -52,10 +55,7 @@ export class ProductRepository {
     categoryCode: number,
     isAuction: boolean
   ) {
-    const dto = new ProductsDTO();
-
-    console.log("Repo" + isAuction);
-
+    const dto = new ProductsDTO()
     const product = dto.create(
       userId,
       title,
@@ -68,8 +68,8 @@ export class ProductRepository {
       thumbnail,
       categoryCode,
       isAuction
-    );
+    )
 
-    return await this.em.save(product);
+    return await this.em.save(product)
   }
 }
