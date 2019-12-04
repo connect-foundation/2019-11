@@ -23,7 +23,7 @@ const SignUpDialog = ({ close, login }) => {
   const [checkPwd, setCheckPwd] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const userInfo = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
 
   const handleIdKeyUp = e => {
     setId(e.target.value);
@@ -60,15 +60,12 @@ const SignUpDialog = ({ close, login }) => {
       })
     })
       .then(result => result.json())
-      .then(result => {
+      .then(async result => {
         const { msg, user } = result;
         if (msg) {
-          userInfo.id = user.id;
-          userInfo.username = user.loginId;
-          userInfo.name = user.name;
-          userInfo.email = user.email;
-          localStorage.setItem("access-token", user.accessToken);
-          localStorage.setItem("refresh-token", user.refreshToken);
+          setUser(user);
+          await localStorage.setItem("access-token", user.accessToken);
+          await localStorage.setItem("refresh-token", user.refreshToken);
           alert("회원가입 완료");
           login();
         } else {

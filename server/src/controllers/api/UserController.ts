@@ -27,23 +27,43 @@ export class UserController {
   @Get()
   public async getUser(@Req() req: any, @Res() res: any) {
     console.log(req.headers);
-    const accessToken = req.headers["access-token"];
-    const decodedAccessToken = await jwt.verify(
-      accessToken,
-      `${process.env.JWT_KEY}`
-    );
-    console.log(decodedAccessToken);
-    const refreshToken = req.headers["refresh-token"];
-    const decodedRefreshToken = await jwt.verify(
-      accessToken,
-      `${process.env.JWT_KEY}`
-    );
-    return this.userService.findOne((<any>decodedAccessToken).loginId);
+    let accessToken = req.headers["access-token"];
+    let refreshToken = req.headers["refresh-token"];
+    try {
+      const decodedAccessToken = jwt.verify(
+        accessToken,
+        `${process.env.JWT_KEY}`
+      );
+      const user = await this.userService.findOne(
+        (<any>decodedAccessToken).loginId
+      );
+      return user;
+    } catch {
+      try {
+        const decodedRefreshToken = jwt.verify(
+          refreshToken,
+          `${process.env.JWT_KEY}`
+        );
+        const { loginId } = <any>decodedRefreshToken;
+        accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
+          expiresIn: "2h"
+        });
+        const user = await this.userService.updateToken(
+          loginId,
+          accessToken,
+          refreshToken
+        );
+        return user;
+      } catch {
+        return false;
+      }
+    }
   }
 
   @Get("/:id")
-  public findOne(@Param("id") loginId: string) {
-    return this.userService.findOne(loginId);
+  public async findOne(@Param("id") loginId: string) {
+    const user = await this.userService.findOne(loginId);
+    return user;
   }
 
   @Post()
@@ -67,7 +87,7 @@ export class UserController {
       expiresIn: "3 days"
     });
 
-    const result = await this.userService.create(
+    const user = await this.userService.create(
       loginId,
       password,
       name,
@@ -76,7 +96,7 @@ export class UserController {
       refreshToken
     );
 
-    return { msg: true, result };
+    return { msg: true, user };
   }
 
   @Put("/:id")

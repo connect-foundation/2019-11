@@ -17,7 +17,7 @@ import UserContext from "../../../context/UserContext";
 const LoginDialog = ({ signUp, login, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const userInfo = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
 
   const handleSubmit = e => {
     fetch("http://localhost:3000/api/sign/login", {
@@ -35,10 +35,7 @@ const LoginDialog = ({ signUp, login, close }) => {
       .then(async result => {
         const { msg, user } = result;
         if (msg) {
-          userInfo.id = user.id;
-          userInfo.username = user.loginId;
-          userInfo.name = user.name;
-          userInfo.email = user.email;
+          setUser(user);
           await localStorage.setItem("access-token", user.accessToken);
           await localStorage.setItem("refresh-token", user.refreshToken);
           close();
