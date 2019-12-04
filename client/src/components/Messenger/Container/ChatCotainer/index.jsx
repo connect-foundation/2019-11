@@ -1,7 +1,18 @@
 import styled from "styled-components"
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useContext } from "react"
 import ChatMessage from "./ChatMessage"
 import firebase from "../../../../shared/firebase"
+
+import userContext from "../../../../context/UserContext"
+
+const ChatContainerWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+`
 const MessengerChatScroll = styled.div`
   width: 100%;
   height: 80%;
@@ -102,8 +113,9 @@ const InputButton = styled.button`
 `
 function ChatContainer(props) {
   const [chat, setChat] = useState({})
+  const [user, setUser] = useContext(userContext)
 
-  let USERID = 1 //임시 나의 유저 id
+  let USERID = user.id //user.id
 
   const messengerBodyRef = useRef()
   useEffect(() => {
@@ -120,7 +132,7 @@ function ChatContainer(props) {
   }, [])
 
   return (
-    <>
+    <ChatContainerWrap>
       <MessengerChatHead>
         <BackButton onClick={props.clickback}>&lt;</BackButton>
         <HostName>
@@ -157,7 +169,7 @@ function ChatContainer(props) {
           <input type="hidden" name="roomNumber" value={props.roomNumber}></input>
         </MessengerChatForm>
       </MessengerChatFoot>
-    </>
+    </ChatContainerWrap>
   )
 }
 

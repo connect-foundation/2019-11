@@ -1,23 +1,27 @@
 import styled from "styled-components"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import RoomElement from "./RoomElement"
 import ChatCotainer from "./ChatCotainer"
 import firebase from "../../../shared/firebase"
 
+import userContext from "../../../context/UserContext"
+//
 const MessengerDiv = styled.div`
   position: absolute;
   left: 6rem;
   bottom: 1rem;
   width: ${props => (props.show ? "20" : 0)}rem;
   height: ${props => (props.show ? "25" : 0)}rem;
-  border: solid 0.1rem;
-  border-color: ${props => (props.show ? "var(--color-primary)" : "white")};
+  border: ${props => (props.show ? "solid 0.1rem" : "")};
+  border-color: var(--color-primary);
   background-color: white;
-
+  border-radius: 10px;
   z-index: 30;
 
   transition: all 0.3s ease-in-out;
-
+  &::before {
+    overflow: hidden;
+  }
   &::after {
     content: "";
     position: absolute;
@@ -42,18 +46,29 @@ function Container(props) {
   const [RoomNumber, setRoomNumber] = useState(0)
   const [RoomUser, setRoomUser] = useState(0)
 
-  let USERID = 1 //임시 나의 유저 id
+  const [user, setUser] = useContext(userContext)
+
+  let USERID = user.id //user.id //임시 나의 유저 id
 
   useEffect(() => {
     firebase.getRoomList(String(USERID)).on("value", function listener(result) {
       if (result.val() !== null) {
         let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          acc.push({
-            RoomNumber: ele,
-            RecentMeg: result.val()[ele]["recent"]["text"],
-            opponentUserName: getOpponentUserId(result.val()[ele])
-            // opponentUserImg:0,
-          })
+          if (result.val()[ele]["recent"] !== undefined) {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: result.val()[ele]["recent"]["text"],
+              opponentUserName: getOpponentUserId(result.val()[ele])
+              // opponentUserImg:0,
+            })
+          } else {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: "",
+              opponentUserName: getOpponentUserId(result.val()[ele])
+              // opponentUserImg:0,
+            })
+          }
           return acc
         }, [])
         setRoomList(roomNumbers)
