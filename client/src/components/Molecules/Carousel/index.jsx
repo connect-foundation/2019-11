@@ -5,6 +5,8 @@ import BeforeButton from "./BeforeButton"
 import CarouselImage from "./CarouselImage"
 import AddButton from "./AddButton"
 
+import LoddingImage from "../../../assets/loadding.gif"
+
 const Container = styled.div`
   width: 20em;
   height: 20em;
@@ -47,8 +49,19 @@ const RightDiv = styled.div`
 `
 
 const CarouselItem = styled.div`
-  width: 20em;
-  height: 20em;
+  width: 20rem;
+  height: 20rem;
+`
+
+const Lodding = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20rem;
+  height: 20rem;
+  z-index: 10;
+  color: white;
+  background: url(${LoddingImage}) center no-repeat;
 `
 
 const Components = ({ list, handler }) => {
@@ -58,6 +71,7 @@ const Components = ({ list, handler }) => {
   let renderCount = 0
   const [showIdx, changeIdx] = useState(0)
   const [dragOn, setDragOn] = useState(false)
+  const [isLoadding, setIsLoadding] = useState(false)
 
   const handleLeft = event => {
     if (!onImageLoad) changeIdx(showIdx > 0 ? showIdx - 1 : 0)
@@ -94,13 +108,14 @@ const Components = ({ list, handler }) => {
     handler(prev => [...prev, ...imageBuffer])
     imageBuffer = []
     onloadCount = renderCount = 0
+    setIsLoadding(false)
   }
 
   const imageOnLoad = files => {
     const supportedFilesTypes = ["image/jpeg", "image/png", "image/gif"]
-
-    for (const file of files) {
-      const { type } = file
+    setIsLoadding(true)
+    for (let idx = 0; idx < files.length; ++idx) {
+      const { type } = files[idx]
       if (supportedFilesTypes.indexOf(type) > -1) {
         ++renderCount
         const render = new FileReader()
@@ -109,9 +124,10 @@ const Components = ({ list, handler }) => {
           imageBuffer.push(e.target.result)
           imageOnLoadEnd()
         }
-        render.readAsDataURL(file)
+        render.readAsDataURL(files[idx])
       }
     }
+    if (!renderCount) setIsLoadding(false)
   }
 
   return (
@@ -145,6 +161,7 @@ const Components = ({ list, handler }) => {
           <AddButton trigger={imageOnLoad} />
         </Panel>
       </Window>
+      {isLoadding ? <Lodding /> : undefined}
     </Container>
   )
 }
