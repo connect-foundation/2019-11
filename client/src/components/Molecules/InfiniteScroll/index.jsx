@@ -44,28 +44,27 @@ const renderNotFound = () => {
   )
 }
 
-const Component = ({ fetcher, drawer, reset }) => {
+const Component = ({ fetcher, drawer, loadPerOnce }) => {
   const [loadding, setLoadding] = useState(true)
   const [list, setList] = useState([])
 
-  useEffect(() => {
-    ;(async () => {
-      const data = await fetcher()
-      const initComponents = drawer(data)
-      setLoadding(false)
-      setList(prev => [...initComponents])
-    })()
-  }, [reset])
-
-  const [_, setRef] = useIntersect(async (entry, observer) => {
+  const [, setRef] = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target)
+    const loadedComponentCount = await update()
 
-    const nextData = await fetcher()
-    const nextComponents = drawer(nextData)
-    setList(prev => [...prev, ...nextComponents])
-
-    if (nextData.length) observer.observe(entry.target)
+    if (loadedComponentCount === loadPerOnce) observer.observe(entry.target)
   }, {})
+
+  const update = async () => {
+    setLoadding(true)
+    const data = await fetcher()
+    const components = drawer(data)
+    setLoadding(false)
+
+    setList(prev => [...prev, ...components])
+
+    return components.length
+  }
 
   return (
     <Container className={"hide-scroll"}>
