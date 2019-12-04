@@ -3,7 +3,7 @@ export const devConfig = {
 }
 
 export const prodConfig = {
-  Bucket: process.env.Bucket
+  Bucket: process.env.BUCKET
 }
 
 export default process.env.NODE_ENV === "development" ? devConfig : prodConfig
