@@ -1,4 +1,4 @@
-const devConfig = {
+export const devConfig = {
     apiKey: process.env.REACT_APP_DEV_API_KEY,
     authDomain: process.env.REACT_APP_DEV_AUTH_DOMAIN,
     databaseURL: process.env.REACT_APP_DEV_DATABASE_URL,
@@ -9,7 +9,7 @@ const devConfig = {
     measurementId: process.env.REACT_APP_DEV_MEASUREMENT_ID
 }
 
-const prodConfig = {
+export const prodConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
     databaseURL: process.env.REACT_APP_DATABASE_URL,

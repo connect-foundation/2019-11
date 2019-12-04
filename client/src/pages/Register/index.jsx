@@ -11,6 +11,11 @@ import { base642Blob } from "../../utils/converter"
 import { jsonFetch, putJsonFetch } from "../../services/fetchService"
 import { createThumbnail } from "../../services/imageService"
 import { phaseList, defaultData } from "./constants"
+import apiConfig from "../../config/api"
+import pathConfig from "../../config/path"
+
+const { apiUrl } = apiConfig
+const { storage, products } = pathConfig
 
 const WIDTH = 80
 
@@ -45,8 +50,8 @@ const registerProduct = async obj => {
   const timestamp = new Date().toUTCString()
   const productsHeader = { "x-timestamp": timestamp }
   const imageHeader = Object.assign(productsHeader, { "x-auth": "user" })
-  const imageUrl = "http://localhost:3000/api/downloader"
-  const apiUrl = "http://localhost:3000/api/products"
+  const imageUrl = `${apiUrl}${storage.image}`
+  const productUrl = `${apiUrl}${products.create}`
 
   obj.thumbnail = await createThumbnail(base642Blob(obj.images[0]))
   obj.thumbnail = await jsonFetch(imageUrl, imageHeader, { uri: obj.thumbnail })
@@ -54,7 +59,7 @@ const registerProduct = async obj => {
   for (let i = 0; i < obj.images.length; i++)
     obj.images[i] = await jsonFetch(imageUrl, imageHeader, { uri: obj.images[i] })
 
-  return await putJsonFetch(apiUrl, productsHeader, obj)
+  return await putJsonFetch(productUrl, productsHeader, obj)
 }
 
 const Page = () => {
