@@ -17,7 +17,7 @@ const Label = styled.label`
   font-family: "BMJUA";
 `;
 
-const SignUpDialog = ({ close, login }) => {
+const SignUpDialog = ({ close }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [checkPwd, setCheckPwd] = useState("");
@@ -64,10 +64,9 @@ const SignUpDialog = ({ close, login }) => {
         const { msg, user } = result;
         if (msg) {
           setUser(user);
-          await localStorage.setItem("access-token", user.accessToken);
-          await localStorage.setItem("refresh-token", user.refreshToken);
+          localStorage.setItem("access-token", user.accessToken);
+          localStorage.setItem("refresh-token", user.refreshToken);
           alert("회원가입 완료");
-          login();
         } else {
           alert("회원가입에 실패하였습니다.");
         }
