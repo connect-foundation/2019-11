@@ -1,4 +1,5 @@
 import { Await, Option } from '../utils/fetchUtil.js'
+import axios from 'axios';
 
 export const getFetch = async (url, headerOption, params) => {
     const option = Option.get;
@@ -27,4 +28,9 @@ export const putJsonFetch = async (url, headerOption, body) => {
     return result
 }
 
-export default { getFetch, postJsonFetch, putJsonFetch }
+export const deleteJsonFetch = async (url, headerOption, body) => {
+    const option = await axios.delete(url, body, headerOption)
+    return option
+}
+
+export default { getFetch, postJsonFetch, putJsonFetch, deleteJsonFetch }
