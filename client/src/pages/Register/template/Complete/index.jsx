@@ -1,9 +1,11 @@
-import React from "react"
+import React, { useContext } from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
 import ShareBox from "../../../../components/Molecules/ShareBox"
 import { notice, shareConfig } from "../../constants"
+
+import productContext from "../../context"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -63,7 +65,9 @@ const NoticeText = styled.div`
   word-break: keep-all;
 `
 
-const Component = ({ width, obj }) => {
+const Component = ({ width }) => {
+  const obj = useContext(productContext).data
+
   return (
     <PageBase width={width}>
       <ContentDiv>
