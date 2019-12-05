@@ -31,13 +31,14 @@ export class ProductController {
     return this.productService.findOne(Number(productId))
   }
 
-  @Get()
+  @Get("/onlySale/:id/:start/:limits")
   public async sale(
-    @BodyParam("id") userId: number,
-    @BodyParam("page") page: number,
-    @BodyParam("limits") limits: number
+    @Param("id") userId: number,
+    @Param("start") start: number,
+    @Param("limits") limits: number
   ) {
-    return await this.productService.getOwnSale(userId, page, limits)
+    const result = await this.productService.getOwnSale(userId, start, limits)
+    return result
   }
 
   @Put("/:id")

@@ -28,18 +28,21 @@ export class ProductRepository {
   }
 
   /*GET*/
-  public async onlyOwnSale(userId: number, page: number, limits: number) {
-    return await this.em.findAndCount(Products, {
-      relations: ["seller"],
-      select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
-      where: {
-        seller: { id: userId },
-        buyerId: null
-      },
-      skip: page * limits,
-      take: limits,
-      cache: true
-    })
+  public async onlyOwnSale(userId: number, start: number, limits: number) {
+    return await this.em
+      .createQueryBuilder(Products, "products")
+      .select([
+        "products.id",
+        "products.title",
+        "products.thumbnail_url",
+        "products.immediate_price",
+        "products.register_date"
+      ])
+      .where("products.seller_id = :id", { id: userId })
+      .orderBy("id", "ASC")
+      .skip(start)
+      .take(limits)
+      .getMany()
   }
 
   /* DELETE */
