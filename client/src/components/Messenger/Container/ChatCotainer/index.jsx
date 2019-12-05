@@ -1,7 +1,18 @@
 import styled from "styled-components"
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useContext } from "react"
 import ChatMessage from "./ChatMessage"
 import firebase from "../../../../shared/firebase"
+
+import userContext from "../../../../context/UserContext"
+
+const ChatContainerWrap = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+`
 const MessengerChatScroll = styled.div`
   width: 100%;
   height: 80%;
@@ -102,8 +113,10 @@ const InputButton = styled.button`
 `
 function ChatContainer(props) {
   const [chat, setChat] = useState({})
+  const [opponentUserName, setOpponentUserName] = useState("unknown")
+  const [user, setUser] = useContext(userContext)
 
-  let USERID = 1 //임시 나의 유저 id
+  let USERID = user.loginId
 
   const messengerBodyRef = useRef()
   useEffect(() => {
@@ -114,17 +127,29 @@ function ChatContainer(props) {
     function listener(snapshot) {
       setChat(snapshot.val())
     }
+
+    fetch(
+      `http://${
+        process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
+      }/api/users/${props.roomUserId}`
+    )
+      .then(result => {
+        return result.json()
+      })
+      .then(result => {
+        setOpponentUserName(result.name)
+      })
     firebase.getRoomChat(props.roomNumber).on("value", listener)
 
     return () => firebase.getRoomChat(props.roomNumber).off("value", listener)
   }, [])
 
   return (
-    <>
+    <ChatContainerWrap>
       <MessengerChatHead>
         <BackButton onClick={props.clickback}>&lt;</BackButton>
         <HostName>
-          <span>{props.roomUser}</span>
+          <span>{opponentUserName}</span>
         </HostName>
       </MessengerChatHead>
       <MessengerChatScroll ref={messengerBodyRef}>
@@ -157,7 +182,7 @@ function ChatContainer(props) {
           <input type="hidden" name="roomNumber" value={props.roomNumber}></input>
         </MessengerChatForm>
       </MessengerChatFoot>
-    </>
+    </ChatContainerWrap>
   )
 }
 

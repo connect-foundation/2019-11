@@ -1,16 +1,6 @@
 import * as firebase from "firebase"
 import "firebase/database"
-
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDERID,
-  appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID
-}
+import firebaseConfig from '../config/firebase.js'
 
 function Firebase() {
   if (!firebase.apps.length) {
@@ -19,6 +9,42 @@ function Firebase() {
   }
   firebase.analytics()
   this.database = firebase.database()
+
+  /**
+   * 채팅 방 생성
+   *
+   */
+  this.makeRoom = (myid, sellerid) => {
+    return this.database
+      .ref("/rooms/")
+      .orderByChild(String(myid))
+      .equalTo(true)
+      .once("value")
+      .then(result => {
+        if (result.val() !== null) {
+          let check = Object.keys(result.val()).reduce((acc, ele) => {
+            if (
+              Object.keys(result.val()[ele]).find(element => element === String(sellerid)) !==
+              undefined
+            ) {
+              acc = false
+            }
+            return acc
+          }, true)
+          if (check) {
+            let temp = {}
+            temp[myid] = true
+            temp[sellerid] = true
+            return this.database.ref("/rooms/").push(temp)
+          }
+        } else {
+          let temp = {}
+          temp[myid] = true
+          temp[sellerid] = true
+          return this.database.ref("/rooms/").push(temp)
+        }
+      })
+  }
 
   /**
    * 채팅 방 리스너

@@ -1,5 +1,7 @@
-import React from "react"
+import React, { useState, useContext } from "react"
 import styled from "styled-components"
+
+import UserContext from "../../context/UserContext"
 
 import Header from "../../components/Atoms/Header"
 import TradeBox from "../../components/Molecules/TradeBox"
@@ -7,6 +9,13 @@ import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 import Footer from "../../components/Atoms/Footer"
 
 import { jsonFetch } from "../../services/fetchService"
+import { limits } from "./contants"
+
+import apiConfig from "../../config/api"
+import pathConfig from "../../config/path"
+
+const { apiUrl } = apiConfig
+const { products } = pathConfig
 
 const Container = styled.div`
   width: 100%;
@@ -32,20 +41,22 @@ const ScrollFrame = styled.div`
   width: 60rem;
   height: 90%;
   overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const Page = props => {
+  const [page, setPage] = useState(0)
+  const [user] = useContext(UserContext)
+
   const fetcher = async () => {
-    const url = "http://localhost:3000/api/products/onlySale"
+    const url = `${apiUrl}${products.onSale}`
 
-    const [list, count] = await jsonFetch(url, {}, { id: 1 })
+    console.dir(user.id)
 
+    const [list] = await jsonFetch(url, {}, { id: user.id, page, limits })
+    setPage(page + 1)
     return list.map(value => {
       return {
+        key: value.id,
         title: value.title,
         status: "경매중",
         thumbnail: value.thumbnailUrl,
@@ -62,7 +73,7 @@ const Page = props => {
       <ContentContainer>
         <Header text={"경매중인 내 상품"} />
         <ScrollFrame>
-          <InfiniteScroll fetcher={fetcher} drawer={drawer} />
+          <InfiniteScroll fetcher={fetcher} drawer={drawer} loadPerOnce={10} />
         </ScrollFrame>
       </ContentContainer>
       <Footer />

@@ -11,8 +11,10 @@ import {
 
 import AWS from "aws-sdk"
 import { randomFileName } from "../../util/StringUtils"
+import objectStorage from "../../config/objectStorage"
 
-const { END_POINT, REGION, ACCESS_KEY, SECRET_KEY, BUCKET } = process.env
+const { END_POINT, REGION, ACCESS_KEY, SECRET_KEY } = process.env
+const { Bucket } = objectStorage
 
 AWS.config.update({
   accessKeyId: ACCESS_KEY,
@@ -24,13 +26,13 @@ const S3 = new AWS.S3({
   region: REGION
 })
 
-@JsonController("/downloader")
+@JsonController("/storage")
 @ContentType("image/*")
 @OnUndefined(403)
 @OnNull(403)
 export class StoreageController {
-  @Post()
-  public async upload(
+  @Post("/image")
+  public async image(
     @HeaderParam("x-auth") uid: string,
     @HeaderParam("x-timestamp") timestamp: string,
     @BodyParam("uri") data: string
@@ -38,15 +40,36 @@ export class StoreageController {
     if (uid === undefined || timestamp === undefined) return new ForbiddenError()
 
     const rawData = new Buffer(data, "base64")
-    const Key = randomFileName()
+    const Key = `image/${randomFileName()}`
 
     const result = await S3.putObject({
-      Bucket: String(BUCKET),
+      Bucket: String(Bucket),
       Key,
       ACL: "public-read",
       Body: rawData
     }).promise()
 
-    return `${END_POINT}/${BUCKET}/${Key}`
+    return `${END_POINT}/${Bucket}/${Key}`
+  }
+
+  @Post("/profile")
+  public async profile(
+    @HeaderParam("x-auth") uid: string,
+    @HeaderParam("x-timestamp") timestamp: string,
+    @BodyParam("uri") data: string
+  ) {
+    if (uid === undefined || timestamp === undefined) return new ForbiddenError()
+
+    const rawData = new Buffer(data, "base64")
+    const Key = `profile/${randomFileName()}`
+
+    const result = await S3.putObject({
+      Bucket: String(Bucket),
+      Key,
+      ACL: "public-read",
+      Body: rawData
+    }).promise()
+
+    return `${END_POINT}/${Bucket}/${Key}`
   }
 }
