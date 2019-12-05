@@ -79,8 +79,8 @@ export class ProductsService {
   }
 
   /** Post */
-  public async getOwnSale(userId: number, page: number, limits: number) {
-    return await this.productRepository.onlyOwnSale(userId, page, limits)
+  public async getOwnSale(userId: number, start: number, limits: number) {
+    return await this.productRepository.onlyOwnSale(userId, start, limits)
   }
 
   public update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
