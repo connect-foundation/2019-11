@@ -1,5 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import styled from "styled-components"
+
+import userContext from "../../../../context/UserContext"
 
 import PageBase from "../../../../components/PageBase"
 import Button from "../../../../components/Atoms/BoxButton"
@@ -117,6 +119,8 @@ const Component = props => {
   const { width, next, obj, registItem } = props
   const dayList = generateDayList()
 
+  const [user] = useContext(userContext)
+
   const [title, setTitle] = useState(obj.title)
   const [description, setDescription] = useState(obj.content)
   const [buyNow, setBuyNow] = useState(obj.nowPrice)
@@ -152,7 +156,7 @@ const Component = props => {
     deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
 
     // 임시 사용자 번호 필히 변경 할것
-    obj.userId = 1
+    obj.userId = user.id
     obj.title = title
     obj.contents = description
     obj.nowPrice = parseInt(buyNow)
