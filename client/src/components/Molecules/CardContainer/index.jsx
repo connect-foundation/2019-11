@@ -19,7 +19,7 @@ const CardContainerStyle = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  height: ${props => (props.isWrap ? "40rem" : "17rem")};
+  height: ${props => (props.isWrap ? "35rem" : "17rem")};
   margin-bottom: 2rem;
   flex-wrap: ${props => (props.isWrap ? "wrap" : "")};
   overflow: ${props => (props.isWrap ? "auto" : "")};

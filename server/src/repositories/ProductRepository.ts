@@ -41,6 +41,16 @@ export class ProductRepository {
       cache: true
     })
   }
+
+  public findCategory(categoryCode: number) {
+    return this.em.findAndCount(Products, {
+      where: {
+        categoryCode: categoryCode
+      },
+      order: { registerDate: "DESC" }
+    })
+  }
+
   /* PUT */
   public async create(
     userId: number,

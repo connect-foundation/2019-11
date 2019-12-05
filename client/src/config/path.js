@@ -20,5 +20,6 @@ export default {
     create: "/api/users/",
     update: "/api/users/",
     delete: "/api/users"
-  }
+  },
+  items: "/api/items/"
 }
