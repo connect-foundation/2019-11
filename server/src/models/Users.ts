@@ -28,7 +28,7 @@ export class Users {
   @Column({ default: false })
   isDelete: boolean;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   email: string;
 
   @Column()

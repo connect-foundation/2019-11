@@ -28,14 +28,4 @@ export class LogService {
   public findAllLog(userid: number, dayago: number, page: number, limit: number) {
     return this.LogRepository.findAll(userid, dayago, page, limit)
   }
-
-  /** PUT, PATCH */
-  public update(id: number, product: Products) {
-    /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
-  }
-
-  /** DELETE */
-  public delete(id: number) {
-    /**TODO: 해당 id값으로 Enitity 삭제 */
-  }
 }

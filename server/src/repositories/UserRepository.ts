@@ -21,6 +21,12 @@ export class UserRepository {
     });
   }
 
+  public findOneByToken(accessToken: string) {
+    return this.em.findOne(Users, {
+      where: { accessToken }
+    });
+  }
+
   public save(user: Users) {
     return this.em.save(user);
   }

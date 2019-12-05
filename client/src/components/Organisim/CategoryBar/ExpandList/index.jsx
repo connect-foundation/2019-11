@@ -1,5 +1,6 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 const Container = styled.div`
   display: flex;
@@ -10,7 +11,7 @@ const Container = styled.div`
   background-color: #ffe1a2;
   box-sizing: border-box;
   z-index: 1;
-`;
+`
 
 const DetailCategory = styled.div`
   font-family: "BMJUA";
@@ -27,20 +28,30 @@ const DetailCategory = styled.div`
   label {
     cursor: pointer;
   }
-`;
+`
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+`
 
-const Components = ({ idx, open, details }) => {
-  const detailCategoryList = details.details;
+const Components = ({ idx, open, details, onClick }) => {
+  const detailCategoryList = details.details
 
   return (
     <Container idx={idx} open={open}>
       {detailCategoryList.map(category => (
-        <DetailCategory key={category.title}>
-          <label>{category.title}</label>
-        </DetailCategory>
+        <StyledLink
+          to={`/category/${category.title}/${category.code}`}
+          onClick={onClick}
+          key={category.title}
+        >
+          <DetailCategory>
+            <label>{category.title}</label>
+          </DetailCategory>
+        </StyledLink>
       ))}
     </Container>
-  );
-};
+  )
+}
 
-export default Components;
+export default Components
