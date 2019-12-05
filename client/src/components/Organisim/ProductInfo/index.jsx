@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import ShareCollection from "../../Product/ShareCollection";
 import { convertToPrice } from "../../../utils/numberUtils";
@@ -7,6 +7,9 @@ import { getDa, getDateTime } from "../../../utils/stringUtils";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
 import moment from "moment";
+import ModalContext from "../../../context/ModalContext";
+import FailModal from "../../Molecules/CustomModal/FailModal";
+import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 
 const { apiUrl } = apiConfig;
 
@@ -154,25 +157,49 @@ const ProductInfo = ({ product }) => {
     e.preventDefault();
     const params = {
       bidPrice: e.target.bidPrice.value,
-      bidDate: getDateTime(),
+      bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
       userId: 1,
       productId: id
     };
 
-    axios.post(`${baseURL}${pathConfig.bids}`, params).then(response => {
-      console.log(response);
-    });
+    axios
+      .post(`${baseURL}${pathConfig.bids}`, params)
+      .then(response => {
+        if (response.status < 300) {
+          setModal({
+            isOpen: true,
+            component: SuccessModal,
+            message: "입찰 성공"
+          });
+        }
+      })
+      .catch(e => {
+        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
+      });
   };
 
   const handleImmediateSubmit = price => e => {
     e.preventDefault();
-    const params = { soldPrice: price, soldDate: getDateTime(), buyerId: 1 };
+    const params = {
+      soldPrice: price,
+      soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
+      buyerId: 1
+    };
     axios
       .put(`${baseURL}${pathConfig.products}${id}`, params)
       .then(response => {
-        console.log(response);
+        setModal({
+          isOpen: true,
+          component: SuccessModal,
+          message: "입찰 성공"
+        });
+      })
+      .catch(() => {
+        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
       });
   };
+
+  const [modal, setModal] = useContext(ModalContext);
 
   useEffect(() => {
     if (auctionDeadline) {
@@ -220,12 +247,10 @@ const ProductInfo = ({ product }) => {
               {deadLine || "비경매 상품"}
             </ProductDescText>
           </ProductDueDate>
-        ) : (
-          undefined
-        )}
+        ) : null}
 
         <ProductBid onSubmit={handleBidSubmit}>
-          <BidInput name="bidPrice" placeholder="입찰가격" />
+          <BidInput name="bidPrice" placeholder="입찰 가격" />
           <BidButton>입찰</BidButton>
         </ProductBid>
         <ProductPurchase onSubmit={handleImmediateSubmit(immediatePrice)}>
