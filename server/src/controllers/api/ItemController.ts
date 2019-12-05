@@ -16,8 +16,6 @@ export class ItemController {
 
   @Get("/:code")
   public async find(@Param("code") categoryCode: number) {
-    console.log("------------------------------------------")
-    console.log(categoryCode)
     return await this.itemService.find(Number(categoryCode))
   }
 }

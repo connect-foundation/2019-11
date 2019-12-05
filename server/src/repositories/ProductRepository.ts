@@ -47,7 +47,8 @@ export class ProductRepository {
       where: {
         categoryCode: categoryCode
       },
-      order: { registerDate: "DESC" }
+      order: { registerDate: "DESC" },
+      cache: true
     })
   }
 

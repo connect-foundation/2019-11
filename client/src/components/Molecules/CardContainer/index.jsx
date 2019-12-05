@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import styled from "styled-components"
 import Card from "../../Atoms/Card"
+import NotFoundImg from "../../../assets/notFound.png"
 
 const Container = styled.div`
   display: flex;
@@ -25,14 +26,24 @@ const CardContainerStyle = styled.div`
   overflow: ${props => (props.isWrap ? "auto" : "")};
 `
 
+const NotItemInfo = styled.div`
+  margin: auto;
+  text-align: center;
+`
+
 const CardContainer = ({ title, items, isWrap }) => {
   return (
     <Container>
       <Title>{title}</Title>
       <CardContainerStyle isWrap={isWrap}>
-        {items.map(item => (
-          <Card key={item.id} item={item} />
-        ))}
+        {items.length === 0 ? (
+          <NotItemInfo>
+            <img src={NotFoundImg}></img>
+            <div>등록된 물품이 없습니다.</div>
+          </NotItemInfo>
+        ) : (
+          items.map(item => <Card key={item.id} item={item} />)
+        )}
       </CardContainerStyle>
     </Container>
   )
