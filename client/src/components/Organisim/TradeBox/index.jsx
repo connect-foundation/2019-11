@@ -40,7 +40,7 @@ const Button = styled.button`
   border-radius: 10px;
 `
 
-const Components = ({ id, link, ...otherProps }) => {
+const Components = ({ id, link, onDelete, onUpdate, ...otherProps }) => {
   const [hover, setHover] = useState(false)
 
   return (
@@ -49,8 +49,22 @@ const Components = ({ id, link, ...otherProps }) => {
         <TradeBase {...otherProps} />
       </LinkWrapper>
       <ButtonDiv hover={hover}>
-        <Button className={"danger"}>삭제</Button>
-        <Button className={"warning"}>수정</Button>
+        <Button
+          className={"danger"}
+          onClick={e => {
+            onDelete()
+          }}
+        >
+          삭제
+        </Button>
+        <Button
+          className={"warning"}
+          onClick={e => {
+            onUpdate()
+          }}
+        >
+          수정
+        </Button>
       </ButtonDiv>
     </Container>
   )

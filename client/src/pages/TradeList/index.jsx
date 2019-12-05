@@ -4,7 +4,7 @@ import ButtonSelect from "../../components/TradeList/ButtonSelect"
 import ButtonDays from "../../components/TradeList/ButtonDays"
 import Header from "../../components/Atoms/Header"
 import Footer from "../../components/Atoms/Footer"
-import TradeListBox from "../../components/Molecules/TradeListBox"
+import TradeListBox from "../../components/Organisim/TradeListBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 
 import userContext from "../../context/UserContext"
@@ -44,7 +44,7 @@ function TradeList(props) {
   const [dayago, setDayago] = useState(1)
   const [page, setPage] = useState(1)
   const [reset, setReset] = useState(false)
-  const [user, setUser] = useContext(userContext)
+  const [user] = useContext(userContext)
 
   async function getData(sale, buy, day, page) {
     try {
@@ -83,7 +83,7 @@ function TradeList(props) {
         return acc
       }, [])
 
-      setPage(page++)
+      setPage(page + 1)
 
       return resultData
     } catch (err) {
