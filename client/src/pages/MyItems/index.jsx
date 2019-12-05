@@ -1,20 +1,20 @@
 import React, { useState, useContext } from "react"
 import styled from "styled-components"
 
-import UserContext from "../../context/UserContext"
-
 import Header from "../../components/Atoms/Header"
-import TradeBox from "../../components/Molecules/TradeBox"
+import TradeBox from "../../components/Organisim/TradeBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 import Footer from "../../components/Atoms/Footer"
 
-import { jsonFetch } from "../../services/fetchService"
-import { limits } from "./contants"
+import userContext from "../../context/UserContext"
 
 import apiConfig from "../../config/api"
 import pathConfig from "../../config/path"
+import { getFetch } from "../../services/fetchService"
 
-const { apiUrl } = apiConfig
+import { limits } from "./contants"
+
+const { url, apiUrl } = apiConfig
 const { products } = pathConfig
 
 const Container = styled.div`
@@ -41,22 +41,26 @@ const ScrollFrame = styled.div`
   width: 60rem;
   height: 90%;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
-const Page = props => {
+const Page = () => {
+  const [user] = useContext(userContext)
   const [page, setPage] = useState(0)
-  const [user] = useContext(UserContext)
 
   const fetcher = async () => {
-    const url = `${apiUrl}${products.onSale}`
+    const fetchUrl = `${apiUrl}${products}`
+    const list = await getFetch(fetchUrl, {}, { id: user.id, page, limits })
+    setPage(page + (list.length === limits))
 
-    console.dir(user.id)
-
-    const [list] = await jsonFetch(url, {}, { id: user.id, page, limits })
-    setPage(page + 1)
     return list.map(value => {
       return {
         key: value.id,
+        id: value.id,
+        link: `${url}/products/${value.id}`,
         title: value.title,
         status: "경매중",
         thumbnail: value.thumbnailUrl,
@@ -73,7 +77,7 @@ const Page = props => {
       <ContentContainer>
         <Header text={"경매중인 내 상품"} />
         <ScrollFrame>
-          <InfiniteScroll fetcher={fetcher} drawer={drawer} loadPerOnce={10} />
+          <InfiniteScroll fetcher={fetcher} drawer={drawer} />
         </ScrollFrame>
       </ContentContainer>
       <Footer />
