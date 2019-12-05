@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import ButtonSelect from "../../components/Atoms/SelectOptionButton"
 import ButtonDays from "../../components/Atoms/DayButton"
 import Header from "../../components/Atoms/Header"
@@ -45,71 +45,73 @@ const TradeContents = styled.div`
   margin-bottom: 0.5rem;
 `
 function TradeList(props) {
+  const [data, setData] = useState([])
   const [isSale, setIsSale] = useState(true)
   const [isBuy, setIsBuy] = useState(true)
   const [dayago, setDayago] = useState(1)
   const [page, setPage] = useState(1)
-  const [reset, setReset] = useState(false)
   const [user, setUser] = useContext(userContext)
 
-  async function getData(sale, buy, day, page) {
-    try {
-      let resultFetch = await fetch(`${apiUrl}${logfilter}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userid: user.id,
-          dayago: day,
-          isSale: sale,
-          isBuy: buy,
-          page: page,
-          limit: 10
-        })
+  function getData(sale, buy, day, page) {
+    let url = apiUrl + logfilter
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userid: user.id,
+        dayago: day,
+        isSale: sale,
+        isBuy: buy,
+        page: page,
+        limit: 10
       })
-      let resultJson = await resultFetch.json()
-      let resultData = await resultJson[0].reduce((acc, ele) => {
-        let data = {
-          title: ele.title,
-          thumbnail: ele.thumbnailUrl,
-          status: ele.seller.id === user.id ? "판매" : "구매",
-          soldprice: ele.soldPrice,
-          solddate: ele.soldDate,
-          registdate: ele.registerDate,
-          hopeprice: ele.hopePrice,
-          deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
-        }
-        acc.push(data)
-        return acc
-      }, [])
-
-      setPage(page++)
-
-      return resultData
-    } catch (err) {
-      console.log(err)
-    }
+    })
+      .then(resultJson => {
+        return resultJson.json()
+      })
+      .then(result => {
+        let resultData = result[0].reduce((acc, ele) => {
+          let data = {
+            title: ele.title,
+            thumbnail: ele.thumbnailUrl,
+            status: ele.seller.id === user.id ? "판매" : "구매",
+            soldprice: ele.soldPrice,
+            solddate: ele.soldDate,
+            registdate: ele.registerDate,
+            hopeprice: ele.hopePrice,
+            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
+          }
+          acc.push(data)
+          return acc
+        }, [])
+        setPageNumber(page++)
+        setData(resultData)
+      })
   }
 
+  function setPageNumber(num) {
+    setPage(num)
+  }
   function setSale() {
     setPage(1)
     setIsSale(!isSale)
-    setReset(!reset)
   }
 
   function setBuy() {
     setPage(1)
     setIsBuy(!isBuy)
-    setReset(!reset)
   }
 
   function setDay(day) {
     setPage(1)
     setDayago(day)
-    setReset(!reset)
   }
 
+  useEffect(() => {
+    getData(isSale, isBuy, dayago, page)
+  }, [dayago, isBuy, isSale])
   const drawer = item => item.map(value => <TradeListBox {...value} />)
   //랜더링.
 
@@ -131,11 +133,14 @@ function TradeList(props) {
           />
         </RightAlign>
         <TradeContents>
-          <InfiniteScroll
+          {data.map(value => (
+            <TradeListBox key={value.title + value.solddate} {...value} />
+          ))}
+          {/* <InfiniteScroll
             reset={reset}
             fetcher={() => getData(isSale, isBuy, dayago, page)}
             drawer={drawer}
-          />
+          /> */}
         </TradeContents>
       </TradeWrap>
       <Footer />
