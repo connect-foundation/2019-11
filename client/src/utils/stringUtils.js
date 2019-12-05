@@ -7,8 +7,8 @@ const getDDay = date => {
   return result;
 };
 
-const getNowDateTime = () => {
-  const today = new Date();
+const getDateTime = dateString => {
+  const today = new Date(dateString);
 
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
@@ -20,4 +20,4 @@ const getNowDateTime = () => {
   return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
 };
 
-export { getDDay, getNowDateTime };
+export { getDDay, getDateTime };

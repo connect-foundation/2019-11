@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ShareCollection from "../../Product/ShareCollection";
 import { convertToPrice } from "../../../utils/numberUtils";
 import axios from "axios";
-import { getNowDateTime } from "../../../utils/stringUtils";
+import { getDa, getDateTime } from "../../../utils/stringUtils";
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+
+const { apiUrl } = apiConfig;
 
 const ProductInfoStyle = styled.div`
   display: flex;
@@ -135,41 +139,41 @@ const ProductInfo = ({ product }) => {
     seller
   } = product;
 
-  const baseURL =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "http://honeybee.palda.shop";
+  const [deadLine, setDeadLine] = useState(getDateTime(auctionDeadline));
+  const baseURL = apiUrl;
 
   const handleBidSubmit = e => {
     e.preventDefault();
     const params = {
       bidPrice: e.target.bidPrice.value,
-      bidDate: getNowDateTime(),
+      bidDate: getDateTime(),
       userId: 1,
       productId: id
     };
 
-    axios.post(`${baseURL}/api/bids`, params).then(response => {
+    axios.post(`${baseURL}${pathConfig.bids}`, params).then(response => {
       console.log(response);
     });
   };
 
   const handleImmediateSubmit = price => e => {
     e.preventDefault();
-    const params = { soldPrice: price, soldDate: getNowDateTime(), buyerId: 1 };
-    axios.put(`${baseURL}/api/products/${id}`, params).then(response => {
-      console.log(response);
-    });
+    const params = { soldPrice: price, soldDate: getDateTime(), buyerId: 1 };
+    axios
+      .put(`${baseURL}${pathConfig.products}${id}`, params)
+      .then(response => {
+        console.log(response);
+      });
   };
 
   useEffect(() => {
     const timer = setInterval(() => {
-      console.log(auctionDeadline);
+      setDeadLine(getDateTime(deadLine));
     }, 1000);
     return () => {
       clearInterval(timer);
     };
-  }, [auctionDeadline]);
+  }, [deadLine]);
 
   return (
     <ProductInfoStyle>
@@ -187,7 +191,7 @@ const ProductInfo = ({ product }) => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료 시간</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline || "비경매 상품"}
+            {deadLine || "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
         <ProductBid onSubmit={handleBidSubmit}>
