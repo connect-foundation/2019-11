@@ -9,6 +9,7 @@ import {
 import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
+import uuid from "uuid";
 
 @JsonController("/sign")
 export class LoginController {
@@ -41,6 +42,42 @@ export class LoginController {
       return { msg, user };
     }
     return { msg, user: null };
+  }
+
+  @Post("/kakao")
+  public async authKakao(
+    @BodyParam("id") loginId: string,
+    @BodyParam("name") name: string,
+    @BodyParam("email") email: string,
+    @BodyParam("profileUrl") profileUrl: string,
+    @Req() req: any
+  ) {
+    const accessToken = `kakao_${req.headers["access-token"]}`;
+    const refreshToken = `kakao_${req.headers["refresh-token"]}`;
+
+    if (await this.userService.checkDuplicate(loginId)) {
+      const user = await this.userService.updateKakao(
+        loginId,
+        name,
+        email,
+        profileUrl,
+        accessToken,
+        refreshToken
+      );
+      return { msg: true, user };
+    }
+    const password = uuid();
+    const user = await this.userService.createKakao(
+      loginId,
+      password,
+      name,
+      email,
+      profileUrl,
+      accessToken,
+      refreshToken
+    );
+
+    return { msg: true, user };
   }
 
   @Get("/logout")

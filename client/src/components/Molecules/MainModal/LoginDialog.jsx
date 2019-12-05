@@ -45,6 +45,42 @@ const LoginDialog = ({ signUp, login, close }) => {
     e.preventDefault();
   };
 
+  const onSuccessKakaoLogin = result => {
+    const { profile, response } = result;
+    const { id, kakao_account, properties } = profile;
+    const { access_token, refresh_token } = response;
+    const { nickname, profile_image } = properties;
+    const { email } = kakao_account;
+
+    fetch("http://localhost:3000/api/sign/kakao", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "access-token": access_token,
+        "refresh-token": refresh_token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id,
+        name: nickname,
+        email: email,
+        profileUrl: profile_image
+      })
+    })
+      .then(result => result.json())
+      .then(async result => {
+        const { msg, user } = result;
+        if (msg) {
+          console.log(user);
+          setUser(user);
+          await localStorage.setItem("access-token", user.accessToken);
+          await localStorage.setItem("refresh-token", user.refreshToken);
+          close();
+          login();
+        } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+      });
+  };
+
   const handleKeyUpId = e => {
     setId(e.target.value);
   };
@@ -81,7 +117,7 @@ const LoginDialog = ({ signUp, login, close }) => {
         <OAuthLoginButton color="white">구글</OAuthLoginButton>
         <KakaoButton
           jsKey="3e60e52d3ff296f46273d8da0462dc40"
-          onSuccess={result => console.log(result)}
+          onSuccess={onSuccessKakaoLogin}
           onFailure={result => console.log(result)}
           getProfile="true"
           buttonText="카카오"

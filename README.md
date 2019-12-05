@@ -67,7 +67,7 @@
     <br>
     </td>
     <tr>
-    <td align="center"><a href="https://github.com/kimjouny"><img src="https://avatars3.githubusercontent.com/u/37038262?s=460&v=4" width="75px;" alt="Kimjouny"/><br /><sub><b>Seungpyo Hong</b></sub></a><br /><a href="https://github.com/connect-foundation/2019-11/commits/develop?author=kimjouny" title="Code">💻</a> </td>
+    <td align="center"><a href="https://github.com/kimjouny"><img src="https://avatars3.githubusercontent.com/u/37038262?s=460&v=4" width="75px;" alt="Kimjouny"/><br /><sub><b>Seungpyo Hong</b></sub></a><br /><a href="https://github.com/connect-foundation/2019-11/commits/develop?author=sphong5911" title="Code">💻</a> </td>
     <td>
     👍 <strong>메인 카테고리 개발</strong>
     <br>

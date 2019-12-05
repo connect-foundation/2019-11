@@ -1,22 +1,26 @@
-import React, { useState, useRef, useEffect, useContext } from "react"
-import Logo from "./Logo"
-import CategoryIcon from "./CategoryIcon"
-import ExpandList from "./ExpandList"
-import LoginButton from "./LoginButton"
-import Profile from "./Profile"
-import MainModal from "../../Molecules/MainModal"
+import React, { useState, useRef, useEffect, useContext } from "react";
+import Logo from "./Logo";
+import CategoryIcon from "./CategoryIcon";
+import ExpandList from "./ExpandList";
+import LoginButton from "./LoginButton";
+import Profile from "./Profile";
+import MainModal from "../../Molecules/MainModal";
 
-import Cloth from "../../../assets/cloth.svg"
-import Electronic from "../../../assets/television.svg"
-import LifeStyle from "../../../assets/geek.svg"
-import MessengerIcon from "../../../assets/messenger.svg"
+import Cloth from "../../../assets/cloth.svg";
+import Electronic from "../../../assets/television.svg";
+import LifeStyle from "../../../assets/geek.svg";
 
-import detailCategoryList from "../../../data/detail-category-list"
+import detailCategoryList from "../../../data/detail-category-list";
 
-import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from "./CategoryBarStyle"
-import userContext from "../../../context/UserContext"
-
-import Messenger from "../../Messenger"
+import {
+  Container,
+  OriginWrapper,
+  ListWrapper,
+  Bar,
+  List,
+  DivisionLine
+} from "./CategoryBarStyle";
+import userContext from "../../../context/UserContext";
 
 const Components = () => {
   const [open, setOpen] = useState(false)
@@ -25,20 +29,20 @@ const Components = () => {
   const [selectIdx, setSelectIdx] = useState(1)
   const [user, setUser] = useContext(userContext)
 
-  const node = useRef()
+  const node = useRef();
 
-  useEffect(async () => {
-    document.addEventListener("mousedown", handleOnBlur)
-    const refreshToken = localStorage.getItem("refresh-token")
-    const accessToken = localStorage.getItem("access-token")
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOnBlur);
+    const refreshToken = localStorage.getItem("refresh-token");
+    const accessToken = localStorage.getItem("access-token");
     if (refreshToken !== null && accessToken !== null) {
-      await fetch("http://localhost:3000/api/users/", {
+      fetch("http://localhost:3000/api/users/", {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "access-token": `${refreshToken}`,
-          "refresh-token": `${accessToken}`
+          "access-token": `${accessToken}`,
+          "refresh-token": `${refreshToken}`
         }
       })
         .then(result => result.json())
@@ -51,41 +55,35 @@ const Components = () => {
           } else alert("세션이 만료되어 로그아웃됩니다.")
         })
     }
-  }, [])
+  }, []);
 
   const handleClick = e => {
-    const { idx } = e.target.dataset
+    const { idx } = e.target.dataset;
     if (selectIdx === idx || open === false) {
-      setOpen(!open)
+      setOpen(!open);
     }
-    setSelectIdx(idx)
-  }
+    setSelectIdx(idx);
+  };
 
   const handleLoginClick = () => {
-    setLoginOpen(!loginOpen)
-  }
+    setLoginOpen(!loginOpen);
+  };
 
   const handleLoginClose = () => {
-    loginOpen === true && setLoginOpen(!loginOpen)
-  }
+    loginOpen === true && setLoginOpen(!loginOpen);
+  };
 
   const handleOnBlur = e => {
     if (!node.current.contains(e.target)) {
-      setOpen(false)
+      setOpen(false);
     }
-  }
-
-  const close = () => {
-    setOpen(false)
-  }
+  };
 
   const setLoginStatus = () => {
-    setIsLogin(!isLogin)
-  }
+    setIsLogin(!isLogin);
+  };
 
-  const handleClickProfile = () => {
-    fetch("http://localhost:3000/api/sign/check").then(result => alert(result))
-  }
+  const handleClickProfile = () => {};
 
   return (
     <Container ref={node}>
@@ -135,9 +133,13 @@ const Components = () => {
           onClick={close}
         />
       </ListWrapper>
-      <MainModal onClose={handleLoginClose} open={loginOpen} login={setLoginStatus} />
+      <MainModal
+        onClose={handleLoginClose}
+        open={loginOpen}
+        login={setLoginStatus}
+      />
     </Container>
-  )
-}
+  );
+};
 
-export default Components
+export default Components;
