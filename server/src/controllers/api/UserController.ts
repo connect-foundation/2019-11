@@ -14,6 +14,8 @@ import {
 import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
+import fetch from "node-fetch";
+import { UserDTO } from "../../dto/UserDTO";
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -26,9 +28,49 @@ export class UserController {
 
   @Get()
   public async getUser(@Req() req: any, @Res() res: any) {
-    console.log(req.headers);
     let accessToken = req.headers["access-token"];
     let refreshToken = req.headers["refresh-token"];
+    if (accessToken.includes("kakao_") || refreshToken.includes("kakao_")) {
+      const user = await this.userService.findOneByToken(accessToken);
+      accessToken = accessToken.replace("kakao_", "");
+      refreshToken = refreshToken.replace("kakao_", "");
+      const checkExpireResult = await fetch(
+        "https://kapi.kakao.com/v1/user/access_token_info",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      )
+        .then(result => result.json())
+        .then(result => result.expiresInMillis);
+      if (checkExpireResult <= 0) {
+        const { access_token, refresh_token } = await fetch(
+          `https://kauth.kakao.com/oauth/token?grant_type=refresh_token&client_id=${process.env.KAKAO_API_KEY}&refresh_token=${refreshToken}`,
+          {
+            method: "POST"
+          }
+        )
+          .then(result => result.json())
+          .then(result => {
+            console.log(result);
+            return result;
+          });
+        console.log("===================");
+        console.log(access_token, refresh_token);
+        console.log("===================");
+        if (refresh_token !== undefined) refreshToken = refresh_token;
+        const { loginId, name, email, profileUrl } = <UserDTO>user;
+        return await this.userService.updateKakao(
+          loginId,
+          name,
+          email,
+          profileUrl,
+          `kakao_${access_token}`,
+          `kakao_${refreshToken}`
+        );
+      }
+
+      return user;
+    }
     try {
       const decodedAccessToken = jwt.verify(
         accessToken,
