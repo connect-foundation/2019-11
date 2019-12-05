@@ -23,11 +23,11 @@ import {
 import userContext from "../../../context/UserContext";
 
 const Components = () => {
-  const [open, setOpen] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [isLogin, setIsLogin] = useState(false)
-  const [selectIdx, setSelectIdx] = useState(1)
-  const [user, setUser] = useContext(userContext)
+  const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [selectIdx, setSelectIdx] = useState(1);
+  const [user, setUser] = useContext(userContext);
 
   const node = useRef();
 
@@ -48,12 +48,12 @@ const Components = () => {
         .then(result => result.json())
         .then(async result => {
           if (result) {
-            setUser(result)
-            await localStorage.setItem("access-token", result.accessToken)
-            await localStorage.setItem("refresh-token", result.refreshToken)
-            setIsLogin(true)
-          } else alert("세션이 만료되어 로그아웃됩니다.")
-        })
+            setUser(result);
+            await localStorage.setItem("access-token", result.accessToken);
+            await localStorage.setItem("refresh-token", result.refreshToken);
+            setIsLogin(true);
+          } else alert("세션이 만료되어 로그아웃됩니다.");
+        });
     }
   }, []);
 
@@ -81,6 +81,10 @@ const Components = () => {
 
   const setLoginStatus = () => {
     setIsLogin(!isLogin);
+  };
+
+  const close = () => {
+    setOpen(false);
   };
 
   const handleClickProfile = () => {};
@@ -122,7 +126,11 @@ const Components = () => {
               idx={3}
             />
           </List>
-          {isLogin === true ? <Messenger img={MessengerIcon} onClick={close} /> : undefined}
+          {isLogin === true ? (
+            <Messenger img={MessengerIcon} onClick={close} />
+          ) : (
+            undefined
+          )}
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open}>
