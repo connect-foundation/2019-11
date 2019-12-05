@@ -30,6 +30,15 @@ export class ProductController {
     return this.productService.findOne(Number(productId))
   }
 
+  @Get()
+  public async sale(
+    @BodyParam("id") userId: number,
+    @BodyParam("page") page: number,
+    @BodyParam("limits") limits: number
+  ) {
+    return await this.productService.getOwnSale(userId, page, limits)
+  }
+
   @Put("/:id")
   public update(
     @Param("id") productId: string,
@@ -45,7 +54,7 @@ export class ProductController {
     )
   }
 
-  @Put()
+  @Post()
   public async create(
     @HeaderParam("x-timestamp") registerDate: string,
     @BodyParam("userId") userId: number,
@@ -75,14 +84,5 @@ export class ProductController {
       isAuction
     )
     return result
-  }
-
-  @Post("/onlySale")
-  public async sale(
-    @BodyParam("id") userId: number,
-    @BodyParam("page") page: number,
-    @BodyParam("limits") limits: number
-  ) {
-    return await this.productService.getOwnSale(userId, page, limits)
   }
 }
