@@ -41,6 +41,13 @@ export class ProductRepository {
       cache: true
     })
   }
+
+  /* DELETE */
+
+  public async remove(pid: number) {
+    return await this.em.delete(Products, { id: pid })
+  }
+
   /* PUT */
   public async create(
     userId: number,

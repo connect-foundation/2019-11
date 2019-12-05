@@ -93,6 +93,11 @@ export class ProductsService {
     return this.productRepository.update(product)
   }
 
+  /** Delete */
+  public async remove(pid: number) {
+    return this.productRepository.remove(pid)
+  }
+
   /** PUT */
   public async create(
     userId: number,

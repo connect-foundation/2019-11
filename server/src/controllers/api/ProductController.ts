@@ -6,7 +6,8 @@ import {
   Get,
   Param,
   QueryParam,
-  HeaderParam
+  HeaderParam,
+  Delete
 } from "routing-controllers"
 import { ProductsService } from "../../services/ProductService"
 
@@ -83,6 +84,18 @@ export class ProductController {
       categoryCode,
       isAuction
     )
+    return result
+  }
+
+  @Delete("/:id")
+  public async remove(
+    @HeaderParam("x-timestamp") timestamp: string,
+    @HeaderParam("x-id") uid: number,
+    @HeaderParam("x-uloginId") lid: string,
+    @Param("id") pid: number
+  ) {
+    const result = await this.productService.remove(pid)
+
     return result
   }
 }
