@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>success</title>
+    <desc>Created with Sketch.</desc>
+    <g id="components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="components-collections" transform="translate(-1828.000000, -633.000000)">
+            <g id="success" transform="translate(1828.000000, 633.000000)">
+                <circle id="Oval" fill="#5CB85C" fill-rule="nonzero" cx="25" cy="25" r="25"></circle>
+                <polyline id="Path" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="38 15 22 33 12 25"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
