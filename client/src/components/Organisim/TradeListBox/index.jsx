@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import TradeBox from "../TradeBox"
+import TradeBox from "../TradeBase"
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
   flex-direction: row;
