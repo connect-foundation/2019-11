@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import ShareCollection from "../../Product/ShareCollection";
 import { convertToPrice } from "../../../utils/numberUtils";
+import axios from "axios";
+import { getNowDateTime } from "../../../utils/stringUtils";
 
 const ProductInfoStyle = styled.div`
   display: flex;
@@ -54,7 +56,7 @@ const ProductDueDate = styled.div`
   text-align: right;
 `;
 
-const ProductBid = styled.div`
+const ProductBid = styled.form`
   margin: var(--margin-md) 0px;
   text-align: right;
 `;
@@ -133,6 +135,42 @@ const ProductInfo = ({ product }) => {
     seller
   } = product;
 
+  const baseURL =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "http://honeybee.palda.shop";
+
+  const handleBidSubmit = e => {
+    e.preventDefault();
+    const params = {
+      bidPrice: e.target.bidPrice.value,
+      bidDate: getNowDateTime(),
+      userId: 1,
+      productId: id
+    };
+
+    axios.post(`${baseURL}/api/bids`, params).then(response => {
+      console.log(response);
+    });
+  };
+
+  const handleImmediateSubmit = price => e => {
+    e.preventDefault();
+    const params = { soldPrice: price, soldDate: getNowDateTime(), buyerId: 1 };
+    axios.put(`${baseURL}/api/products/${id}`, params).then(response => {
+      console.log(response);
+    });
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log(auctionDeadline);
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [auctionDeadline]);
+
   return (
     <ProductInfoStyle>
       <ProductImageBox>
@@ -152,11 +190,11 @@ const ProductInfo = ({ product }) => {
             {auctionDeadline || "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
-        <ProductBid>
-          <BidInput placeholder="입찰가격" />
+        <ProductBid onSubmit={handleBidSubmit}>
+          <BidInput name="bidPrice" placeholder="입찰가격" />
           <BidButton>입찰</BidButton>
         </ProductBid>
-        <ProductPurchase>
+        <ProductPurchase onSubmit={handleImmediateSubmit(immediatePrice)}>
           <PurchasePrice>
             즉시 구매가
             <ProductDescText primary bold size="sm">

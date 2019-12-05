@@ -1,8 +1,8 @@
-import styled from "styled-components"
-import React, { useState, useEffect } from "react"
-import RoomElement from "./RoomElement"
-import ChatCotainer from "./ChatCotainer"
-import firebase from "../../../shared/firebase"
+import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import RoomElement from "./RoomElement";
+import ChatCotainer from "./ChatCotainer";
+import firebase from "../../../shared/firebase";
 
 const MessengerDiv = styled.div`
   position: absolute;
@@ -28,64 +28,70 @@ const MessengerDiv = styled.div`
     bottom: 1rem;
     left: -1rem;
   }
-`
+`;
 
 const MessengerScroll = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-`
+`;
 function Container(props) {
-  const [RoomList, setRoomList] = useState([])
-  const [isRoomList, setIsRoomList] = useState(true)
-  const [RoomNumber, setRoomNumber] = useState(0)
-  const [RoomUser, setRoomUser] = useState(0)
+  const [RoomList, setRoomList] = useState([]);
+  const [isRoomList, setIsRoomList] = useState(true);
+  const [RoomNumber, setRoomNumber] = useState(0);
+  const [RoomUser, setRoomUser] = useState(0);
 
-  let USERID = 1 //임시 나의 유저 id
+  let USERID = 1; //임시 나의 유저 id
 
-  useEffect(() => {
-    firebase.getRoomList(String(USERID)).on("value", function listener(result) {
-      if (result.val() !== null) {
-        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          acc.push({
-            RoomNumber: ele,
-            RecentMeg: result.val()[ele]["recent"]["text"],
-            opponentUserName: getOpponentUserId(result.val()[ele])
-            // opponentUserImg:0,
-          })
-          return acc
-        }, [])
-        setRoomList(roomNumbers)
-      }
-    })
-    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
-      if (result.val() !== null) {
-        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          acc.push({
-            RoomNumber: ele,
-            RecentMeg: result.val()[ele]["recent"]["text"],
-            opponentUserName: getOpponentUserId(result.val()[ele])
-            // opponentUserImg:0,
-          })
-          return acc
-        }, [])
-        setRoomList(roomNumbers)
-      }
-    })
-  }, [isRoomList])
+  // useEffect(() => {
+  //   firebase.getRoomList(String(USERID)).on("value", function listener(result) {
+  //     if (result.val() !== null) {
+  //       let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+  //         acc.push({
+  //           RoomNumber: ele,
+  //           RecentMeg: result.val()[ele]["recent"]["text"],
+  //           opponentUserName: getOpponentUserId(result.val()[ele])
+  //           // opponentUserImg:0,
+  //         })
+  //         return acc
+  //       }, [])
+  //       setRoomList(roomNumbers)
+  //     }
+  //   })
+  //   return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
+  //     if (result.val() !== null) {
+  //       let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+  //         acc.push({
+  //           RoomNumber: ele,
+  //           RecentMeg: result.val()[ele]["recent"]["text"],
+  //           opponentUserName: getOpponentUserId(result.val()[ele])
+  //           // opponentUserImg:0,
+  //         })
+  //         return acc
+  //       }, [])
+  //       setRoomList(roomNumbers)
+  //     }
+  //   })
+  // }, [isRoomList])
 
   function clickRoomList(flag) {
-    setIsRoomList(flag)
+    setIsRoomList(flag);
   }
   const writeChat = e => {
-    e.preventDefault()
-    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
-    e.target.messengerText.value = ""
-  }
+    e.preventDefault();
+    firebase.writeChat(
+      e.target.roomNumber.value,
+      USERID,
+      e.target.messengerText.value
+    ); //방번호, 유저번호
+    e.target.messengerText.value = "";
+  };
 
   function getOpponentUserId(object) {
-    return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent")
+    return Object.keys(object).filter(
+      word => word !== String(USERID) && word !== "recent"
+    );
   }
   let initMessenger = () => {
     return isRoomList ? (
@@ -95,30 +101,30 @@ function Container(props) {
             <RoomElement
               key={value.opponentUserName}
               clickroom={() => {
-                setRoomNumber(value.RoomNumber)
-                setRoomUser(value.opponentUserName)
-                clickRoomList(false)
+                setRoomNumber(value.RoomNumber);
+                setRoomUser(value.opponentUserName);
+                clickRoomList(false);
               }}
               Img={"A"}
               Name={value.opponentUserName}
               RecentMsg={value.RecentMeg}
             />
-          )
+          );
         })}
       </MessengerScroll>
     ) : (
       <ChatCotainer
         clickback={() => {
-          clickRoomList(true)
+          clickRoomList(true);
         }}
         roomNumber={RoomNumber}
         roomUser={RoomUser}
         writeChat={writeChat}
       ></ChatCotainer>
-    )
-  }
+    );
+  };
 
-  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>
+  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>;
 }
 
-export default Container
+export default Container;
