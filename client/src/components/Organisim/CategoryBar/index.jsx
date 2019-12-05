@@ -5,13 +5,11 @@ import ExpandList from "./ExpandList";
 import LoginButton from "./LoginButton";
 import Profile from "./Profile";
 import MainModal from "../../Molecules/MainModal";
-
 import Cloth from "../../../assets/cloth.svg";
 import Electronic from "../../../assets/television.svg";
 import LifeStyle from "../../../assets/geek.svg";
-
+import MessengerIcon from "../../../assets/messenger.svg";
 import detailCategoryList from "../../../data/detail-category-list";
-
 import {
   Container,
   OriginWrapper,
@@ -21,6 +19,7 @@ import {
   DivisionLine
 } from "./CategoryBarStyle";
 import userContext from "../../../context/UserContext";
+import Messenger from "../../Messenger";
 
 const Components = () => {
   const [open, setOpen] = useState(false);

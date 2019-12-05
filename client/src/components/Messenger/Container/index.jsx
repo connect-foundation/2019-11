@@ -1,11 +1,11 @@
-import styled from "styled-components"
-import React, { useState, useEffect, useContext } from "react"
-import RoomElement from "./RoomElement"
-import ChatCotainer from "./ChatCotainer"
-import firebase from "../../../shared/firebase"
+import styled from "styled-components";
+import React, { useState, useEffect, useContext } from "react";
+import RoomElement from "./RoomElement";
+import ChatCotainer from "./ChatCotainer";
+import firebase from "../../../shared/firebase";
 
-import userContext from "../../../context/UserContext"
-import FoundImg from "../../../assets/found.png"
+import userContext from "../../../context/UserContext";
+import FoundImg from "../../../assets/found.png";
 
 const MessengerDiv = styled.div`
   position: absolute;
@@ -33,17 +33,18 @@ const MessengerDiv = styled.div`
     bottom: 1rem;
     left: -1rem;
   }
-`
+`;
 
 const MessengerScroll = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-`
+`;
 
 const MessengerInfo = styled.div`
   display: flex;
+  font-family: "BMJUA";
   width: 17rem;
   flex-direction: column;
   justify-content: center;
@@ -53,16 +54,16 @@ const MessengerInfo = styled.div`
     width: 10rem;
     height: 10rem;
   }
-`
+`;
 function Container(props) {
-  const [RoomList, setRoomList] = useState([])
-  const [isRoomList, setIsRoomList] = useState(true)
-  const [RoomNumber, setRoomNumber] = useState(0)
-  const [RoomUserId, setRoomUserId] = useState(0)
+  const [RoomList, setRoomList] = useState([]);
+  const [isRoomList, setIsRoomList] = useState(true);
+  const [RoomNumber, setRoomNumber] = useState(0);
+  const [RoomUserId, setRoomUserId] = useState(0);
 
-  const [user, setUser] = useContext(userContext)
+  const [user, setUser] = useContext(userContext);
 
-  let USERID = user.loginId
+  let USERID = user.loginId;
 
   useEffect(() => {
     firebase.getRoomList(String(USERID)).on("value", function listener(result) {
@@ -73,53 +74,61 @@ function Container(props) {
               RoomNumber: ele,
               RecentMeg: result.val()[ele]["recent"]["text"],
               opponentUserId: getOpponentUserId(result.val()[ele])
-            })
+            });
           } else {
             acc.push({
               RoomNumber: ele,
               RecentMeg: "",
               opponentUserId: getOpponentUserId(result.val()[ele])
-            })
+            });
           }
-          return acc
-        }, [])
-        setRoomList(roomNumbers)
+          return acc;
+        }, []);
+        setRoomList(roomNumbers);
       }
-    })
-    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
-      if (result.val() !== null) {
-        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          if (result.val()[ele]["recent"] !== undefined) {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: result.val()[ele]["recent"]["text"],
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            })
-          } else {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: "",
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            })
-          }
-          return acc
-        }, [])
-        setRoomList(roomNumbers)
-      }
-    })
-  }, [isRoomList])
+    });
+    return firebase
+      .getRoomList(String(USERID))
+      .off("value", function listener(result) {
+        if (result.val() !== null) {
+          let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+            if (result.val()[ele]["recent"] !== undefined) {
+              acc.push({
+                RoomNumber: ele,
+                RecentMeg: result.val()[ele]["recent"]["text"],
+                opponentUserId: getOpponentUserId(result.val()[ele])
+              });
+            } else {
+              acc.push({
+                RoomNumber: ele,
+                RecentMeg: "",
+                opponentUserId: getOpponentUserId(result.val()[ele])
+              });
+            }
+            return acc;
+          }, []);
+          setRoomList(roomNumbers);
+        }
+      });
+  }, [isRoomList]);
 
   function clickRoomList(flag) {
-    setIsRoomList(flag)
+    setIsRoomList(flag);
   }
   const writeChat = e => {
-    e.preventDefault()
-    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value) //방번호, 유저번호
-    e.target.messengerText.value = ""
-  }
+    e.preventDefault();
+    firebase.writeChat(
+      e.target.roomNumber.value,
+      USERID,
+      e.target.messengerText.value
+    ); //방번호, 유저번호
+    e.target.messengerText.value = "";
+  };
 
   function getOpponentUserId(object) {
-    return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent")
+    return Object.keys(object).filter(
+      word => word !== String(USERID) && word !== "recent"
+    );
   }
   let initMessenger = () => {
     return isRoomList ? (
@@ -144,30 +153,30 @@ function Container(props) {
               <RoomElement
                 key={value.opponentUserId}
                 clickroom={() => {
-                  setRoomNumber(value.RoomNumber)
-                  setRoomUserId(value.opponentUserId)
-                  clickRoomList(false)
+                  setRoomNumber(value.RoomNumber);
+                  setRoomUserId(value.opponentUserId);
+                  clickRoomList(false);
                 }}
                 userLoginId={value.opponentUserId}
                 RecentMsg={value.RecentMeg}
               />
-            )
+            );
           })
         )}
       </MessengerScroll>
     ) : (
       <ChatCotainer
         clickback={() => {
-          clickRoomList(true)
+          clickRoomList(true);
         }}
         roomNumber={RoomNumber}
         roomUserId={RoomUserId}
         writeChat={writeChat}
       ></ChatCotainer>
-    )
-  }
+    );
+  };
 
-  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>
+  return <MessengerDiv show={props.show}>{initMessenger()}</MessengerDiv>;
 }
 
-export default Container
+export default Container;
