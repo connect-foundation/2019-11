@@ -21,7 +21,7 @@ const ProfileContainer = styled.div`
 `;
 
 const Profile = ({ onClick }) => {
-  const [user, setUser] = useContext(userContext);
+  const [user] = useContext(userContext);
   return (
     <ProfileContainer>
       <img

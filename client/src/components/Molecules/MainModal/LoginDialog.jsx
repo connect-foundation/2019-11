@@ -10,11 +10,12 @@ import {
   Footer,
   OAuthLoginButton,
   SignUpButton,
-  KakaoButton
+  KakaoButton,
+  GoogleButton
 } from "./LoginDialogStyles";
 import UserContext from "../../../context/UserContext";
 
-const LoginDialog = ({ signUp, login, close }) => {
+const LoginDialog = ({ signUp, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [user, setUser] = useContext(UserContext);
@@ -36,10 +37,9 @@ const LoginDialog = ({ signUp, login, close }) => {
         const { msg, user } = result;
         if (msg) {
           setUser(user);
-          await localStorage.setItem("access-token", user.accessToken);
-          await localStorage.setItem("refresh-token", user.refreshToken);
+          localStorage.setItem("access-token", user.accessToken);
+          localStorage.setItem("refresh-token", user.refreshToken);
           close();
-          login();
         } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
       });
     e.preventDefault();
@@ -73,11 +73,30 @@ const LoginDialog = ({ signUp, login, close }) => {
         if (msg) {
           console.log(user);
           setUser(user);
-          await localStorage.setItem("access-token", user.accessToken);
-          await localStorage.setItem("refresh-token", user.refreshToken);
+          localStorage.setItem("access-token", user.accessToken);
+          localStorage.setItem("refresh-token", user.refreshToken);
           close();
-          login();
-        } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        } else alert("카카오 로그인에 실패하였습니다.");
+      });
+  };
+
+  const onSuccessGoogleLogin = result => {
+    fetch("http://localhost:3000/api/sign/google", {
+      method: "POST",
+      headers: {
+        "auth-code": `${result.code}`
+      }
+    })
+      .then(result => result.json())
+      .then(result => {
+        const { msg, user } = result;
+        if (msg) {
+          console.log(user);
+          setUser(user);
+          localStorage.setItem("access-token", user.accessToken);
+          localStorage.setItem("refresh-token", user.refreshToken);
+          close();
+        } else alert("구글 로그인에 실패하였습니다.");
       });
   };
 
@@ -114,9 +133,17 @@ const LoginDialog = ({ signUp, login, close }) => {
       </form>
       <DivisionLine />
       <Footer>
-        <OAuthLoginButton color="white">구글</OAuthLoginButton>
+        <GoogleButton
+          clientId={process.env.REACT_APP_GOOGLE_KEY}
+          buttonText={"구글"}
+          onSuccess={onSuccessGoogleLogin}
+          onFailure={result => console.log(result)}
+          responseType={"code"}
+          accessType={"offline"}
+          prompt={"consent"}
+        />
         <KakaoButton
-          jsKey="3e60e52d3ff296f46273d8da0462dc40"
+          jsKey={process.env.REACT_APP_KAKAO_KEY}
           onSuccess={onSuccessKakaoLogin}
           onFailure={result => console.log(result)}
           getProfile="true"

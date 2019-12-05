@@ -24,7 +24,6 @@ import Messenger from "../../Messenger";
 const Components = () => {
   const [open, setOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
   const [selectIdx, setSelectIdx] = useState(1);
   const [user, setUser] = useContext(userContext);
 
@@ -45,12 +44,11 @@ const Components = () => {
         }
       })
         .then(result => result.json())
-        .then(async result => {
+        .then(result => {
           if (result) {
             setUser(result);
-            await localStorage.setItem("access-token", result.accessToken);
-            await localStorage.setItem("refresh-token", result.refreshToken);
-            setIsLogin(true);
+            localStorage.setItem("access-token", result.accessToken);
+            localStorage.setItem("refresh-token", result.refreshToken);
           } else alert("세션이 만료되어 로그아웃됩니다.");
         });
     }
@@ -78,10 +76,6 @@ const Components = () => {
     }
   };
 
-  const setLoginStatus = () => {
-    setIsLogin(!isLogin);
-  };
-
   const close = () => {
     setOpen(false);
   };
@@ -93,8 +87,8 @@ const Components = () => {
       <OriginWrapper>
         <Logo />
         <Bar>
-          {isLogin === true ? (
-            <Profile onClick={handleClickProfile} logout={setLoginStatus} />
+          {user.isLogin === true ? (
+            <Profile onClick={handleClickProfile} />
           ) : (
             <LoginButton onClick={handleLoginClick} />
           )}
@@ -125,7 +119,7 @@ const Components = () => {
               idx={3}
             />
           </List>
-          {isLogin === true ? (
+          {user.isLogin === true ? (
             <Messenger img={MessengerIcon} onClick={close} />
           ) : (
             undefined
@@ -140,11 +134,7 @@ const Components = () => {
           onClick={close}
         />
       </ListWrapper>
-      <MainModal
-        onClose={handleLoginClose}
-        open={loginOpen}
-        login={setLoginStatus}
-      />
+      <MainModal onClose={handleLoginClose} open={loginOpen} />
     </Container>
   );
 };
