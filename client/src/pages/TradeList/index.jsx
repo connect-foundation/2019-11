@@ -1,13 +1,19 @@
 import styled from "styled-components"
 import React, { useState, useContext } from "react"
-import ButtonSelect from "../../components/TradeList/ButtonSelect"
-import ButtonDays from "../../components/TradeList/ButtonDays"
+import ButtonSelect from "../../components/Atoms/SelectOptionButton"
+import ButtonDays from "../../components/Atoms/DayButton"
 import Header from "../../components/Atoms/Header"
 import Footer from "../../components/Atoms/Footer"
 import TradeListBox from "../../components/Molecules/TradeListBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 
 import userContext from "../../context/UserContext"
+
+import apiConfig from "../../config/api"
+import pathConfig from "../../config/path"
+
+const { apiUrl } = apiConfig
+const { logfilter } = pathConfig
 
 const Wraper = styled.div`
   display: flex;
@@ -48,25 +54,20 @@ function TradeList(props) {
 
   async function getData(sale, buy, day, page) {
     try {
-      let resultFetch = await fetch(
-        `http://${
-          process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
-        }/api/log/filter`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userid: user.id,
-            dayago: day,
-            isSale: sale,
-            isBuy: buy,
-            page: page,
-            limit: 10
-          })
-        }
-      )
+      let resultFetch = await fetch(`${apiUrl}${logfilter}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userid: user.id,
+          dayago: day,
+          isSale: sale,
+          isBuy: buy,
+          page: page,
+          limit: 10
+        })
+      })
       let resultJson = await resultFetch.json()
       let resultData = await resultJson[0].reduce((acc, ele) => {
         let data = {

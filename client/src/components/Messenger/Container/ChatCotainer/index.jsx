@@ -5,6 +5,12 @@ import firebase from "../../../../shared/firebase"
 
 import userContext from "../../../../context/UserContext"
 
+import apiConfig from "../../../../config/api"
+import pathConfig from "../../../../config/path"
+
+const { apiUrl } = apiConfig
+const { users } = pathConfig
+
 const ChatContainerWrap = styled.div`
   width: 100%;
   height: 100%;
@@ -128,11 +134,7 @@ function ChatContainer(props) {
       setChat(snapshot.val())
     }
 
-    fetch(
-      `http://${
-        process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
-      }/api/users/${props.roomUserId}`
-    )
+    fetch(`${apiUrl}${users.find}${props.roomUserId}`)
       .then(result => {
         return result.json()
       })
