@@ -19,18 +19,18 @@ import userContext from "../../../context/UserContext"
 import Messenger from "../../Messenger"
 
 const Components = () => {
-  const [open, setOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const [selectIdx, setSelectIdx] = useState(1);
-  const [user, setUser] = useContext(userContext);
+  const [open, setOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [isLogin, setIsLogin] = useState(false)
+  const [selectIdx, setSelectIdx] = useState(1)
+  const [user, setUser] = useContext(userContext)
 
   const node = useRef()
 
   useEffect(async () => {
-    document.addEventListener("mousedown", handleOnBlur);
-    const refreshToken = localStorage.getItem("refresh-token");
-    const accessToken = localStorage.getItem("access-token");
+    document.addEventListener("mousedown", handleOnBlur)
+    const refreshToken = localStorage.getItem("refresh-token")
+    const accessToken = localStorage.getItem("access-token")
     if (refreshToken !== null && accessToken !== null) {
       await fetch("http://localhost:3000/api/users/", {
         method: "GET",
@@ -44,12 +44,12 @@ const Components = () => {
         .then(result => result.json())
         .then(async result => {
           if (result) {
-            setUser(result);
-            await localStorage.setItem("access-token", result.accessToken);
-            await localStorage.setItem("refresh-token", result.refreshToken);
-            setIsLogin(true);
-          } else alert("세션이 만료되어 로그아웃됩니다.");
-        });
+            setUser(result)
+            await localStorage.setItem("access-token", result.accessToken)
+            await localStorage.setItem("refresh-token", result.refreshToken)
+            setIsLogin(true)
+          } else alert("세션이 만료되어 로그아웃됩니다.")
+        })
     }
   }, [])
 
@@ -124,11 +124,16 @@ const Components = () => {
               idx={3}
             />
           </List>
-          <Messenger img={MessengerIcon} onClick={close} />
+          {isLogin === true ? <Messenger img={MessengerIcon} onClick={close} /> : undefined}
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open}>
-        <ExpandList open={open} idx={selectIdx} details={detailCategoryList[selectIdx - 1]} />
+        <ExpandList
+          open={open}
+          idx={selectIdx}
+          details={detailCategoryList[selectIdx - 1]}
+          onClick={close}
+        />
       </ListWrapper>
       <MainModal onClose={handleLoginClose} open={loginOpen} login={setLoginStatus} />
     </Container>

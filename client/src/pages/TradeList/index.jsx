@@ -1,11 +1,14 @@
 import styled from "styled-components"
-import React, { useState, useEffect } from "react"
+import React, { useState, useContext } from "react"
 import ButtonSelect from "../../components/TradeList/ButtonSelect"
 import ButtonDays from "../../components/TradeList/ButtonDays"
 import Header from "../../components/Atoms/Header"
 import Footer from "../../components/Atoms/Footer"
 import TradeListBox from "../../components/Molecules/TradeListBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
+
+import userContext from "../../context/UserContext"
+
 const Wraper = styled.div`
   display: flex;
   flex-direction: column;
@@ -41,7 +44,7 @@ function TradeList(props) {
   const [dayago, setDayago] = useState(1)
   const [page, setPage] = useState(1)
   const [reset, setReset] = useState(false)
-  const [userid, setUserid] = useState(2) //임시 userid 고정
+  const [user, setUser] = useContext(userContext)
 
   async function getData(sale, buy, day, page) {
     try {
@@ -55,7 +58,7 @@ function TradeList(props) {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            userid: userid,
+            userid: user.id,
             dayago: day,
             isSale: sale,
             isBuy: buy,
@@ -69,7 +72,7 @@ function TradeList(props) {
         let data = {
           title: ele.title,
           thumbnail: ele.thumbnailUrl,
-          status: ele.seller.id === userid ? "판매" : "구매",
+          status: ele.seller.id === user.id ? "판매" : "구매",
           soldprice: ele.soldPrice,
           solddate: ele.soldDate,
           registdate: ele.registerDate,

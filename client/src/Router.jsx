@@ -7,6 +7,7 @@ import CategoryBar from "./components/Organisim/CategoryBar"
 import Register from "./pages/Register"
 import ProductPage from "./pages/Product/index"
 import MyItem from "./pages/MyItems"
+import CategoryItems from "./pages/CategoryItems"
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
       <CategoryBar></CategoryBar>
       <Switch>
         <Route path="/" exact component={Main}></Route>
+        <Route path="/category/:title/:code" exact component={CategoryItems}></Route>
         <Route path="/user"></Route>
         <Route path="/tradelist" component={TradeList}></Route>
         <Route path="/register" exact component={Register}></Route>
