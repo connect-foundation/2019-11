@@ -6,6 +6,7 @@ import axios from "axios";
 import { getDa, getDateTime } from "../../../utils/stringUtils";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
+import moment from "moment";
 
 const { apiUrl } = apiConfig;
 
@@ -108,16 +109,6 @@ const PurchaseButton = styled(BidButton)`
   border-color: var(--color-primary);
 `;
 
-const product = {
-  id: "12",
-  src:
-    "https://d1rkccsb0jf1bk.cloudfront.net/products/99993547/main/medium/gb05021_04-1454001319-8684.jpg",
-  title: "애플 스마트 워치 3세대",
-  seller: "최성찬",
-  due: "1일 6시간 27분",
-  price: "45,000"
-};
-
 const ProductInfo = ({ product }) => {
   const {
     id,
@@ -139,7 +130,24 @@ const ProductInfo = ({ product }) => {
     seller
   } = product;
 
-  const [deadLine, setDeadLine] = useState(getDateTime(auctionDeadline));
+  const getDiffDateTime = (end, start) => {
+    const t1 = moment(start);
+    const t2 = moment(end);
+    const diff = t2.diff(t1);
+
+    const d = moment.duration(diff).days();
+    const h = moment.duration(diff).hours();
+    const m = moment.duration(diff).minutes();
+    const s = moment.duration(diff).seconds();
+
+    return { diff, d, h, m, s };
+  };
+
+  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+  const [deadLine, setDeadLine] = useState(
+    diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감"
+  );
+
   const baseURL = apiUrl;
 
   const handleBidSubmit = e => {
@@ -167,13 +175,21 @@ const ProductInfo = ({ product }) => {
   };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setDeadLine(getDateTime(deadLine));
-    }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [deadLine]);
+    if (auctionDeadline) {
+      const timer = setInterval(() => {
+        const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+        if (diff > 0) {
+          setDeadLine(`D-${d} ${h}:${m}:${s}`);
+        } else {
+          clearInterval(timer);
+          setDeadLine(`경매 마감`);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [auctionDeadline, setDeadLine]);
 
   return (
     <ProductInfoStyle>
@@ -189,11 +205,25 @@ const ProductInfo = ({ product }) => {
           </ProductDescText>
         </ProductSeller>
         <ProductDueDate>
-          <ProductDescText size="sm">판매 종료 시간</ProductDescText>
+          <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {deadLine || "비경매 상품"}
+            {auctionDeadline
+              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
+              : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
+
+        {isAuction ? (
+          <ProductDueDate>
+            <ProductDescText size="sm">남은 시간</ProductDescText>
+            <ProductDescText primary bold>
+              {deadLine || "비경매 상품"}
+            </ProductDescText>
+          </ProductDueDate>
+        ) : (
+          undefined
+        )}
+
         <ProductBid onSubmit={handleBidSubmit}>
           <BidInput name="bidPrice" placeholder="입찰가격" />
           <BidButton>입찰</BidButton>
