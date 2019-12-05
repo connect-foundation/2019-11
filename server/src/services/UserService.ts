@@ -28,6 +28,7 @@ export class UserService {
       userResponse.profileUrl = result.profileUrl;
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
+      userResponse.isLogin = true;
       return userResponse;
     }
     return result;
@@ -45,6 +46,7 @@ export class UserService {
       userResponse.profileUrl = result.profileUrl;
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
+      userResponse.isLogin = true;
       return userResponse;
     }
     return result;
@@ -79,11 +81,12 @@ export class UserService {
     userResponse.profileUrl = res.profileUrl;
     userResponse.accessToken = res.accessToken;
     userResponse.refreshToken = res.refreshToken;
+    userResponse.isLogin = true;
 
     return userResponse;
   }
 
-  public async createKakao(
+  public async createAuth(
     loginId: string,
     password: string,
     name: string,
@@ -113,6 +116,7 @@ export class UserService {
     userResponse.profileUrl = res.profileUrl;
     userResponse.accessToken = res.accessToken;
     userResponse.refreshToken = res.refreshToken;
+    userResponse.isLogin = true;
 
     return userResponse;
   }
@@ -148,12 +152,13 @@ export class UserService {
       userResponse.profileUrl = result.profileUrl;
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
+      userResponse.isLogin = true;
 
       return userResponse;
     }
   }
 
-  public async updateKakao(
+  public async updateAuth(
     loginId: string,
     name: string,
     email: string,
@@ -180,6 +185,7 @@ export class UserService {
       userResponse.profileUrl = result.profileUrl;
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
+      userResponse.isLogin = true;
 
       return userResponse;
     }
