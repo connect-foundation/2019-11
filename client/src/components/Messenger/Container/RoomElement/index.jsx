@@ -22,7 +22,7 @@ const Img = styled.div`
   width: 3rem;
   height: 3rem;
   border-radius: 3rem;
-  background-color: white;
+  background-color: black;
   overflow: hidden;
   text-align: center;
   margin: 0 0.5rem 0 0;
@@ -54,7 +54,7 @@ const HostRecentMsg = styled.span`
 `
 
 function RoomElement(props) {
-  const [name, setName] = useState("unknown")
+  const [name, setName] = useState("nonamed")
   const [profile, setProfile] = useState(null)
   //userId
   useEffect(() => {
@@ -63,8 +63,10 @@ function RoomElement(props) {
         return result.json()
       })
       .then(result => {
-        setName(result.name)
-        setProfile(result.profileUrl)
+        if (result.name !== "NotFoundError") {
+          setName(result.name)
+          setProfile(result.profileUrl)
+        }
       })
   }, [])
   return (
