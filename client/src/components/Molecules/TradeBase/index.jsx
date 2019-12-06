@@ -9,18 +9,11 @@ const Container = styled.div`
   min-height: fit-content;
   margin-bottom: 5px;
   justify-content: space-between;
-
-  &:hover {
-    img {
-      width: 7rem;
-      height: 7rem;
-    }
-  }
 `
 
 const Thumbnail = styled.img`
-  width: 5rem;
-  height: 5rem;
+  width: 6rem;
+  height: 6rem;
 
   transition: width 0.15s ease-in-out, height 0.15s ease-in-out;
 `

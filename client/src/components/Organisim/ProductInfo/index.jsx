@@ -1,30 +1,29 @@
-import React, { useState, useEffect, useContext } from "react";
-import styled from "styled-components";
-import ShareCollection from "../../Product/ShareCollection";
-import { convertToPrice } from "../../../utils/numberUtils";
-import axios from "axios";
-import { getDa, getDateTime } from "../../../utils/stringUtils";
-import apiConfig from "../../../config/api";
-import pathConfig from "../../../config/path";
-import moment from "moment";
-import ModalContext from "../../../context/ModalContext";
-import FailModal from "../../Molecules/CustomModal/FailModal";
-import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
+import React, { useState, useEffect, useContext } from "react"
+import styled from "styled-components"
+import ShareCollection from "../../Product/ShareCollection"
+import { convert2Price } from "../../../utils/converter"
+import axios from "axios"
+import apiConfig from "../../../config/api"
+import pathConfig from "../../../config/path"
+import moment from "moment"
+import ModalContext from "../../../context/ModalContext"
+import FailModal from "../../Molecules/CustomModal/FailModal"
+import SuccessModal from "../../Molecules/CustomModal/SuccessModal"
 
-const { apiUrl } = apiConfig;
+const { apiUrl } = apiConfig
 
 const ProductInfoStyle = styled.div`
   display: flex;
   min-height: 400px;
   margin: 0 auto;
   justify-content: center;
-`;
+`
 
 const ProductImageBox = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-`;
+`
 
 const ProductImage = styled.img`
   width: 400px;
@@ -32,20 +31,20 @@ const ProductImage = styled.img`
   border: 1px solid var(--color-gray);
   border-radius: 8px;
   padding: var(--padding-xs);
-`;
+`
 
 const ProductDescBox = styled.div`
   width: 480px;
   padding-top: var(--padding-lg);
   padding-right: var(--padding-md);
-`;
+`
 
 const ProductDescText = styled.span`
   color: ${props => (props.primary ? "var(--color-primary)" : "black")};
   font-weight: ${props => (props.bold ? "bold" : "normal")};
   font-size: ${props => (props.size === "sm" ? "0.8rem" : "1.1rem")};
   margin-left: var(--margin-sm);
-`;
+`
 
 const ProductTitle = styled.div`
   margin-bottom: var(--margin-xl);
@@ -53,21 +52,21 @@ const ProductTitle = styled.div`
   font-weight: bold;
   padding-left: var(--padding-lg);
   color: var(--color-darkgray);
-`;
+`
 
 const ProductSeller = styled.div`
   text-align: right;
-`;
+`
 
 const ProductDueDate = styled.div`
   margin: var(--margin-md) 0px;
   text-align: right;
-`;
+`
 
 const ProductBid = styled.form`
   margin: var(--margin-md) 0px;
   text-align: right;
-`;
+`
 
 const BidInput = styled.input`
   border: 1px solid var(--color-gray);
@@ -78,7 +77,7 @@ const BidInput = styled.input`
   ${ProductBid}:hover & {
     border-color: var(--color-darkgray-lighter);
   }
-`;
+`
 
 const BidButton = styled.button`
   border: 1px solid black;
@@ -87,11 +86,11 @@ const BidButton = styled.button`
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
-`;
+`
 
 const ProductPurchase = styled(ProductBid)`
   margin-bottom: var(--margin-xl);
-`;
+`
 
 const PurchasePrice = styled.span`
   border: 1px solid var(--color-gray);
@@ -105,12 +104,12 @@ const PurchasePrice = styled.span`
   ${ProductPurchase}:hover & {
     border-color: var(--color-primary);
   }
-`;
+`
 
 const PurchaseButton = styled(BidButton)`
   background-color: var(--color-primary);
   border-color: var(--color-primary);
-`;
+`
 
 const ProductInfo = ({ product }) => {
   const {
@@ -131,36 +130,34 @@ const ProductInfo = ({ product }) => {
     auctionDeadline,
     extensionDate,
     seller
-  } = product;
+  } = product
 
   const getDiffDateTime = (end, start) => {
-    const t1 = moment(start);
-    const t2 = moment(end);
-    const diff = t2.diff(t1);
+    const t1 = moment(start)
+    const t2 = moment(end)
+    const diff = t2.diff(t1)
 
-    const d = moment.duration(diff).days();
-    const h = moment.duration(diff).hours();
-    const m = moment.duration(diff).minutes();
-    const s = moment.duration(diff).seconds();
+    const d = moment.duration(diff).days()
+    const h = moment.duration(diff).hours()
+    const m = moment.duration(diff).minutes()
+    const s = moment.duration(diff).seconds()
 
-    return { diff, d, h, m, s };
-  };
+    return { diff, d, h, m, s }
+  }
 
-  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(
-    diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감"
-  );
+  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline)
+  const [deadLine, setDeadLine] = useState(diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감")
 
-  const baseURL = apiUrl;
+  const baseURL = apiUrl
 
   const handleBidSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     const params = {
       bidPrice: e.target.bidPrice.value,
       bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
       userId: 1,
       productId: id
-    };
+    }
 
     axios
       .post(`${baseURL}${pathConfig.bids}`, params)
@@ -170,21 +167,21 @@ const ProductInfo = ({ product }) => {
             isOpen: true,
             component: SuccessModal,
             message: "입찰 성공"
-          });
+          })
         }
       })
       .catch(e => {
-        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
-      });
-  };
+        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" })
+      })
+  }
 
   const handleImmediateSubmit = price => e => {
-    e.preventDefault();
+    e.preventDefault()
     const params = {
       soldPrice: price,
       soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
       buyerId: 1
-    };
+    }
     axios
       .put(`${baseURL}${pathConfig.products}${id}`, params)
       .then(response => {
@@ -192,35 +189,35 @@ const ProductInfo = ({ product }) => {
           isOpen: true,
           component: SuccessModal,
           message: "즉시 구매 성공"
-        });
+        })
       })
       .catch(() => {
         setModal({
           isOpen: true,
           component: FailModal,
           message: "즉시 구매 실패"
-        });
-      });
-  };
+        })
+      })
+  }
 
-  const [modal, setModal] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext)
 
   useEffect(() => {
     if (auctionDeadline) {
       const timer = setInterval(() => {
-        const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+        const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline)
         if (diff > 0) {
-          setDeadLine(`D-${d} ${h}:${m}:${s}`);
+          setDeadLine(`D-${d} ${h}:${m}:${s}`)
         } else {
-          clearInterval(timer);
-          setDeadLine(`경매 마감`);
+          clearInterval(timer)
+          setDeadLine(`경매 마감`)
         }
-      }, 1000);
+      }, 1000)
       return () => {
-        clearInterval(timer);
-      };
+        clearInterval(timer)
+      }
     }
-  }, [auctionDeadline, setDeadLine]);
+  }, [auctionDeadline, setDeadLine])
 
   return (
     <ProductInfoStyle>
@@ -238,9 +235,7 @@ const ProductInfo = ({ product }) => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -261,7 +256,7 @@ const ProductInfo = ({ product }) => {
           <PurchasePrice>
             즉시 구매가
             <ProductDescText primary bold size="sm">
-              {`${convertToPrice(immediatePrice)} 원`}
+              {`${convert2Price(immediatePrice)} 원`}
             </ProductDescText>
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
@@ -269,7 +264,7 @@ const ProductInfo = ({ product }) => {
         <ShareCollection></ShareCollection>
       </ProductDescBox>
     </ProductInfoStyle>
-  );
-};
+  )
+}
 
-export default ProductInfo;
+export default ProductInfo

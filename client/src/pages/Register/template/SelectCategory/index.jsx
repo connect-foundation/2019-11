@@ -1,9 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
 import Button from "../../../../components/Atoms/BoxButton"
 import CategorySelector from "../../../../components/Organisim/ItemCategorySelector"
+
+import productContext from "../../context"
 
 import { categoryList } from "../../constants.jsx"
 import { idxNotSelected } from "../../../../utils/validator.js"
@@ -26,8 +28,8 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback()
 }
 
-const Component = props => {
-  const { width, obj, next } = props
+const Component = ({ width, next }) => {
+  const obj = useContext(productContext).data
 
   const [leftIdx, setLeftIdx] = useState(-1)
   const [rightIdx, setRightIdx] = useState(-1)

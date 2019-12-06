@@ -44,16 +44,22 @@ const renderNotFound = () => {
   )
 }
 
-const Component = ({ fetcher, drawer, loadPerOnce }) => {
+const Component = ({ fetcher, drawer, reset, hasMore }) => {
   const [loadding, setLoadding] = useState(true)
   const [list, setList] = useState([])
 
   const [, setRef] = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target)
-    const loadedComponentCount = await update()
-
-    if (loadedComponentCount === loadPerOnce) observer.observe(entry.target)
+    await update()
+    observer.observe(entry.target)
   }, {})
+
+  useEffect(() => {
+    if (reset) {
+      setList([])
+      reset = false
+    }
+  }, [reset])
 
   const update = async () => {
     setLoadding(true)
@@ -75,7 +81,7 @@ const Component = ({ fetcher, drawer, loadPerOnce }) => {
       ) : (
         renderNotFound()
       )}
-      <div ref={setRef} />
+      {hasMore ? <div ref={setRef} /> : undefined}
     </Container>
   )
 }
