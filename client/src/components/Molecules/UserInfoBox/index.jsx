@@ -89,7 +89,11 @@ const StyledLink = styled(Link)`
 `
 function Component(props) {
   const [user, setUser] = useContext(userContext)
-
+  const handleLogoutClick = () => {
+    localStorage.removeItem("access-token")
+    localStorage.removeItem("refresh-token")
+    setUser({})
+  }
   console.log(user)
   return (
     <div>
@@ -111,7 +115,7 @@ function Component(props) {
             거래내역조회 >
           </StyledLink>
         </ButtonWrap>
-        <LogoutButtons>로그아웃</LogoutButtons>
+        <LogoutButtons onClick={handleLogoutClick}>로그아웃</LogoutButtons>
       </InfoDiv>
     </div>
   )

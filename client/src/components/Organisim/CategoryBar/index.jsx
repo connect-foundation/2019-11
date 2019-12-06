@@ -22,13 +22,17 @@ const Components = () => {
   const [selectIdx, setSelectIdx] = useState(1)
   const [user, setUser] = useContext(userContext)
 
-  const [UserInfoOpen, setUserInfoOpen] = useState(false)
+  const [userInfoOpen, setUserInfoOpen] = useState(false)
   const node = useRef()
   const nodeUser = useRef()
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOnBlur)
-    document.addEventListener("mousedown", handleOnBlurUser)
+    console.log(nodeUser)
+    if (nodeUser.current !== undefined) {
+      console.log("hi")
+      document.addEventListener("mousedown", handleOnBlurUser)
+    }
     const refreshToken = localStorage.getItem("refresh-token")
     const accessToken = localStorage.getItem("access-token")
     if (refreshToken !== null && accessToken !== null) {
@@ -88,7 +92,7 @@ const Components = () => {
     switchUserInfo()
   }
   const switchUserInfo = () => {
-    setUserInfoOpen(!UserInfoOpen)
+    setUserInfoOpen(!userInfoOpen)
   }
 
   const handleOnBlurUser = e => {
@@ -104,7 +108,7 @@ const Components = () => {
           {isLogin === true ? (
             <div ref={nodeUser}>
               <Profile onClick={handleClickProfile} logout={setLoginStatus} />
-              <UserInfoBox isShow={UserInfoOpen} onClick={handleClickProfile} />
+              <UserInfoBox isShow={userInfoOpen} onClick={handleClickProfile} />
             </div>
           ) : (
             <LoginButton onClick={handleLoginClick} />
