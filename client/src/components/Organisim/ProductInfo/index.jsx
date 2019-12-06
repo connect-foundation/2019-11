@@ -9,6 +9,7 @@ import moment from "moment";
 import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
+import UserContext from "../../../context/UserContext";
 
 const { apiUrl } = apiConfig;
 
@@ -132,6 +133,8 @@ const ProductInfo = ({ product }) => {
     seller
   } = product;
 
+  const [user, setUser] = useContext(UserContext);
+
   const getDiffDateTime = (end, start) => {
     const t1 = moment(start);
     const t2 = moment(end);
@@ -157,7 +160,7 @@ const ProductInfo = ({ product }) => {
     const params = {
       bidPrice: e.target.bidPrice.value,
       bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
-      userId: 1,
+      userId: user.id,
       productId: id
     };
 
@@ -182,7 +185,7 @@ const ProductInfo = ({ product }) => {
     const params = {
       soldPrice: price,
       soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
-      buyerId: 1
+      buyerId: user.id
     };
     axios
       .put(`${baseURL}${pathConfig.products}/${id}`, params)
