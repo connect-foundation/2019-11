@@ -16,6 +16,8 @@ define(Users, (faker: typeof Faker, settings: any): Users => {
   user.mannerPoint = Math.round(Math.random() * (5 - 0) + 0);
   user.isDelete = false;
   user.email = faker.internet.email();
+  user.accessToken = faker.lorem.word();
+  user.refreshToken = faker.lorem.word();
 
   //user.products =
   //user.bids =
