@@ -1,7 +1,7 @@
 export const devConfig = {
     url: process.env.REACT_APP_DEV_CLIENT,
     apiUrl: process.env.REACT_APP_DEV_API,
-    chatUrl: process.env.REACT_APP_DEV_CAHT
+    chatUrl: process.env.REACT_APP_DEV_CHAT
 }
 
 export const prodConfig = {
