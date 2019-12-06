@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 
 import styled from "styled-components"
@@ -10,9 +10,9 @@ import URLLogo from "../../../assets/urlShareIcon.svg"
 const Container = styled.div`
   position: relative;
   display: flex;
-  width: fit-content;
+  width: ${props => props.width}rem;
+  min-width: fit-content;
   height: 80px;
-  border: var(--color-gray) solid 1px;
   background: var(--color-gary-lighter);
   padding: 5px 10px;
   justify-content: space-between;
@@ -26,9 +26,10 @@ const Wrapper = styled.div`
   align-items: center;
   text-align: center;
   cursor: pointer;
+  color: var(--color-darkgray-lighter);
 
   &:hover {
-    background: rgba(192, 192, 192, 0.6);
+    color: var(--color-primary);
   }
 `
 
@@ -36,7 +37,7 @@ const LinkWrapper = styled.a`
   outline: none;
   border: none;
   text-decoration: none;
-  color: black;
+  color: inherit;
 `
 
 const Logo = styled.img`
@@ -50,14 +51,6 @@ const Title = styled.span`
   font-size: 12px;
   font-weight: 700;
   margin: 3px 5px;
-`
-
-const ContainerTitle = styled.span`
-  position: absolute;
-  left: 10px;
-  top: -9px;
-  font-size: 14px;
-  font-weight: bold;
 `
 
 const handleKakao = (url, object) => {
@@ -82,7 +75,7 @@ const handleKakao = (url, object) => {
   })
 }
 
-const Component = ({ url, object }) => {
+const Component = ({ url, object, width }) => {
   useEffect(() => {
     window.Kakao.init("3e60e52d3ff296f46273d8da0462dc40")
   }, [])
@@ -92,8 +85,7 @@ const Component = ({ url, object }) => {
 
   return (
     <Container>
-      <ContainerTitle>공유하기</ContainerTitle>
-      <Wrapper>
+      <Wrapper width={width}>
         <LinkWrapper target="_blank" href={facebookUrl}>
           <Logo src={FacebookLogo} />
           <Title>Facebook</Title>

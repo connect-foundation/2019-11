@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import KakaoLogin from "react-kakao-login";
+import GoogleLogin from "react-google-login";
 
 const BUTTON_MARGIN = "0.5em";
 
@@ -53,6 +54,24 @@ const OAuthLoginButton = styled.button`
   border-radius: 3px;
 `;
 
+const GoogleButton = styled(GoogleLogin)`
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  background: white;
+  margin-bottom: ${BUTTON_MARGIN};
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
+  padding: 1em;
+  border-radius: 3px;
+  div {
+    display: none;
+  }
+  span {
+    font-family: "BMJUA";
+    color: black;
+  }
+`;
+
 const KakaoButton = styled(KakaoLogin)`
   width: 80%;
   background: yellow;
@@ -83,5 +102,6 @@ export {
   Footer,
   OAuthLoginButton,
   SignUpButton,
-  KakaoButton
+  KakaoButton,
+  GoogleButton
 };

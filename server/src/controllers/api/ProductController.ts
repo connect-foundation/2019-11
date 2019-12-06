@@ -6,7 +6,8 @@ import {
   Get,
   Param,
   QueryParam,
-  HeaderParam
+  HeaderParam,
+  Delete
 } from "routing-controllers"
 import { ProductsService } from "../../services/ProductService"
 
@@ -30,6 +31,16 @@ export class ProductController {
     return this.productService.findOne(Number(productId))
   }
 
+  @Get("/onlySale/:id/:start/:limits")
+  public async sale(
+    @Param("id") userId: number,
+    @Param("start") start: number,
+    @Param("limits") limits: number
+  ) {
+    const result = await this.productService.getOwnSale(userId, start, limits)
+    return result
+  }
+
   @Put("/:id")
   public update(
     @Param("id") productId: string,
@@ -45,7 +56,7 @@ export class ProductController {
     )
   }
 
-  @Put()
+  @Post()
   public async create(
     @HeaderParam("x-timestamp") registerDate: string,
     @BodyParam("userId") userId: number,
@@ -77,12 +88,15 @@ export class ProductController {
     return result
   }
 
-  @Post("/onlySale")
-  public async sale(
-    @BodyParam("id") userId: number,
-    @BodyParam("page") page: number,
-    @BodyParam("limits") limits: number
+  @Delete("/:id")
+  public async remove(
+    @HeaderParam("x-timestamp") timestamp: string,
+    @HeaderParam("x-id") uid: number,
+    @HeaderParam("x-uloginId") lid: string,
+    @Param("id") pid: number
   ) {
-    return await this.productService.getOwnSale(userId, page, limits)
+    const result = await this.productService.remove(pid)
+
+    return result
   }
 }

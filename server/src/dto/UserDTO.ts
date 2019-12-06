@@ -7,4 +7,5 @@ export class UserDTO {
   email: string;
   accessToken: string;
   refreshToken: string;
+  isLogin: Boolean;
 }

@@ -14,8 +14,10 @@ import {
 import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
-import fetch from "node-fetch";
 import { UserDTO } from "../../dto/UserDTO";
+import { Await, Async, Option } from "../../util/fetchUtil";
+import { kakao, google } from "../../constants/oauthAPIs";
+import { keyValue2Str } from "../../util/StringUtils";
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -31,45 +33,10 @@ export class UserController {
     let accessToken = req.headers["access-token"];
     let refreshToken = req.headers["refresh-token"];
     if (accessToken.includes("kakao_") || refreshToken.includes("kakao_")) {
-      const user = await this.userService.findOneByToken(accessToken);
-      accessToken = accessToken.replace("kakao_", "");
-      refreshToken = refreshToken.replace("kakao_", "");
-      const checkExpireResult = await fetch(
-        "https://kapi.kakao.com/v1/user/access_token_info",
-        {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        }
-      )
-        .then(result => result.json())
-        .then(result => result.expiresInMillis);
-      if (checkExpireResult <= 0) {
-        const { access_token, refresh_token } = await fetch(
-          `https://kauth.kakao.com/oauth/token?grant_type=refresh_token&client_id=${process.env.KAKAO_API_KEY}&refresh_token=${refreshToken}`,
-          {
-            method: "POST"
-          }
-        )
-          .then(result => result.json())
-          .then(result => {
-            console.log(result);
-            return result;
-          });
-        console.log("===================");
-        console.log(access_token, refresh_token);
-        console.log("===================");
-        if (refresh_token !== undefined) refreshToken = refresh_token;
-        const { loginId, name, email, profileUrl } = <UserDTO>user;
-        return await this.userService.updateKakao(
-          loginId,
-          name,
-          email,
-          profileUrl,
-          `kakao_${access_token}`,
-          `kakao_${refreshToken}`
-        );
-      }
-
-      return user;
+      return await this.getUserKakao(accessToken, refreshToken);
+    }
+    if (accessToken.includes("google_") || refreshToken.includes("google_")) {
+      return await this.getUserGoogle(accessToken, refreshToken);
     }
     try {
       const decodedAccessToken = jwt.verify(
@@ -151,5 +118,80 @@ export class UserController {
   @Delete("/:id")
   public delete(@Param("id") id: string) {
     return this.userService.delete(parseInt(id));
+  }
+
+  public async getUserKakao(accessToken: string, refreshToken: string) {
+    const user = await this.userService.findOneByToken(accessToken);
+    accessToken = accessToken.replace("kakao_", "");
+    refreshToken = refreshToken.replace("kakao_", "");
+    const checkExpireResult = await Await(kakao.checkTokenExpired, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const { expiresInMillis } = checkExpireResult;
+    if (expiresInMillis <= 0) {
+      const params = {
+        grant_type: "refresh_token",
+        client_id: process.env.KAKAO_API_KEY,
+        refresh_token: refreshToken
+      };
+      const paramsStr = keyValue2Str(params);
+      const { access_token, refresh_token } = await Await(
+        `${kakao.getToken}?${paramsStr}`,
+        Option.post
+      );
+      if (refresh_token !== undefined) refreshToken = `kakao_${refresh_token}`;
+      const { loginId, name, email, profileUrl } = <UserDTO>user;
+      return await this.userService.updateAuth(
+        loginId,
+        name,
+        email,
+        profileUrl,
+        `kakao_${access_token}`,
+        `kakao_${refreshToken}`
+      );
+    }
+
+    return user;
+  }
+
+  public async getUserGoogle(accessToken: string, refreshToken: string) {
+    const user = await this.userService.findOneByToken(accessToken);
+    accessToken = accessToken.replace("google_", "");
+    refreshToken = refreshToken.replace("google_", "");
+    const params = {
+      access_token: accessToken
+    };
+    const paramsStr = keyValue2Str(params);
+    const checkExpireResult = await Await(
+      `${google.checkTokenExpired}?${paramsStr}`,
+      Option.get
+    );
+    const { user_id } = checkExpireResult;
+    console.log(checkExpireResult);
+
+    if (user_id === undefined) {
+      const params = {
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        refresh_token: refreshToken,
+        grant_type: "refresh_token"
+      };
+      const paramsStr = keyValue2Str(params);
+      const { access_token } = await Await(
+        `${google.getToken}?${paramsStr}`,
+        Option.post
+      );
+      const { loginId, name, email, profileUrl } = <UserDTO>user;
+      return await this.userService.updateAuth(
+        loginId,
+        name,
+        email,
+        profileUrl,
+        `google_${access_token}`,
+        `google_${refreshToken}`
+      );
+    }
+
+    return user;
   }
 }
