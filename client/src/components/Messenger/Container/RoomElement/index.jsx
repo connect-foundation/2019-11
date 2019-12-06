@@ -39,7 +39,7 @@ const RoomContent = styled.div`
   padding: 0.5rem 0;
 `
 const HostName = styled.div`
-  color: #6e6e6e;
+  color: var(--color-darkgray-lighter);
   font-size: 0.8rem;
   text-align: left;
   margin-bottom: 0.1rem;
