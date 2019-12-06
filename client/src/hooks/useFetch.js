@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
+import apiConfig from "../config/api";
 import axios from "axios";
 
-const BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "http://honeybee.palda.shop";
-
+const { apiUrl } = apiConfig;
 const initialFetchState = {
   response: null,
   error: null,
@@ -20,7 +17,7 @@ export const useFetch = path => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}${path}`);
+        const response = await axios.get(`${apiUrl}${path}`);
         if (!isUnmounted) {
           setFetchState(state => ({ ...state, response, loading: false }));
         }

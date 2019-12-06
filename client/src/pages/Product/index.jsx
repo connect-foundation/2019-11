@@ -5,6 +5,7 @@ import ChatBox from "../../components/Organisim/Chat/ChatBox";
 import AuctionGraph from "../../components/Organisim/AuctionGraph";
 import Spinner from "../../components/Atoms/Spinner";
 import { useFetch } from "../../hooks/useFetch";
+import pathConfig from "../../config/path";
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -52,7 +53,7 @@ const user = {
 const ProductPage = ({ match }) => {
   const productId = match.params.id;
   const [product, setProduct] = useState({});
-  const fetchState = useFetch(`/api/products/${productId}`);
+  const fetchState = useFetch(`${pathConfig.products}/${productId}`);
 
   return fetchState.loading ? (
     <Spinner />
