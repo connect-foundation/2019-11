@@ -7,4 +7,17 @@ const getDDay = date => {
   return result;
 };
 
-export { getDDay };
+const getDateTime = dateString => {
+  const today = new Date(dateString);
+
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const date = today.getDate();
+  const hour = today.getHours();
+  const minute = today.getMinutes();
+  const second = today.getSeconds();
+
+  return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+};
+
+export { getDDay, getDateTime };
