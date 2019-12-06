@@ -2,6 +2,12 @@ import styled from "styled-components"
 import React, { useState, useEffect } from "react"
 import DefaultProfileIcon from "../../../../assets/default-profile.svg"
 
+import apiConfig from "../../../../config/api"
+import pathConfig from "../../../../config/path"
+
+const { apiUrl } = apiConfig
+const { users } = pathConfig
+
 const Wrap = styled.div`
   width: 19.5rem;
   height: 3rem;
@@ -52,11 +58,7 @@ function RoomElement(props) {
   const [profile, setProfile] = useState(null)
   //userId
   useEffect(() => {
-    fetch(
-      `http://${
-        process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
-      }/api/users/${props.userLoginId}`
-    )
+    fetch(`${apiUrl}${users.find}${props.userLoginId}`)
       .then(result => {
         return result.json()
       })

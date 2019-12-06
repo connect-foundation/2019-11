@@ -4,14 +4,13 @@ export default {
     profile: "/api/storage/profile"
   },
   bids: "/api/bids/",
-  logs: {
-    find: "/api/log/",
-    filter: "/api/filter/"
-  },
+  logfilter: "/api/log/filter/",
   sign: {
     in: "/api/sign/login/",
     out: "/api/sign/logout/"
   },
   products: "/api/products/",
-  users: "/api/users/"
+  users: "/api/users/",
+  items: "/api/items/"
 };
+
