@@ -22,12 +22,11 @@ const Img = styled.div`
   width: 3rem;
   height: 3rem;
   border-radius: 3rem;
-  background-color: black;
+  background-color: white;
   overflow: hidden;
   text-align: center;
   margin: 0 0.5rem 0 0;
   img {
-    margin-top: 0.5em;
     width: 100%;
     height: 100%;
     object-fit: contain;
