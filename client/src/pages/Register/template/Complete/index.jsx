@@ -1,9 +1,11 @@
-import React from "react"
+import React, { useContext } from "react"
 import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
 import ShareBox from "../../../../components/Molecules/ShareBox"
 import { notice, shareConfig } from "../../constants"
+
+import productContext from "../../context"
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -24,8 +26,8 @@ const LinkBox = styled.a`
   width: 100%;
   height: 3rem;
   border: none;
-  background: #ffb001;
-  font-size: 1.3rem;
+  background: var(--color-secondary-plus1);
+  font-size: var(--font-size-xl);
   border-radius: 1.5rem;
   text-decoration: none;
   color: white;
@@ -34,7 +36,7 @@ const LinkBox = styled.a`
 
   &:hover,
   &:focus {
-    background: #ffcf01;
+    background: var(--color-secondary-plus1-lighter);
     font-weight: 700;
   }
 `
@@ -49,12 +51,12 @@ const NoticeDiv = styled.div`
   width: 400px;
   height: 200px;
   font-family: "BMDOHYEON";
-  font-size: 1.3rem;
+  font-size: var(--font-size-xl);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: #ffb001 dashed 1px;
+  border: var(--color-secondary-plus1) dashed 1px;
   margin: 20px auto 50px auto;
 `
 
@@ -63,7 +65,9 @@ const NoticeText = styled.div`
   word-break: keep-all;
 `
 
-const Component = ({ width, obj }) => {
+const Component = ({ width }) => {
+  const obj = useContext(productContext).data
+
   return (
     <PageBase width={width}>
       <ContentDiv>

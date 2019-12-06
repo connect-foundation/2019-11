@@ -1,7 +1,6 @@
 import styled from "styled-components"
-import React, { useEffect } from "react"
-import { sec2date } from "../../../../utils/sec2date"
-import { dateDiff2Str } from "../../../../utils/converter"
+import React from "react"
+import { dateDiff2Str, sec2date } from "../../../../utils/converter"
 const Wrap = styled.div`
   width: 19rem;
 

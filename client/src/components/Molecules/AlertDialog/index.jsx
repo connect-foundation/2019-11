@@ -62,14 +62,14 @@ const Button = styled.button`
 `
 
 export const Components = ({ title, content, cancelAble, onCancel, onAccept, onDismiss }) => {
-  const handleSuccess = e => {
-    if (onAccept !== undefined) onAccept()
+  const handleSuccess = async e => {
+    if (onAccept !== undefined) await onAccept()
     if (onDismiss === undefined) return
     onDismiss()
   }
 
-  const handleCancel = e => {
-    if (onCancel !== undefined) onCancel()
+  const handleCancel = async e => {
+    if (onCancel !== undefined) await onCancel()
     if (onDismiss === undefined) return
     onDismiss()
   }

@@ -1,4 +1,4 @@
-import { EntityRepository, EntityManager } from "typeorm"
+import { EntityRepository, EntityManager, Equal } from "typeorm"
 import { ProductsDTO } from "../dto/ProductDTO"
 import { Products } from "../models/Products"
 
@@ -28,19 +28,37 @@ export class ProductRepository {
   }
 
   /*GET*/
-  public async onlyOwnSale(userId: number, page: number, limits: number) {
+  public async onlyOwnSale(userId: number, start: number, limits: number) {
     return await this.em.findAndCount(Products, {
-      relations: ["seller"],
       select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
       where: {
-        seller: { id: userId },
-        buyerId: null
+        seller: userId
       },
-      skip: page * limits,
+      order: {
+        id: "ASC"
+      },
+      skip: start,
       take: limits,
       cache: true
     })
   }
+
+  /* DELETE */
+
+  public async remove(pid: number) {
+    return await this.em.delete(Products, { id: pid })
+  }
+
+  public findCategory(categoryCode: number) {
+    return this.em.findAndCount(Products, {
+      where: {
+        categoryCode: categoryCode
+      },
+      order: { registerDate: "DESC" },
+      cache: true
+    })
+  }
+
   /* PUT */
   public async create(
     userId: number,

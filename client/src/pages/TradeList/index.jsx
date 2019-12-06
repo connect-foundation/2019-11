@@ -1,13 +1,19 @@
 import styled from "styled-components"
-import React, { useState, useContext } from "react"
-import ButtonSelect from "../../components/TradeList/ButtonSelect"
-import ButtonDays from "../../components/TradeList/ButtonDays"
+import React, { useState, useContext, useEffect } from "react"
+import ButtonSelect from "../../components/Atoms/SelectOptionButton"
+import ButtonDays from "../../components/Atoms/DayButton"
 import Header from "../../components/Atoms/Header"
 import Footer from "../../components/Atoms/Footer"
-import TradeListBox from "../../components/Molecules/TradeListBox"
+import TradeListBox from "../../components/Organisim/TradeListBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 
 import userContext from "../../context/UserContext"
+
+import apiConfig from "../../config/api"
+import pathConfig from "../../config/path"
+
+const { apiUrl } = apiConfig
+const { logfilter } = pathConfig
 
 const Wraper = styled.div`
   display: flex;
@@ -39,76 +45,73 @@ const TradeContents = styled.div`
   margin-bottom: 0.5rem;
 `
 function TradeList(props) {
+  const [data, setData] = useState([])
   const [isSale, setIsSale] = useState(true)
   const [isBuy, setIsBuy] = useState(true)
   const [dayago, setDayago] = useState(1)
   const [page, setPage] = useState(1)
-  const [reset, setReset] = useState(false)
   const [user, setUser] = useContext(userContext)
 
-  async function getData(sale, buy, day, page) {
-    try {
-      let resultFetch = await fetch(
-        `http://${
-          process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
-        }/api/log/filter`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userid: user.id,
-            dayago: day,
-            isSale: sale,
-            isBuy: buy,
-            page: page,
-            limit: 10
-          })
-        }
-      )
-      let resultJson = await resultFetch.json()
-      let resultData = await resultJson[0].reduce((acc, ele) => {
-        let data = {
-          title: ele.title,
-          thumbnail: ele.thumbnailUrl,
-          status: ele.seller.id === user.id ? "판매" : "구매",
-          soldprice: ele.soldPrice,
-          solddate: ele.soldDate,
-          registdate: ele.registerDate,
-          hopeprice: ele.hopePrice,
-          deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
-        }
-        acc.push(data)
-        return acc
-      }, [])
-
-      setPage(page++)
-
-      return resultData
-    } catch (err) {
-      console.log(err)
-    }
+  function getData(sale, buy, day, page) {
+    let url = apiUrl + logfilter
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userid: user.id,
+        dayago: day,
+        isSale: sale,
+        isBuy: buy,
+        page: page,
+        limit: 10
+      })
+    })
+      .then(resultJson => {
+        return resultJson.json()
+      })
+      .then(result => {
+        let resultData = result[0].reduce((acc, ele) => {
+          let data = {
+            title: ele.title,
+            thumbnail: ele.thumbnailUrl,
+            status: ele.seller.id === user.id ? "판매" : "구매",
+            soldprice: ele.soldPrice,
+            solddate: ele.soldDate,
+            registdate: ele.registerDate,
+            hopeprice: ele.hopePrice,
+            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
+          }
+          acc.push(data)
+          return acc
+        }, [])
+        setPageNumber(page++)
+        setData(resultData)
+      })
   }
 
+  function setPageNumber(num) {
+    setPage(num)
+  }
   function setSale() {
     setPage(1)
     setIsSale(!isSale)
-    setReset(!reset)
   }
 
   function setBuy() {
     setPage(1)
     setIsBuy(!isBuy)
-    setReset(!reset)
   }
 
   function setDay(day) {
     setPage(1)
     setDayago(day)
-    setReset(!reset)
   }
 
+  useEffect(() => {
+    getData(isSale, isBuy, dayago, page)
+  }, [dayago, isBuy, isSale])
   const drawer = item => item.map(value => <TradeListBox {...value} />)
   //랜더링.
 
@@ -130,11 +133,14 @@ function TradeList(props) {
           />
         </RightAlign>
         <TradeContents>
-          <InfiniteScroll
+          {data.map(value => (
+            <TradeListBox key={value.title + value.solddate} {...value} />
+          ))}
+          {/* <InfiniteScroll
             reset={reset}
             fetcher={() => getData(isSale, isBuy, dayago, page)}
             drawer={drawer}
-          />
+          /> */}
         </TradeContents>
       </TradeWrap>
       <Footer />

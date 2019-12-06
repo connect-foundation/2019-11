@@ -1,8 +1,6 @@
 import React, { useState, useContext } from "react"
 import styled from "styled-components"
 
-import userContext from "../../../../context/UserContext"
-
 import PageBase from "../../../../components/PageBase"
 import Button from "../../../../components/Atoms/BoxButton"
 import Carousel from "../../../../components/Molecules/Carousel"
@@ -11,6 +9,8 @@ import MoneyBox from "../../../../components/Molecules/MoneyBox"
 import ItemDescription from "../../../../components/Atoms/TextareaWithLength"
 import TermSelector from "../../../../components/Organisim/RegisterTermSelector"
 import ToggleButton from "../../../../components/Atoms/ToggleButton"
+import userContext from "../../../../context/UserContext"
+import productContext from "../../context"
 
 import { termList, itemDescription } from "../../constants"
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js"
@@ -115,17 +115,16 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback()
 }
 
-const Component = props => {
-  const { width, next, obj, registItem } = props
+const Component = ({ width, next, registItem }) => {
+  const [user] = useContext(userContext)
+  const obj = useContext(productContext)
   const dayList = generateDayList()
 
-  const [user] = useContext(userContext)
-
-  const [title, setTitle] = useState(obj.title)
-  const [description, setDescription] = useState(obj.content)
-  const [buyNow, setBuyNow] = useState(obj.nowPrice)
-  const [minPrice, setMinPrice] = useState(obj.minPrice)
-  const [predictPrice, setPredictPrice] = useState(obj.hopePrice)
+  const [title, setTitle] = useState(obj.data.title)
+  const [description, setDescription] = useState(obj.data.content)
+  const [buyNow, setBuyNow] = useState(obj.data.nowPrice)
+  const [minPrice, setMinPrice] = useState(obj.data.minPrice)
+  const [predictPrice, setPredictPrice] = useState(obj.data.hopePrice)
   const [imgList, setImageList] = useState([])
   const [dayIdx, setDayIdx] = useState(-1)
   const [focusItem, setFocus] = useState(-1)
@@ -139,6 +138,7 @@ const Component = props => {
     setOnRegister(true)
 
     validation(valiResult, successCallback, failCallback)
+    setOnRegister(false)
   }
 
   const valiResult = [
@@ -151,29 +151,32 @@ const Component = props => {
     isArrayEmpty(imgList)
   ]
 
-  const successCallback = async () => {
+  const successCallback = () => {
+    const { data } = obj
     const deadLine = new Date()
     deadLine.setDate(deadLine.getDate() + termList[dayIdx].term)
 
     // 임시 사용자 번호 필히 변경 할것
-    obj.userId = user.id
-    obj.title = title
-    obj.contents = description
-    obj.nowPrice = parseInt(buyNow)
-    obj.minPrice = isAuction ? parseInt(minPrice) : undefined
-    obj.hopePrice = isAuction ? parseInt(predictPrice) : undefined
-    obj.endDate = deadLine.toString()
-    obj.isAuction = isAuction
+    data.userId = user.id
+    data.title = title
+    data.contents = description
+    data.nowPrice = parseInt(buyNow)
+    data.minPrice = isAuction ? parseInt(minPrice) : undefined
+    data.hopePrice = isAuction ? parseInt(predictPrice) : undefined
+    data.endDate = deadLine.toString()
+    data.isAuction = isAuction
 
-    for (let i = 0; i < imgList.length; i++) obj.images.push(imgList[i].split(",")[1])
+    for (let i = 0; i < imgList.length; i++) data.images.push(imgList[i].split(",")[1])
 
-    const result = await registItem(obj)
-
-    if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
-    else {
-      obj.productId = result
-      next()
+    obj.callback = result => {
+      if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
+      else {
+        obj.productId = result
+        next()
+      }
     }
+
+    registItem()
   }
 
   const failCallback = () => {
