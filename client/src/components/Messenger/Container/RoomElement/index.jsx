@@ -58,7 +58,7 @@ function RoomElement(props) {
   const [profile, setProfile] = useState(null)
   //userId
   useEffect(() => {
-    fetch(`${apiUrl}${users.find}${props.userLoginId}`)
+    fetch(`${apiUrl}${users}/${props.userLoginId}`)
       .then(result => {
         return result.json()
       })

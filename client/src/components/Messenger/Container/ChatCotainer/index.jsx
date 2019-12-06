@@ -134,7 +134,7 @@ function ChatContainer(props) {
       setChat(snapshot.val())
     }
 
-    fetch(`${apiUrl}${users.find}${props.roomUserId}`)
+    fetch(`${apiUrl}${users}/${props.roomUserId}`)
       .then(result => {
         return result.json()
       })
