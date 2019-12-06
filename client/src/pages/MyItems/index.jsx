@@ -56,9 +56,11 @@ const Page = () => {
 
   const fetcher = async () => {
     const fetchUrl = `${apiUrl}${products}/onlySale/${2}/${offset.current}/${limits}`
-    const list = await getFetch(fetchUrl)
+    const [list, cnt] = await getFetch(fetchUrl)
     hasMore.current = list.length >= limits
     offset.current = page + list.length
+
+    console.dir(list)
 
     return list.map(value => {
       return {
