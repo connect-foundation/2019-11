@@ -9,7 +9,9 @@ export default {
 }
 
 //방만들기 버튼
-export const MessengerCreateButton = () => <CreateButton userId={"a"} sellerId={"b"}></CreateButton>
+export const MessengerCreateButton = () => (
+  <CreateButton userId={"104731762607210695795"} sellerId={"a"}></CreateButton>
+)
 
 //메시지 목록 요소
 
