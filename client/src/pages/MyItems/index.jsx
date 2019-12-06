@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useRef, useReducer } from "react"
 import styled from "styled-components"
 
 import Header from "../../components/Atoms/Header"
@@ -50,11 +50,15 @@ const ScrollFrame = styled.div`
 const Page = () => {
   const [user] = useContext(userContext)
   const [page, setPage] = useState(0)
+  const offset = useRef(0)
+  const hasMore = useRef(true)
+  const reset = useRef(false)
 
   const fetcher = async () => {
-    const fetchUrl = `${apiUrl}${products}`
-    const list = await getFetch(fetchUrl, {}, { id: user.id, page, limits })
-    setPage(page + (list.length === limits))
+    const fetchUrl = `${apiUrl}${products}/onlySale/${2}/${offset.current}/${limits}`
+    const list = await getFetch(fetchUrl)
+    hasMore.current = list.length >= limits
+    offset.current = page + list.length
 
     return list.map(value => {
       return {
@@ -77,7 +81,12 @@ const Page = () => {
       <ContentContainer>
         <Header text={"경매중인 내 상품"} />
         <ScrollFrame>
-          <InfiniteScroll fetcher={fetcher} drawer={drawer} />
+          <InfiniteScroll
+            fetcher={fetcher}
+            drawer={drawer}
+            hasMore={hasMore.current}
+            reset={reset.current}
+          />
         </ScrollFrame>
       </ContentContainer>
       <Footer />
