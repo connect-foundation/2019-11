@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog";
 import LoginDialog from "./LoginDialog";
 import SignUpDialog from "./SignUpDialog";
 
-const MainModal = ({ open, onClose, login }) => {
+const MainModal = ({ open, onClose }) => {
   const [signUpOpen, setSignUpOpen] = useState(false);
 
   const handleSignUpClick = () => {
@@ -18,13 +18,9 @@ const MainModal = ({ open, onClose, login }) => {
   return (
     <Dialog open={open} onClose={handleOnClose}>
       {signUpOpen === false ? (
-        <LoginDialog
-          close={handleOnClose}
-          signUp={handleSignUpClick}
-          login={login}
-        />
+        <LoginDialog close={handleOnClose} signUp={handleSignUpClick} />
       ) : (
-        <SignUpDialog close={handleOnClose} login={login} />
+        <SignUpDialog close={handleOnClose} />
       )}
     </Dialog>
   );

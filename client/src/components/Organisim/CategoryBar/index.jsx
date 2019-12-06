@@ -1,26 +1,38 @@
-import React, { useState, useRef, useEffect, useContext } from "react"
-import Logo from "./Logo"
-import CategoryIcon from "./CategoryIcon"
-import ExpandList from "./ExpandList"
-import LoginButton from "./LoginButton"
-import Profile from "./Profile"
-import MainModal from "../../Molecules/MainModal"
-import Cloth from "../../../assets/cloth.svg"
-import Electronic from "../../../assets/television.svg"
-import LifeStyle from "../../../assets/geek.svg"
-import MessengerIcon from "../../../assets/messenger.svg"
-import detailCategoryList from "../../../data/detail-category-list"
-import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from "./CategoryBarStyle"
-import userContext from "../../../context/UserContext"
-import Messenger from "../../Messenger"
+import React, { useState, useRef, useEffect, useContext } from "react";
+import Logo from "./Logo";
+import CategoryIcon from "./CategoryIcon";
+import ExpandList from "./ExpandList";
+import LoginButton from "./LoginButton";
+import Profile from "./Profile";
+import MainModal from "../../Molecules/MainModal";
+import Cloth from "../../../assets/cloth.svg";
+import Electronic from "../../../assets/television.svg";
+import LifeStyle from "../../../assets/geek.svg";
+import MessengerIcon from "../../../assets/messenger.svg";
+import detailCategoryList from "../../../data/detail-category-list";
+import {
+  Container,
+  OriginWrapper,
+  ListWrapper,
+  Bar,
+  List,
+  DivisionLine
+} from "./CategoryBarStyle";
+import userContext from "../../../context/UserContext";
+import Messenger from "../../Messenger";
 import UserInfoBox from "../../Molecules/UserInfoBox"
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+import { jsonFetch, getFetch } from "../../../services/fetchService";
+
+const { apiUrl } = apiConfig;
+const { users } = pathConfig;
 
 const Components = () => {
-  const [open, setOpen] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [isLogin, setIsLogin] = useState(false)
-  const [selectIdx, setSelectIdx] = useState(1)
-  const [user, setUser] = useContext(userContext)
+  const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [selectIdx, setSelectIdx] = useState(1);
+  const [user, setUser] = useContext(userContext);
 
   const [userInfoOpen, setUserInfoOpen] = useState(false)
   const node = useRef()
@@ -28,7 +40,6 @@ const Components = () => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOnBlur)
-    console.log(nodeUser)
     if (nodeUser.current !== undefined) {
       console.log("hi")
       document.addEventListener("mousedown", handleOnBlurUser)
@@ -36,24 +47,17 @@ const Components = () => {
     const refreshToken = localStorage.getItem("refresh-token")
     const accessToken = localStorage.getItem("access-token")
     if (refreshToken !== null && accessToken !== null) {
-      fetch("http://localhost:3000/api/users/", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": `${accessToken}`,
-          "refresh-token": `${refreshToken}`
-        }
-      })
-        .then(result => result.json())
-        .then(async result => {
-          if (result) {
-            setUser(result)
-            await localStorage.setItem("access-token", result.accessToken)
-            await localStorage.setItem("refresh-token", result.refreshToken)
-            setIsLogin(true)
-          } else alert("세션이 만료되어 로그아웃됩니다.")
-        })
+      const headers = {
+        "access-token": `${accessToken}`,
+        "refresh-token": `${refreshToken}`
+      };
+      getFetch(`${apiUrl}${users}`, headers, {}, result => {
+        if (result) {
+          setUser(result);
+          localStorage.setItem("access-token", result.accessToken);
+          localStorage.setItem("refresh-token", result.refreshToken);
+        } else alert("세션이 만료되어 로그아웃됩니다.");
+      });
     }
   }, [])
 
@@ -79,10 +83,6 @@ const Components = () => {
     }
   }
 
-  const setLoginStatus = () => {
-    setIsLogin(!isLogin)
-  }
-
   const close = () => {
     setOpen(false)
   }
@@ -105,7 +105,7 @@ const Components = () => {
       <OriginWrapper>
         <Logo />
         <Bar>
-          {isLogin === true ? (
+          {user.isLogin === true ? (
             <div ref={nodeUser}>
               <Profile onClick={handleClickProfile} logout={setLoginStatus} />
               <UserInfoBox isShow={userInfoOpen} onClick={handleClickProfile} />
@@ -140,7 +140,11 @@ const Components = () => {
               idx={3}
             />
           </List>
-          {isLogin === true ? <Messenger img={MessengerIcon} onClick={close} /> : undefined}
+          {user.isLogin === true ? (
+            <Messenger img={MessengerIcon} onClick={close} />
+          ) : (
+            undefined
+          )}
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open}>
@@ -151,7 +155,7 @@ const Components = () => {
           onClick={close}
         />
       </ListWrapper>
-      <MainModal onClose={handleLoginClose} open={loginOpen} login={setLoginStatus} />
+      <MainModal onClose={handleLoginClose} open={loginOpen} />
     </Container>
   )
 }
