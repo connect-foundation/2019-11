@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import ProductInfo from "../../components/Organisim/ProductInfo";
 import ChatBox from "../../components/Organisim/Chat/ChatBox";
@@ -51,6 +51,7 @@ const user = {
 
 const ProductPage = ({ match }) => {
   const productId = match.params.id;
+  const [product, setProduct] = useState({});
   const fetchState = useFetch(`/api/products/${productId}`);
 
   return fetchState.loading ? (

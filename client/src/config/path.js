@@ -9,17 +9,8 @@ export default {
     in: "/api/sign/login/",
     out: "/api/sign/logout/"
   },
-  products: {
-    find: "/api/products",
-    update: "/api/products/",
-    create: "/api/products/",
-    onSale: "/api/products/onlySale/"
-  },
-  users: {
-    find: "/api/users/",
-    create: "/api/users/",
-    update: "/api/users/",
-    delete: "/api/users"
-  },
+  products: "/api/products/",
+  users: "/api/users/",
   items: "/api/items/"
-}
+};
+
