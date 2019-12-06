@@ -191,11 +191,15 @@ const ProductInfo = ({ product }) => {
         setModal({
           isOpen: true,
           component: SuccessModal,
-          message: "입찰 성공"
+          message: "즉시 구매 성공"
         });
       })
       .catch(() => {
-        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
+        setModal({
+          isOpen: true,
+          component: FailModal,
+          message: "즉시 구매 실패"
+        });
       });
   };
 
