@@ -6,7 +6,7 @@ import { DialogStyle, Input, SubmitButton } from "./LoginDialogStyles";
 import UserContext from "../../../context/UserContext";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
-import { jsonFetch } from "../../../services/fetchService";
+import { postJsonFetch } from "../../../services/fetchService";
 
 const { apiUrl } = apiConfig;
 const { users } = pathConfig;
@@ -58,7 +58,7 @@ const SignUpDialog = ({ close }) => {
       name,
       email
     };
-    const result = await jsonFetch(`${apiUrl}${users}`, {}, body);
+    const result = await postJsonFetch(`${apiUrl}${users}`, {}, body);
     const { msg, user } = result;
     if (msg) {
       setUser(user);

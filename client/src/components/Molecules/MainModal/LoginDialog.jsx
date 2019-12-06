@@ -16,7 +16,7 @@ import {
 import UserContext from "../../../context/UserContext";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
-import { jsonFetch } from "../../../services/fetchService";
+import { postJsonFetch } from "../../../services/fetchService";
 
 const { apiUrl } = apiConfig;
 const { sign } = pathConfig;
@@ -31,7 +31,7 @@ const LoginDialog = ({ signUp, close }) => {
       username: id,
       password: pwd
     };
-    const res = await jsonFetch(`${apiUrl}${sign.in}`, {}, body);
+    const res = await postJsonFetch(`${apiUrl}${sign.in}`, {}, body);
     const { msg, user } = res;
     if (msg) {
       setUser(user);
@@ -59,7 +59,7 @@ const LoginDialog = ({ signUp, close }) => {
       "refresh-token": refresh_token,
       "Content-Type": "application/json"
     };
-    const res = await jsonFetch(`${apiUrl}${sign.kakao}`, headers, body);
+    const res = await postJsonFetch(`${apiUrl}${sign.kakao}`, headers, body);
 
     const { msg, user } = res;
     if (msg) {
@@ -72,7 +72,7 @@ const LoginDialog = ({ signUp, close }) => {
   };
 
   const onSuccessGoogleLogin = async result => {
-    const response = await jsonFetch(
+    const response = await postJsonFetch(
       `${apiUrl}${sign.google}`,
       { "auth-code": result.code },
       {}
