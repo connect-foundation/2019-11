@@ -11,6 +11,8 @@ import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
 import uuid from "uuid";
 import fetch from "node-fetch";
+import { google } from "../../constants/oauthAPIs";
+import { Await, Option } from "../../util/fetchUtil";
 
 @JsonController("/sign")
 export class LoginController {
@@ -84,22 +86,14 @@ export class LoginController {
   @Post("/google")
   public async authGoogle(@Req() req: any) {
     const authCode = req.headers["auth-code"];
-    const { id_token, access_token, refresh_token } = await fetch(
-      `https://oauth2.googleapis.com/token?code=${authCode}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=postmessage&grant_type=authorization_code`,
-      {
-        method: "POST"
-      }
-    )
-      .then(result => result.json())
-      .then(result => {
-        console.log(result);
-        return result;
-      });
-    const { sub, email, name, picture } = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`
-    )
-      .then(result => result.json())
-      .then(result => result);
+    const { id_token, access_token, refresh_token } = await Await(
+      `${google.getAccess}?code=${authCode}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=postmessage&grant_type=authorization_code`,
+      Option.post
+    );
+    const { sub, email, name, picture } = await Await(
+      `${google.getUserInfo}?id_token=${id_token}`,
+      Option.get
+    );
     const accessToken = `google_${access_token}`;
     const refreshToken = `google_${refresh_token}`;
     if (await this.userService.checkDuplicate(sub)) {

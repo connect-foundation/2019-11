@@ -14,90 +14,77 @@ import {
   GoogleButton
 } from "./LoginDialogStyles";
 import UserContext from "../../../context/UserContext";
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+import { jsonFetch } from "../../../services/fetchService";
+
+const { apiUrl } = apiConfig;
+const { sign } = pathConfig;
 
 const LoginDialog = ({ signUp, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [user, setUser] = useContext(UserContext);
 
-  const handleSubmit = e => {
-    fetch("http://localhost:3000/api/sign/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: id,
-        password: pwd
-      })
-    })
-      .then(result => result.json())
-      .then(async result => {
-        const { msg, user } = result;
-        if (msg) {
-          setUser(user);
-          localStorage.setItem("access-token", user.accessToken);
-          localStorage.setItem("refresh-token", user.refreshToken);
-          close();
-        } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-      });
+  const handleSubmit = async e => {
+    const body = {
+      username: id,
+      password: pwd
+    };
+    const res = await jsonFetch(`${apiUrl}${sign.in}`, {}, body);
+    const { msg, user } = res;
+    if (msg) {
+      setUser(user);
+      localStorage.setItem("access-token", user.accessToken);
+      localStorage.setItem("refresh-token", user.refreshToken);
+      close();
+    } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
     e.preventDefault();
   };
 
-  const onSuccessKakaoLogin = result => {
+  const onSuccessKakaoLogin = async result => {
     const { profile, response } = result;
     const { id, kakao_account, properties } = profile;
     const { access_token, refresh_token } = response;
     const { nickname, profile_image } = properties;
     const { email } = kakao_account;
+    const body = {
+      id,
+      name: nickname,
+      email: email,
+      profileUrl: profile_image
+    };
+    const headers = {
+      "access-token": access_token,
+      "refresh-token": refresh_token,
+      "Content-Type": "application/json"
+    };
+    const res = await jsonFetch(`${apiUrl}${sign.kakao}`, headers, body);
 
-    fetch("http://localhost:3000/api/sign/kakao", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "access-token": access_token,
-        "refresh-token": refresh_token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id,
-        name: nickname,
-        email: email,
-        profileUrl: profile_image
-      })
-    })
-      .then(result => result.json())
-      .then(async result => {
-        const { msg, user } = result;
-        if (msg) {
-          console.log(user);
-          setUser(user);
-          localStorage.setItem("access-token", user.accessToken);
-          localStorage.setItem("refresh-token", user.refreshToken);
-          close();
-        } else alert("카카오 로그인에 실패하였습니다.");
-      });
+    const { msg, user } = res;
+    if (msg) {
+      console.log(user);
+      setUser(user);
+      localStorage.setItem("access-token", user.accessToken);
+      localStorage.setItem("refresh-token", user.refreshToken);
+      close();
+    } else alert("카카오 로그인에 실패하였습니다.");
   };
 
-  const onSuccessGoogleLogin = result => {
-    fetch("http://localhost:3000/api/sign/google", {
-      method: "POST",
-      headers: {
-        "auth-code": `${result.code}`
-      }
-    })
-      .then(result => result.json())
-      .then(result => {
-        const { msg, user } = result;
-        if (msg) {
-          console.log(user);
-          setUser(user);
-          localStorage.setItem("access-token", user.accessToken);
-          localStorage.setItem("refresh-token", user.refreshToken);
-          close();
-        } else alert("구글 로그인에 실패하였습니다.");
-      });
+  const onSuccessGoogleLogin = async result => {
+    const response = await jsonFetch(
+      `${apiUrl}${sign.google}`,
+      { "auth-code": result.code },
+      {}
+    );
+    const { msg, user } = response;
+    if (msg) {
+      console.log(user);
+      setUser(user);
+      localStorage.setItem("access-token", user.accessToken);
+      localStorage.setItem("refresh-token", user.refreshToken);
+      close();
+    } else alert("구글 로그인에 실패하였습니다.");
   };
 
   const handleKeyUpId = e => {

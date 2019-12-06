@@ -20,6 +20,12 @@ import {
 } from "./CategoryBarStyle";
 import userContext from "../../../context/UserContext";
 import Messenger from "../../Messenger";
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+import { jsonFetch, getFetch } from "../../../services/fetchService";
+
+const { apiUrl } = apiConfig;
+const { users } = pathConfig;
 
 const Components = () => {
   const [open, setOpen] = useState(false);
@@ -34,23 +40,17 @@ const Components = () => {
     const refreshToken = localStorage.getItem("refresh-token");
     const accessToken = localStorage.getItem("access-token");
     if (refreshToken !== null && accessToken !== null) {
-      fetch("http://localhost:3000/api/users/", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": `${accessToken}`,
-          "refresh-token": `${refreshToken}`
-        }
-      })
-        .then(result => result.json())
-        .then(result => {
-          if (result) {
-            setUser(result);
-            localStorage.setItem("access-token", result.accessToken);
-            localStorage.setItem("refresh-token", result.refreshToken);
-          } else alert("세션이 만료되어 로그아웃됩니다.");
-        });
+      const headers = {
+        "access-token": `${accessToken}`,
+        "refresh-token": `${refreshToken}`
+      };
+      getFetch(`${apiUrl}${users}`, headers, {}, result => {
+        if (result) {
+          setUser(result);
+          localStorage.setItem("access-token", result.accessToken);
+          localStorage.setItem("refresh-token", result.refreshToken);
+        } else alert("세션이 만료되어 로그아웃됩니다.");
+      });
     }
   }, []);
 
