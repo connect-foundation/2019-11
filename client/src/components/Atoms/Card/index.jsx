@@ -12,7 +12,7 @@ import {
   ThumbnailStyle
 } from "./CardStyles"
 
-import { getDDay } from "../../../utils/stringUtils"
+import { dateDiff2Dday } from "../../../utils/converter"
 
 import personIcon from "../../../assets/person.svg"
 
@@ -46,7 +46,7 @@ const Bids = ({ bids }) => {
 }
 
 const TagContainer = ({ isAuction, date }) => {
-  const day = getDDay(date)
+  const day = dateDiff2Dday(date)
 
   return (
     <TagContainerStyle>
