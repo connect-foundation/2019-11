@@ -4,6 +4,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { DialogStyle, Input, SubmitButton } from "./LoginDialogStyles";
 import UserContext from "../../../context/UserContext";
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+import { jsonFetch } from "../../../services/fetchService";
+
+const { apiUrl } = apiConfig;
+const { users } = pathConfig;
 
 const InputContainer = styled.div`
   display: flex;
@@ -45,33 +51,24 @@ const SignUpDialog = ({ close }) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = e => {
-    fetch("http://localhost:3000/api/users", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id,
-        password,
-        name,
-        email
-      })
-    })
-      .then(result => result.json())
-      .then(async result => {
-        const { msg, user } = result;
-        if (msg) {
-          setUser(user);
-          localStorage.setItem("access-token", user.accessToken);
-          localStorage.setItem("refresh-token", user.refreshToken);
-          alert("회원가입 완료");
-        } else {
-          alert("회원가입에 실패하였습니다.");
-        }
-        close();
-      });
+  const handleSubmit = async e => {
+    const body = {
+      id,
+      password,
+      name,
+      email
+    };
+    const result = await jsonFetch(`${apiUrl}${users}`, {}, body);
+    const { msg, user } = result;
+    if (msg) {
+      setUser(user);
+      localStorage.setItem("access-token", user.accessToken);
+      localStorage.setItem("refresh-token", user.refreshToken);
+      alert("회원가입 완료");
+    } else {
+      alert("회원가입에 실패하였습니다.");
+    }
+    close();
     e.preventDefault();
   };
 

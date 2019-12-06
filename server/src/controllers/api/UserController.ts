@@ -17,6 +17,7 @@ import jwt from "jsonwebtoken";
 import { UserDTO } from "../../dto/UserDTO";
 import { Await, Async, Option } from "../../util/fetchUtil";
 import { kakao, google } from "../../constants/oauthAPIs";
+import { keyValue2Str } from "../../util/StringUtils";
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -128,14 +129,14 @@ export class UserController {
     });
     const { expiresInMillis } = checkExpireResult;
     if (expiresInMillis <= 0) {
-      const option = Option.post;
-      option.params = {
+      const params = {
         grant_type: "refresh_token",
         client_id: process.env.KAKAO_API_KEY,
         refresh_token: refreshToken
       };
+      const paramsStr = keyValue2Str(params);
       const { access_token, refresh_token } = await Await(
-        kakao.getToken,
+        `${kakao.getToken}?${paramsStr}`,
         Option.post
       );
       if (refresh_token !== undefined) refreshToken = `kakao_${refresh_token}`;
@@ -157,22 +158,29 @@ export class UserController {
     const user = await this.userService.findOneByToken(accessToken);
     accessToken = accessToken.replace("google_", "");
     refreshToken = refreshToken.replace("google_", "");
+    const params = {
+      access_token: accessToken
+    };
+    const paramsStr = keyValue2Str(params);
     const checkExpireResult = await Await(
-      `${google.checkTokenExpired}?access_token=${accessToken}`,
+      `${google.checkTokenExpired}?${paramsStr}`,
       Option.get
     );
     const { user_id } = checkExpireResult;
     console.log(checkExpireResult);
 
     if (user_id === undefined) {
-      const postOption = Option.post;
-      postOption.params = {
+      const params = {
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
         refresh_token: refreshToken,
         grant_type: "refresh_token"
       };
-      const { access_token } = await Await(google.getToken, postOption);
+      const paramsStr = keyValue2Str(params);
+      const { access_token } = await Await(
+        `${google.getToken}?${paramsStr}`,
+        Option.post
+      );
       const { loginId, name, email, profileUrl } = <UserDTO>user;
       return await this.userService.updateAuth(
         loginId,

@@ -21,11 +21,10 @@ export const Await = async (url: any, option: any) => {
 };
 
 export const Option = {
-  get: { method: "GET", headers: { "User-Agent": "Mozilla/5.0" }, params: {} },
+  get: { method: "GET", headers: { "User-Agent": "Mozilla/5.0" } },
   post: {
     method: "POST",
-    headers: { "User-Agent": "Mozilla/5.0" },
-    params: {}
+    headers: { "User-Agent": "Mozilla/5.0" }
   },
   put: { method: "PUT", headers: { "User-Agent": "Mozilla/5.0" } },
   postJson: {
