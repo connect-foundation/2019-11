@@ -104,7 +104,7 @@ const Components = () => {
           {isLogin === true ? (
             <div ref={nodeUser}>
               <Profile onClick={handleClickProfile} logout={setLoginStatus} />
-              <UserInfoBox isShow={UserInfoOpen} />
+              <UserInfoBox isShow={UserInfoOpen} onClick={handleClickProfile} />
             </div>
           ) : (
             <LoginButton onClick={handleLoginClick} />

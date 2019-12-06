@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 import userContext from "../../../context/UserContext"
 import DefaultProfileIcon from "../../../assets/default-profile.svg"
@@ -75,6 +76,17 @@ const LogoutButtons = styled.button`
     cursor: pointer;
   }
 `
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  all: unset;
+  margin-buttom: 0.5rem;
+  text-align: center;
+  &:hover {
+    background-color: var(--color-secondary-plus0);
+    color: white;
+    cursor: pointer;
+  }
+`
 function Component(props) {
   const [user, setUser] = useContext(userContext)
 
@@ -95,7 +107,9 @@ function Component(props) {
         </UserWrap>
         <ButtonWrap>
           <Buttons>회원정보수정 ></Buttons>
-          <Buttons>거래내역조회 ></Buttons>
+          <StyledLink to={`/tradelist/`} onClick={props.onClick}>
+            거래내역조회 >
+          </StyledLink>
         </ButtonWrap>
         <LogoutButtons>로그아웃</LogoutButtons>
       </InfoDiv>
