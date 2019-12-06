@@ -24,14 +24,13 @@ const IconBox = styled.div`
   cursor: pointer;
 `;
 
-const IconImage = styled.img`
-  ${IconBox}:hover & {
-    border: 1px solid var(--color-gray);
-    border-radius: 50%;
-  }
-`;
+const IconImage = styled.img``;
 
 const IconTitle = styled.div`
+  ${IconBox}:hover & {
+    font-weight: bold;
+    color: var(--color-primary);
+  }
   margin-top: var(--margin-sm);
   text-align: center;
   color: var(--color-darkgray-lighter);

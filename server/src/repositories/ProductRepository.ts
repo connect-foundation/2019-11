@@ -49,6 +49,16 @@ export class ProductRepository {
     return await this.em.delete(Products, { id: pid })
   }
 
+  public findCategory(categoryCode: number) {
+    return this.em.findAndCount(Products, {
+      where: {
+        categoryCode: categoryCode
+      },
+      order: { registerDate: "DESC" },
+      cache: true
+    })
+  }
+
   /* PUT */
   public async create(
     userId: number,
