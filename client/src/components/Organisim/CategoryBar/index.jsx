@@ -20,10 +20,10 @@ import {
 } from "./CategoryBarStyle";
 import userContext from "../../../context/UserContext";
 import Messenger from "../../Messenger";
-import UserInfoBox from "../../Molecules/UserInfoBox"
+import UserInfoBox from "../../Molecules/UserInfoBox";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
-import { jsonFetch, getFetch } from "../../../services/fetchService";
+import { getFetch } from "../../../services/fetchService";
 
 const { apiUrl } = apiConfig;
 const { users } = pathConfig;
@@ -34,72 +34,73 @@ const Components = () => {
   const [selectIdx, setSelectIdx] = useState(1);
   const [user, setUser] = useContext(userContext);
 
-  const [userInfoOpen, setUserInfoOpen] = useState(false)
-  const node = useRef()
-  const nodeUser = useRef()
+  const [userInfoOpen, setUserInfoOpen] = useState(false);
+  const node = useRef();
+  const nodeUser = useRef();
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOnBlur)
+    document.addEventListener("mousedown", handleOnBlur);
     if (nodeUser.current !== undefined) {
-      console.log("hi")
-      document.addEventListener("mousedown", handleOnBlurUser)
+      console.log("hi");
+      document.addEventListener("mousedown", handleOnBlurUser);
     }
-    const refreshToken = localStorage.getItem("refresh-token")
-    const accessToken = localStorage.getItem("access-token")
+    const refreshToken = localStorage.getItem("refresh-token");
+    const accessToken = localStorage.getItem("access-token");
     if (refreshToken !== null && accessToken !== null) {
       const headers = {
         "access-token": `${accessToken}`,
         "refresh-token": `${refreshToken}`
       };
-      getFetch(`${apiUrl}${users}`, headers, {}, result => {
+      (async () => {
+        const result = await getFetch(`${apiUrl}${users}`, headers, {});
         if (result) {
           setUser(result);
           localStorage.setItem("access-token", result.accessToken);
           localStorage.setItem("refresh-token", result.refreshToken);
         } else alert("세션이 만료되어 로그아웃됩니다.");
-      });
+      })();
     }
-  }, [])
+  }, []);
 
   const handleClick = e => {
-    const { idx } = e.target.dataset
+    const { idx } = e.target.dataset;
     if (selectIdx === idx || open === false) {
-      setOpen(!open)
+      setOpen(!open);
     }
-    setSelectIdx(idx)
-  }
+    setSelectIdx(idx);
+  };
 
   const handleLoginClick = () => {
-    setLoginOpen(!loginOpen)
-  }
+    setLoginOpen(!loginOpen);
+  };
 
   const handleLoginClose = () => {
-    loginOpen === true && setLoginOpen(!loginOpen)
-  }
+    loginOpen === true && setLoginOpen(!loginOpen);
+  };
 
   const handleOnBlur = e => {
     if (!node.current.contains(e.target)) {
-      setOpen(false)
+      setOpen(false);
     }
-  }
+  };
 
   const close = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleClickProfile = () => {
-    close()
-    switchUserInfo()
-  }
+    close();
+    switchUserInfo();
+  };
   const switchUserInfo = () => {
-    setUserInfoOpen(!userInfoOpen)
-  }
+    setUserInfoOpen(!userInfoOpen);
+  };
 
   const handleOnBlurUser = e => {
     if (!nodeUser.current.contains(e.target)) {
-      setUserInfoOpen()
+      setUserInfoOpen();
     }
-  }
+  };
   return (
     <Container ref={node}>
       <OriginWrapper>
@@ -107,7 +108,7 @@ const Components = () => {
         <Bar>
           {user.isLogin === true ? (
             <div ref={nodeUser}>
-              <Profile onClick={handleClickProfile} logout={setLoginStatus} />
+              <Profile onClick={handleClickProfile} />
               <UserInfoBox isShow={userInfoOpen} onClick={handleClickProfile} />
             </div>
           ) : (
@@ -157,7 +158,7 @@ const Components = () => {
       </ListWrapper>
       <MainModal onClose={handleLoginClose} open={loginOpen} />
     </Container>
-  )
-}
+  );
+};
 
-export default Components
+export default Components;
