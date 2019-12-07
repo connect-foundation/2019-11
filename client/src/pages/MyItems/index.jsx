@@ -49,16 +49,15 @@ const ScrollFrame = styled.div`
 
 const Page = () => {
   const [user] = useContext(userContext)
-  const [page, setPage] = useState(0)
-  const offset = useRef(0)
-  const hasMore = useRef(true)
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
   const reset = useRef(false)
 
   const fetcher = async () => {
-    const fetchUrl = `${apiUrl}${products}/onlySale/${2}/${offset.current}/${limits}`
+    const fetchUrl = `${apiUrl}${products}/onlySale/${user.id}/${offset}/${limits}`
     const [list, cnt] = await getFetch(fetchUrl)
-    offset.current += list.length
-    hasMore.current = offset.current < cnt
+    setOffset(offset + list.length)
+    setHasMore(offset.current < cnt)
 
     return list.map(value => {
       return {
@@ -84,7 +83,7 @@ const Page = () => {
           <InfiniteScroll
             fetcher={fetcher}
             drawer={drawer}
-            hasMore={hasMore.current}
+            hasMore={hasMore}
             reset={reset.current}
           />
         </ScrollFrame>
