@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
-
+import UserInfoBox from "../../../Molecules/UserInfoBox"
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,21 +35,28 @@ const StyledLink = styled(Link)`
 `
 
 const Components = ({ idx, open, details, onClick }) => {
-  const detailCategoryList = details.details
+  let detailCategoryList = null
+  if (details !== undefined) {
+    detailCategoryList = details.details
+  }
 
   return (
     <Container idx={idx} open={open}>
-      {detailCategoryList.map(category => (
-        <StyledLink
-          to={`/category/${category.title}/${category.code}`}
-          onClick={onClick}
-          key={category.title}
-        >
-          <DetailCategory>
-            <label>{category.title}</label>
-          </DetailCategory>
-        </StyledLink>
-      ))}
+      {Number(idx) === 0 ? (
+        <UserInfoBox onClick={onClick} />
+      ) : (
+        detailCategoryList.map(category => (
+          <StyledLink
+            to={`/category/${category.title}/${category.code}`}
+            onClick={onClick}
+            key={category.title}
+          >
+            <DetailCategory>
+              <label>{category.title}</label>
+            </DetailCategory>
+          </StyledLink>
+        ))
+      )}
     </Container>
   )
 }
