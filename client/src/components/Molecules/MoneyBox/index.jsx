@@ -44,27 +44,15 @@ const NonBorderBox = styled.input`
   font-size: ${props => props.font}rem;
 `
 
-const Component = props => {
-  const { money, handler } = props
-
+const Component = ({ money, handler }) => {
   const changeHandler = ev => {
-    handler(ev.target.value)
-  }
-
-  const keyValidator = ev => {
-    const value = ev.key
-    if (!isNumber(value)) ev.preventDefault()
+    const input = ev.target.value.replace(/[^0-9]/g, "")
+    handler(input.substring(0, 9))
   }
 
   return (
     <Container>
-      <NonBorderBox
-        value={money}
-        onChange={changeHandler}
-        onKeyPress={keyValidator}
-        type={"input"}
-        font={1}
-      />
+      <NonBorderBox value={money} onChange={changeHandler} font={1} />
       <WonDiv>
         <span>원</span>
       </WonDiv>
