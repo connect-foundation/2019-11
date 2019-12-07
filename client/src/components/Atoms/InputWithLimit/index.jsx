@@ -32,14 +32,20 @@ const Counter = styled.div`
   color: ${props => (props.exceed ? "var(--color-danger)" : "var(--color-gray)")};
 `
 
-const Component = ({ size, limit, hint, onChange, value }) => {
+const Component = ({ size, limit, hint, onChange, value, isBlockMode }) => {
   const [focus, setFocus] = useState(false)
   const [length, setLength] = useState(value.length)
 
   const handleOnChange = e => {
     const content = e.target.value
-    onChange(content)
-    setLength(content.length)
+    const validContent =
+      isBlockMode && content.length > limit ? content.substring(0, limit) : content
+    onChange(validContent)
+    setLength(validContent.length)
+  }
+
+  const handleBlock = e => {
+    if (e.target.value.length >= limit) e.preventDefault()
   }
 
   return (
@@ -50,6 +56,7 @@ const Component = ({ size, limit, hint, onChange, value }) => {
         onFocus={e => setFocus(true)}
         onBlur={e => setFocus(false)}
         onChange={handleOnChange}
+        onKeyDown={isBlockMode ? handleBlock : undefined}
         value={value}
       />
       <Counter exceed={length > limit}>{`${length} / ${limit}`}</Counter>

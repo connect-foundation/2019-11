@@ -201,6 +201,7 @@ const Component = ({ width, next, registItem }) => {
               value={title}
               limit={50}
               onChange={v => setTitle(v)}
+              isBlockMode={true}
             />
             <SelectorDiv>
               <TermSelector
@@ -254,7 +255,8 @@ const Component = ({ width, next, registItem }) => {
           title={"상품 설명"}
           content={description}
           handler={setDescription}
-          maxLen={500}
+          limit={500}
+          isBlockMode={true}
         />
         <ButtonContainer>
           <Button onClick={handleRgister} text={"등록"} />
