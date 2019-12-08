@@ -3,10 +3,11 @@ import styled from "styled-components"
 
 import FoundImage from "../../../../assets/found.png"
 import NotFoundImage from "../../../../assets/notFound.png"
+import { size } from "../constant"
 
 const Container = styled.div`
-  width: 20rem;
-  height: 20rem;
+  width: ${size}rem;
+  height: ${size}rem;
   display: flex;
   justify-content: center;
   align-items: center;

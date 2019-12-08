@@ -7,9 +7,11 @@ import AddButton from "./AddButton"
 
 import LoddingImage from "../../../assets/loadding.gif"
 
+import { limits, size } from "./constant"
+
 const Container = styled.div`
-  width: 20em;
-  height: 20em;
+  width: ${size}rem;
+  height: ${size}rem;
   box-sizing: border-box;
   position: relative;
 
@@ -20,22 +22,22 @@ const LeftDiv = styled.div`
   position: absolute;
   display: flex;
   height: 100%;
-  width: 2.5em;
+  width: 2.5rem;
   left: 0;
 `
 
 const Window = styled.div`
-  width: 20em;
-  height: 20em;
+  width: ${size}rem;
+  height: ${size}rem;
   box-sizing: border-box;
   overflow: hidden;
 `
 
 const Panel = styled.div`
   display: flex;
-  width: 220em;
-  height: 20em;
-  transform: ${props => `translateX(calc(-20em * ${props.idx}))`};
+  width: ${size * 10}rem;
+  height: ${size}rem;
+  transform: ${props => `translateX(calc(-${size}rem * ${props.idx}))`};
 
   transition: transform 0.1s ease-in-out;
 `
@@ -49,22 +51,23 @@ const RightDiv = styled.div`
 `
 
 const CarouselItem = styled.div`
-  width: 20rem;
-  height: 20rem;
+  width: ${size}rem;
+  height: ${size}rem;
 `
 
 const Lodding = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 20rem;
-  height: 20rem;
+  width: ${size}rem;
+  height: ${size}rem;
   z-index: 10;
   color: white;
   background: url(${LoddingImage}) center no-repeat;
 `
 
-const Components = ({ list, handler }) => {
+const Components = ({ list, handler, readOnly }) => {
+  console.dir(readOnly)
   let onImageLoad = false
   let imageBuffer = []
   let onloadCount = 0
@@ -72,6 +75,7 @@ const Components = ({ list, handler }) => {
   const [showIdx, changeIdx] = useState(0)
   const [dragOn, setDragOn] = useState(false)
   const [isLoadding, setIsLoadding] = useState(false)
+  const [isFull, setIsFull] = useState(list.length >= 10)
 
   const handleLeft = event => {
     if (!onImageLoad) changeIdx(showIdx > 0 ? showIdx - 1 : 0)
@@ -142,7 +146,7 @@ const Components = ({ list, handler }) => {
         <BeforeButton visible={showIdx !== 0} onClick={handleLeft} />
       </LeftDiv>
       <RightDiv>
-        <NextButton visible={showIdx !== list.length} onClick={handleRight} />
+        <NextButton visible={showIdx !== list.length - !!readOnly} onClick={handleRight} />
       </RightDiv>
       <Window>
         <Panel idx={showIdx}>
@@ -158,7 +162,7 @@ const Components = ({ list, handler }) => {
               />
             </CarouselItem>
           ))}
-          <AddButton trigger={imageOnLoad} />
+          {readOnly | isFull ? undefined : <AddButton trigger={imageOnLoad} />}
         </Panel>
       </Window>
       {isLoadding ? <Lodding /> : undefined}
