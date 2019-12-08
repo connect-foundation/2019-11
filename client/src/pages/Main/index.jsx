@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { CardContainer } from "../../components";
+import CardContainer from "../../components/Molecules/CardContainer";
 import { populars, deadlines } from "../../mock";
 
 const MainStyle = styled.div`

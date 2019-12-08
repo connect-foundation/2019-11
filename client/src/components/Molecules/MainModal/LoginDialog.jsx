@@ -17,16 +17,14 @@ import UserContext from "../../../context/UserContext";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
 import { postJsonFetch } from "../../../services/fetchService";
-
 const { apiUrl } = apiConfig;
 const { sign } = pathConfig;
-
 const LoginDialog = ({ signUp, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [user, setUser] = useContext(UserContext);
-
   const handleSubmit = async e => {
+    e.preventDefault();
     const body = {
       username: id,
       password: pwd
@@ -39,9 +37,7 @@ const LoginDialog = ({ signUp, close }) => {
       localStorage.setItem("refresh-token", user.refreshToken);
       close();
     } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-    e.preventDefault();
   };
-
   const onSuccessKakaoLogin = async result => {
     const { profile, response } = result;
     const { id, kakao_account, properties } = profile;
@@ -60,17 +56,14 @@ const LoginDialog = ({ signUp, close }) => {
       "Content-Type": "application/json"
     };
     const res = await postJsonFetch(`${apiUrl}${sign.kakao}`, headers, body);
-
     const { msg, user } = res;
     if (msg) {
-      console.log(user);
       setUser(user);
       localStorage.setItem("access-token", user.accessToken);
       localStorage.setItem("refresh-token", user.refreshToken);
       close();
     } else alert("카카오 로그인에 실패하였습니다.");
   };
-
   const onSuccessGoogleLogin = async result => {
     const response = await postJsonFetch(
       `${apiUrl}${sign.google}`,
@@ -79,45 +72,41 @@ const LoginDialog = ({ signUp, close }) => {
     );
     const { msg, user } = response;
     if (msg) {
-      console.log(user);
       setUser(user);
       localStorage.setItem("access-token", user.accessToken);
       localStorage.setItem("refresh-token", user.refreshToken);
       close();
     } else alert("구글 로그인에 실패하였습니다.");
   };
-
   const handleKeyUpId = e => {
     setId(e.target.value);
   };
-
   const handleKeyUpPwd = e => {
     setPwd(e.target.value);
   };
-
   return (
     <DialogStyle>
-      <form action="#" onSubmit={handleSubmit}>
-        <DialogContent>
-          <InputContainer>
-            <Input
-              type="text"
-              name="username"
-              placeholder="ID"
-              onKeyUp={handleKeyUpId}
-            />
-            <Input
-              type="password"
-              name="password"
-              placeholder="PASSWORD"
-              onKeyUp={handleKeyUpPwd}
-            />
-          </InputContainer>
-        </DialogContent>
-        <DialogActions>
-          <SubmitButton type="submit">로그인</SubmitButton>
-        </DialogActions>
-      </form>
+      <DialogContent>
+        <InputContainer>
+          <Input
+            type="text"
+            name="username"
+            placeholder="ID"
+            onKeyUp={handleKeyUpId}
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="PASSWORD"
+            onKeyUp={handleKeyUpPwd}
+          />
+        </InputContainer>
+      </DialogContent>
+      <DialogActions>
+        <SubmitButton onClick={handleSubmit} type="submit">
+          로그인
+        </SubmitButton>
+      </DialogActions>
       <DivisionLine />
       <Footer>
         <GoogleButton
@@ -136,11 +125,9 @@ const LoginDialog = ({ signUp, close }) => {
           getProfile="true"
           buttonText="카카오"
         />
-        <OAuthLoginButton color="#2DB400">네이버</OAuthLoginButton>
         <SignUpButton onClick={signUp}>회원가입</SignUpButton>
       </Footer>
     </DialogStyle>
   );
 };
-
 export default LoginDialog;

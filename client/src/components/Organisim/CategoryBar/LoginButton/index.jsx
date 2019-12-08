@@ -6,13 +6,13 @@ const LoginButtonStyle = styled.button`
   width: 100%;
   height: 3.5em;
   border-radius: 20%;
-  background: #5c5749;
+  background: var(--color-quaternary);
   color: white;
 
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: #5c5749;
+    color: var(--color-quaternary);
     background: white;
   }
 `;
