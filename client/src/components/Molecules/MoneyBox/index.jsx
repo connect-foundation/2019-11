@@ -1,8 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 
-import { isNumber } from "../../../utils/validator"
-
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -41,18 +39,18 @@ const NonBorderBox = styled.input`
   box-sizing: border-box;
   border: none;
   outline: none;
-  font-size: ${props => props.font}rem;
+  font-size: var(--font-size-md);
 `
 
-const Component = ({ money, handler }) => {
+const Component = ({ money, handler, disabled, ...otherProps }) => {
   const changeHandler = ev => {
     const input = ev.target.value.replace(/[^0-9]/g, "")
     handler(input.substring(0, 9))
   }
 
   return (
-    <Container>
-      <NonBorderBox value={money} onChange={changeHandler} font={1} />
+    <Container disabled {...otherProps}>
+      <NonBorderBox value={money} onChange={disabled ? undefined : changeHandler} />
       <WonDiv>
         <span>원</span>
       </WonDiv>
