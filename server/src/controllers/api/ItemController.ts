@@ -14,8 +14,18 @@ import { ItemService } from "../../services/ItemService"
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
-  @Get("/:code")
+  @Get("/category/:code")
   public async find(@Param("code") categoryCode: number) {
     return await this.itemService.find(Number(categoryCode))
+  }
+
+  @Get("/hot")
+  public async findHot() {
+    return await this.itemService.findHot()
+  }
+
+  @Get("/deadline")
+  public async findDeadline() {
+    return await this.itemService.findDeadline()
   }
 }

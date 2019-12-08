@@ -31,7 +31,7 @@ const CategoryItems = ({ match }) => {
 
   const fetcher = async () => {
     setItemslist([])
-    const url = `${apiUrl}${items}/${categoryCode}`
+    const url = `${apiUrl}${items.category}/${categoryCode}`
     let result = await fetch(url)
     const list = await result.json()
 
