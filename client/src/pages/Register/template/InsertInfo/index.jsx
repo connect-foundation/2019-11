@@ -196,7 +196,6 @@ const Component = ({ width, next, registItem }) => {
             }}
           >
             <TitleBox
-              size={1.25}
               hint={"상품 제목"}
               value={title}
               limit={50}
@@ -255,7 +254,7 @@ const Component = ({ width, next, registItem }) => {
           title={"상품 설명"}
           content={description}
           handler={setDescription}
-          limit={500}
+          limit={1000}
           isBlockMode={true}
         />
         <ButtonContainer>
