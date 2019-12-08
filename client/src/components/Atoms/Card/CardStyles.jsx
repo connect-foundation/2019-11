@@ -64,8 +64,8 @@ const IsAuctionTag = styled.div`
 
 const DDayTag = styled.div`
   border-radius: 0.5rem;
-  border: #feaa6e solid 0.1rem;
-  color: #feaa6e;
+  border: var(--color-secondary) solid 0.1rem;
+  color: var(--color-secondary);
   padding: 0.1rem 0.3rem 0.1rem 0.3rem;
   margin: 0.25rem;
 `;

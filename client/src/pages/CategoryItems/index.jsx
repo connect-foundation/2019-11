@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react"
-import styled from "styled-components"
-import { CardContainer } from "../../components"
-import { populars } from "../../mock"
-import { jsonFetch } from "../../services/fetchService"
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import CardContainer from "../../components/Molecules/CardContainer";
 
-import apiConfig from "../../config/api"
-import pathConfig from "../../config/path"
+import apiConfig from "../../config/api";
+import pathConfig from "../../config/path";
 
-const { apiUrl } = apiConfig
-const { items } = pathConfig
+const { apiUrl } = apiConfig;
+const { items } = pathConfig;
 
 const MainStyle = styled.div`
   display: flex;
@@ -22,30 +20,30 @@ const MainStyle = styled.div`
     justify-content: flex-start;
     padding-left: 10rem;
   }
-`
+`;
 
 const CategoryItems = ({ match }) => {
-  const categoryCode = match.params.code
-  const categoryTitle = match.params.title
-  const [itemlist, setItemslist] = useState([])
+  const categoryCode = match.params.code;
+  const categoryTitle = match.params.title;
+  const [itemlist, setItemslist] = useState([]);
 
   const fetcher = async () => {
-    setItemslist([])
-    const url = `${apiUrl}${items}/${categoryCode}`
-    let result = await fetch(url)
-    const list = await result.json()
+    setItemslist([]);
+    const url = `${apiUrl}${items}/${categoryCode}`;
+    let result = await fetch(url);
+    const list = await result.json();
 
-    setItemslist(list[0])
-  }
+    setItemslist(list[0]);
+  };
   useEffect(() => {
-    fetcher()
-  }, [categoryCode, categoryTitle])
+    fetcher();
+  }, [categoryCode, categoryTitle]);
 
   return (
     <MainStyle>
       <CardContainer items={itemlist} title={categoryTitle} isWrap={true} />
     </MainStyle>
-  )
-}
+  );
+};
 
-export default CategoryItems
+export default CategoryItems;

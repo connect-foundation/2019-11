@@ -37,10 +37,12 @@ html {
   --color-secondary-plus1-lighter: #ffcf01;
   --color-secondary-plus0: #ec885e;
   --color-secondary: #feaa6e;
+  --color-secondary-lighter: #fef2c7;
   --color-secondary-minus0: #ffc69d;
   --color-secondary-minus1: #ffd9be;
 
   --color-tertiary: #beddbf;
+  --color-tertiary-darker: #beddbf77;
 
   --color-quaternary: #5c5749;
 
