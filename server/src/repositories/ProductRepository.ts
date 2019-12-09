@@ -1,6 +1,6 @@
-import { EntityRepository, EntityManager, Equal, Not, IsNull } from "typeorm"
-import { ProductsDTO } from "../dto/ProductDTO"
-import { Products } from "../models/Products"
+import { EntityRepository, EntityManager, Equal, Not, IsNull } from "typeorm";
+import { ProductsDTO } from "../dto/ProductDTO";
+import { Products } from "../models/Products";
 
 @EntityRepository()
 export class ProductRepository {
@@ -11,7 +11,7 @@ export class ProductRepository {
       .createQueryBuilder(Products, "products")
       .skip(start)
       .take(limit)
-      .getMany()
+      .getMany();
   }
 
   public findOne(productId: number) {
@@ -20,11 +20,11 @@ export class ProductRepository {
       .innerJoinAndSelect("products.seller", "user")
       .innerJoinAndSelect("products.images", "images")
       .where("products.id = :id", { id: productId })
-      .getOne()
+      .getOne();
   }
 
   public update(product: Products) {
-    return this.em.save(product)
+    return this.em.save(product);
   }
 
   /*GET*/
@@ -40,66 +40,48 @@ export class ProductRepository {
       skip: start,
       take: limits,
       cache: true
-    })
+    });
   }
 
   /* DELETE */
 
   public async remove(pid: number) {
-    return await this.em.delete(Products, { id: pid })
+    return await this.em.delete(Products, { id: pid });
   }
 
   public findCategory(categoryCode: number) {
     return this.em.findAndCount(Products, {
       where: {
         categoryCode: categoryCode,
-        soldPrice: Not(IsNull())
+        soldPrice: IsNull()
       },
       order: { registerDate: "DESC" },
       cache: true
-    })
+    });
   }
 
-  public findHotAuction() {
-    return this.em
-      .getRepository("Products")
-      .createQueryBuilder("product")
-      .leftJoinAndSelect("product.bids", "bids")
-      .select("product.id as id")
-      .addSelect("product.title as title")
-      .addSelect("product.contents as contents")
-      .addSelect("product.immediate_price as immediatePrice")
-      .addSelect("product.hope_price as hopePrice")
-      .addSelect("product.start_bid_price as startBidPrice")
-      .addSelect("product.register_date as registerDate")
-      .addSelect("product.auction_deadline as auctionDeadline")
-      .addSelect("product.extension_date as extensionDate")
-      .addSelect("product.sold_price as soldPrice")
-      .addSelect("product.sold_date as soldDate")
-      .addSelect("product.thumbnail_url as thumbnailUrl")
-      .addSelect("product.category_code as categoryCode")
-      .addSelect("product.is_auction as isAuction")
-      .addSelect("product.buyer_id as buyerId")
-      .addSelect("product.seller_id as sellerId")
-      .addSelect("COUNT(product.id) as countbid")
-      .where("product.sold_date is not null")
-      .groupBy("product.id")
-      .orderBy("countbid", "DESC")
-      .addOrderBy("registerDate", "DESC")
-      .limit(5)
-      .getRawMany()
+  public findOneAuction(productId: number) {
+    return this.em.findOne(Products, {
+      where: {
+        id: productId,
+        isAuction: true,
+        soldDate: IsNull()
+      },
+      cache: true
+    });
   }
 
-  public findDeadline() {
+  public findAndOrder(take: number, orderOption: any) {
     return this.em.find(Products, {
       where: {
-        soldPrice: Not(IsNull())
+        soldPrice: IsNull(),
+        isAuction: true
       },
-      order: { extensionDate: "ASC" },
+      order: orderOption,
       skip: 0,
-      take: 5,
+      take,
       cache: true
-    })
+    });
   }
 
   /* PUT */
@@ -116,7 +98,7 @@ export class ProductRepository {
     categoryCode: number,
     isAuction: boolean
   ) {
-    const dto = new ProductsDTO()
+    const dto = new ProductsDTO();
     const product = dto.create(
       userId,
       title,
@@ -129,8 +111,8 @@ export class ProductRepository {
       thumbnail,
       categoryCode,
       isAuction
-    )
+    );
 
-    return await this.em.save(product)
+    return await this.em.save(product);
   }
 }
