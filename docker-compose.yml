@@ -41,5 +41,14 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=development
+
+  auction-server:
+    build:
+      context: ./auction-server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
 volumes:
   mysql:
