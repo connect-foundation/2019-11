@@ -171,7 +171,7 @@ const Component = ({ width, next, registItem }) => {
     obj.callback = result => {
       if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.")
       else {
-        obj.productId = result
+        data.productId = result
         next()
       }
     }
