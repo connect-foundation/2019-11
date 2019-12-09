@@ -31,6 +31,11 @@ export class ProductController {
     return this.productService.findOne(Number(productId))
   }
 
+  @Get("/withBids/:id")
+  public async findOneWithBids(@Param("id") productId: string) {
+    return this.productService.findOneWithBids(Number(productId))
+  }
+
   @Get("/onlySale/:id/:start/:limits")
   public async sale(
     @Param("id") userId: number,

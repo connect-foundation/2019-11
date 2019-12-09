@@ -23,6 +23,10 @@ export class ProductsService {
   }
 
   public async findOne(productId: number) {
+    return await this.productRepository.findMyOne(productId)
+  }
+
+  public async findOneWithBids(productId: number) {
     const product = await this.productRepository.findOne(productId)
     if (product) {
       const userResponse = new UserResponseDTO()
@@ -39,11 +43,10 @@ export class ProductsService {
       })
 
       const bids = await this.bidRepository.findByProductId(product.id)
-      console.log(bids)
 
       const bidListResponse =
-        product.bids &&
-        product.bids.map(bid => {
+        bids &&
+        bids.map(bid => {
           const bidResponseDTO = new BidResponseDTO()
           bidResponseDTO.bidDate = bid.bidDate
           bidResponseDTO.bidPrice = bid.bidPrice

@@ -43,6 +43,16 @@ export class ProductRepository {
     })
   }
 
+  public findMyOne(productId: number) {
+    return this.em.find(Products, {
+      relations: ["images"],
+      where: {
+        id: productId,
+        ["images.product.id"]: productId
+      }
+    })
+  }
+
   /* DELETE */
 
   public async remove(pid: number) {
