@@ -49,8 +49,12 @@ const Component = ({ money, handler, disabled, ...otherProps }) => {
   }
 
   return (
-    <Container disabled {...otherProps}>
-      <NonBorderBox value={money} onChange={disabled ? undefined : changeHandler} />
+    <Container {...otherProps}>
+      <NonBorderBox
+        value={money}
+        onChange={disabled ? undefined : changeHandler}
+        disabled={disabled}
+      />
       <WonDiv>
         <span>원</span>
       </WonDiv>
