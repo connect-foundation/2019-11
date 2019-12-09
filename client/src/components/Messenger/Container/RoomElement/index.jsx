@@ -27,7 +27,6 @@ const Img = styled.div`
   text-align: center;
   margin: 0 0.5rem 0 0;
   img {
-    margin-top: 0.5em;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -39,7 +38,7 @@ const RoomContent = styled.div`
   padding: 0.5rem 0;
 `
 const HostName = styled.div`
-  color: #6e6e6e;
+  color: var(--color-darkgray-lighter);
   font-size: 0.8rem;
   text-align: left;
   margin-bottom: 0.1rem;
@@ -54,7 +53,7 @@ const HostRecentMsg = styled.span`
 `
 
 function RoomElement(props) {
-  const [name, setName] = useState("unknown")
+  const [name, setName] = useState("nonamed")
   const [profile, setProfile] = useState(null)
   //userId
   useEffect(() => {
@@ -63,8 +62,10 @@ function RoomElement(props) {
         return result.json()
       })
       .then(result => {
-        setName(result.name)
-        setProfile(result.profileUrl)
+        if (result.name !== "NotFoundError") {
+          setName(result.name)
+          setProfile(result.profileUrl)
+        }
       })
   }, [])
   return (

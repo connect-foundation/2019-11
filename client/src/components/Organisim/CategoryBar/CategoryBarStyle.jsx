@@ -1,19 +1,19 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
-const WIDTH = 5
+const WIDTH = 5;
 
 const Container = styled.div`
   display: flex;
   position: relative;
-`
+`;
 
 const OriginWrapper = styled.div`
   width: ${WIDTH}rem;
   display: flex;
   flex-direction: column;
   z-index: 2;
-  background: #beddbf77;
-`
+  background: var(--color-tertiary-darker);
+`;
 
 const ListWrapper = styled.div`
   position: absolute;
@@ -24,7 +24,7 @@ const ListWrapper = styled.div`
 
   overflow: hidden;
   transition: width 0.35s ease-in-out;
-`
+`;
 
 const Bar = styled.div`
   display: flex;
@@ -34,18 +34,18 @@ const Bar = styled.div`
   overflow-y: auto;
   box-sizing: border-box;
   padding: 0.5em 1em;
-`
+`;
 
 const List = styled.ul`
   flex-grow: 1;
   list-style: none;
   padding: 0;
   margin: 0;
-`
+`;
 const DivisionLine = styled.hr`
   width: 100%;
-  border-top: 1px solid #5c5749;
+  border-top: 1px solid var(--color-quaternary);
   border-left: none;
-`
+`;
 
-export { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine }
+export { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine };

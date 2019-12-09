@@ -40,6 +40,7 @@ const BodyContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row-reverse;
+  margin: var(--margin-lg) 0 var(--margin-xs) 0;
 `
 
 const Title = styled.div`

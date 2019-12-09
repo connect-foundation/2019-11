@@ -13,5 +13,9 @@ export default {
   },
   products: "/api/products",
   users: "/api/users",
-  items: "/api/items"
-};
+  items: {
+    category: "/api/items/category",
+    hot: "/api/items/hot",
+    deadline: "/api/items/deadline"
+  }
+}

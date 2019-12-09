@@ -5,22 +5,13 @@ import userContext from "../../../context/UserContext"
 import DefaultProfileIcon from "../../../assets/default-profile.svg"
 
 const InfoDiv = styled.div`
-  position: absolute;
-  left: 6rem;
-  top: 1rem;
-
   display: flex;
   flex-direction: column;
-  background-color: var(--color-secondary-minus1);
+  background-color: var(--color-gray-lighter);
 
-  width: ${props => (props.isShow ? "15" : 0)}rem;
-  height: 20rem;
+  width: 100%
+  height: 100%;
 
-  overflow: hidden;
-  z-index: 30;
-
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
 `
 const ProfileWrap = styled.div`
   display: flex;
@@ -49,8 +40,10 @@ const UserWrap = styled.div`
   justify-content: space-between;
 
   margin: 1rem 0.2rem;
+  border-bottom: solid 2px var(--color-gray-darker);
   height: 2rem;
 `
+
 const ButtonWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,10 +52,21 @@ const ButtonWrap = styled.div`
 `
 const Buttons = styled.button`
   all: unset;
-  margin-buttom: 0.5rem;
+  margin-bottom: 0.5rem;
   text-align: center;
   &:hover {
-    background-color: var(--color-secondary-plus0);
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+  }
+`
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  all: unset;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  &:hover {
+    background-color: var(--color-primary);
     color: white;
     cursor: pointer;
   }
@@ -76,48 +80,43 @@ const LogoutButtons = styled.button`
     cursor: pointer;
   }
 `
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  all: unset;
-  margin-buttom: 0.5rem;
-  text-align: center;
-  &:hover {
-    background-color: var(--color-secondary-plus0);
-    color: white;
-    cursor: pointer;
-  }
-`
+
 function Component(props) {
   const [user, setUser] = useContext(userContext)
   const handleLogoutClick = () => {
     localStorage.removeItem("access-token")
     localStorage.removeItem("refresh-token")
     setUser({})
+    props.onClick()
   }
   console.log(user)
   return (
-    <div>
-      <InfoDiv isShow={props.isShow}>
-        <ProfileWrap>
-          <ProfileBig>
-            <img
-              src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
-            />
-          </ProfileBig>
-        </ProfileWrap>
-        <UserWrap>
-          <div>{user.name}님</div>
-          <div>매너지수 : {user.mannerPoint}</div>
-        </UserWrap>
-        <ButtonWrap>
-          <Buttons>회원정보수정 ></Buttons>
-          <StyledLink to={`/tradelist/`} onClick={props.onClick}>
-            거래내역조회 >
-          </StyledLink>
-        </ButtonWrap>
-        <LogoutButtons onClick={handleLogoutClick}>로그아웃</LogoutButtons>
-      </InfoDiv>
-    </div>
+    <InfoDiv>
+      <ProfileWrap>
+        <ProfileBig>
+          <img
+            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
+          />
+        </ProfileBig>
+      </ProfileWrap>
+      <UserWrap>
+        <div>{user.name}님</div>
+        <div>매너지수 : {user.mannerPoint}</div>
+      </UserWrap>
+      <ButtonWrap>
+        <Buttons>회원정보수정 ></Buttons>
+        <StyledLink to={`/register/`} onClick={props.onClick}>
+          상품등록하기 >
+        </StyledLink>
+        <StyledLink to={`/tradelist/`} onClick={props.onClick}>
+          거래내역조회 >
+        </StyledLink>
+        <StyledLink to={`/myItems/`} onClick={props.onClick}>
+          경매중인 내 상품 >
+        </StyledLink>
+      </ButtonWrap>
+      <LogoutButtons onClick={handleLogoutClick}>로그아웃</LogoutButtons>
+    </InfoDiv>
   )
 }
 

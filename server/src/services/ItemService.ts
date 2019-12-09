@@ -9,4 +9,10 @@ export class ItemService {
   public async find(categoryCode: number) {
     return await this.productRepository.findCategory(categoryCode)
   }
+  public async findHot() {
+    return await this.productRepository.findHotAuction()
+  }
+  public async findDeadline() {
+    return await this.productRepository.findDeadline()
+  }
 }

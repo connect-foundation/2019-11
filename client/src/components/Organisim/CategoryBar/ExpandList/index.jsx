@@ -1,6 +1,8 @@
+
 import React from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import UserInfoBox from "../../../Molecules/UserInfoBox"
 
 const Container = styled.div`
   display: flex;
@@ -8,10 +10,10 @@ const Container = styled.div`
   width: 15em;
   height: 100%;
   overflow-y: auto;
-  background-color: #ffe1a2;
+  background-color: var(--color-secondary-minus1);
   box-sizing: border-box;
   z-index: 1;
-`
+`;
 
 const DetailCategory = styled.div`
   font-family: "BMJUA";
@@ -22,36 +24,45 @@ const DetailCategory = styled.div`
 
   transition: all 0.3s ease-in-out;
   &:hover {
-    background-color: #ec8852;
+    background-color: var(--color-secondary-plus0);
   }
 
   label {
     cursor: pointer;
   }
-`
+`;
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: black;
-`
+`;
 
 const Components = ({ idx, open, details, onClick }) => {
-  const detailCategoryList = details.details
+
+  let detailCategoryList = null
+  if (details !== undefined) {
+    detailCategoryList = details.details
+  }
+
 
   return (
     <Container idx={idx} open={open}>
-      {detailCategoryList.map(category => (
-        <StyledLink
-          to={`/category/${category.title}/${category.code}`}
-          onClick={onClick}
-          key={category.title}
-        >
-          <DetailCategory>
-            <label>{category.title}</label>
-          </DetailCategory>
-        </StyledLink>
-      ))}
+      {Number(idx) === 0 ? (
+        <UserInfoBox onClick={onClick} />
+      ) : (
+        detailCategoryList.map(category => (
+          <StyledLink
+            to={`/category/${category.title}/${category.code}`}
+            onClick={onClick}
+            key={category.title}
+          >
+            <DetailCategory>
+              <label>{category.title}</label>
+            </DetailCategory>
+          </StyledLink>
+        ))
+      )}
     </Container>
-  )
-}
+  );
+};
 
-export default Components
+export default Components;

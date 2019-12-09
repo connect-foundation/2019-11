@@ -1,116 +1,86 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
-import Logo from "./Logo";
-import CategoryIcon from "./CategoryIcon";
-import ExpandList from "./ExpandList";
-import LoginButton from "./LoginButton";
-import Profile from "./Profile";
-import MainModal from "../../Molecules/MainModal";
-import Cloth from "../../../assets/cloth.svg";
-import Electronic from "../../../assets/television.svg";
-import LifeStyle from "../../../assets/geek.svg";
-import MessengerIcon from "../../../assets/messenger.svg";
-import detailCategoryList from "../../../data/detail-category-list";
-import {
-  Container,
-  OriginWrapper,
-  ListWrapper,
-  Bar,
-  List,
-  DivisionLine
-} from "./CategoryBarStyle";
-import userContext from "../../../context/UserContext";
-import Messenger from "../../Messenger";
-import UserInfoBox from "../../Molecules/UserInfoBox";
-import apiConfig from "../../../config/api";
-import pathConfig from "../../../config/path";
-import { getFetch } from "../../../services/fetchService";
+import React, { useState, useRef, useEffect, useContext } from "react"
+import Logo from "./Logo"
+import CategoryIcon from "./CategoryIcon"
+import ExpandList from "./ExpandList"
+import LoginButton from "./LoginButton"
+import Profile from "./Profile"
+import MainModal from "../../Molecules/MainModal"
+import Cloth from "../../../assets/cloth.svg"
+import Electronic from "../../../assets/television.svg"
+import LifeStyle from "../../../assets/geek.svg"
+import MessengerIcon from "../../../assets/messenger.svg"
+import detailCategoryList from "../../../data/detail-category-list"
+import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from "./CategoryBarStyle"
+import userContext from "../../../context/UserContext"
+import Messenger from "../../Messenger"
+import apiConfig from "../../../config/api"
+import pathConfig from "../../../config/path"
+import { getFetch } from "../../../services/fetchService"
 
-const { apiUrl } = apiConfig;
-const { users } = pathConfig;
+const { apiUrl } = apiConfig
+const { users } = pathConfig
 
 const Components = () => {
-  const [open, setOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [selectIdx, setSelectIdx] = useState(1);
-  const [user, setUser] = useContext(userContext);
+  const [open, setOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [selectIdx, setSelectIdx] = useState(1)
+  const [user, setUser] = useContext(userContext)
 
-  const [userInfoOpen, setUserInfoOpen] = useState(false);
-  const node = useRef();
-  const nodeUser = useRef();
+  const node = useRef()
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleOnBlur);
-    if (nodeUser.current !== undefined) {
-      console.log("hi");
-      document.addEventListener("mousedown", handleOnBlurUser);
-    }
-    const refreshToken = localStorage.getItem("refresh-token");
-    const accessToken = localStorage.getItem("access-token");
+    document.addEventListener("mousedown", handleOnBlur)
+    const refreshToken = localStorage.getItem("refresh-token")
+    const accessToken = localStorage.getItem("access-token")
     if (refreshToken !== null && accessToken !== null) {
       const headers = {
         "access-token": `${accessToken}`,
         "refresh-token": `${refreshToken}`
-      };
-      (async () => {
-        const result = await getFetch(`${apiUrl}${users}`, headers, {});
+      }
+      ;(async () => {
+        const result = await getFetch(`${apiUrl}${users}`, headers, {})
         if (result) {
-          setUser(result);
-          localStorage.setItem("access-token", result.accessToken);
-          localStorage.setItem("refresh-token", result.refreshToken);
-        } else alert("세션이 만료되어 로그아웃됩니다.");
-      })();
+          setUser(result)
+          localStorage.setItem("access-token", result.accessToken)
+          localStorage.setItem("refresh-token", result.refreshToken)
+        } else alert("세션이 만료되어 로그아웃됩니다.")
+      })()
     }
-  }, []);
+  }, [])
 
   const handleClick = e => {
-    const { idx } = e.target.dataset;
+    const { idx } = e.target.dataset
     if (selectIdx === idx || open === false) {
-      setOpen(!open);
+      setOpen(!open)
     }
-    setSelectIdx(idx);
-  };
+    setSelectIdx(idx)
+  }
 
   const handleLoginClick = () => {
-    setLoginOpen(!loginOpen);
-  };
+    setLoginOpen(!loginOpen)
+  }
 
   const handleLoginClose = () => {
-    loginOpen === true && setLoginOpen(!loginOpen);
-  };
+    loginOpen === true && setLoginOpen(!loginOpen)
+  }
 
   const handleOnBlur = e => {
     if (!node.current.contains(e.target)) {
-      setOpen(false);
+      setOpen(false)
     }
-  };
+  }
 
   const close = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
-  const handleClickProfile = () => {
-    close();
-    switchUserInfo();
-  };
-  const switchUserInfo = () => {
-    setUserInfoOpen(!userInfoOpen);
-  };
-
-  const handleOnBlurUser = e => {
-    if (!nodeUser.current.contains(e.target)) {
-      setUserInfoOpen();
-    }
-  };
   return (
     <Container ref={node}>
       <OriginWrapper>
         <Logo />
         <Bar>
           {user.isLogin === true ? (
-            <div ref={nodeUser}>
-              <Profile onClick={handleClickProfile} />
-              <UserInfoBox isShow={userInfoOpen} onClick={handleClickProfile} />
-            </div>
+            <Profile onClick={handleClick} idx={0} />
           ) : (
             <LoginButton onClick={handleLoginClick} />
           )}
@@ -141,11 +111,7 @@ const Components = () => {
               idx={3}
             />
           </List>
-          {user.isLogin === true ? (
-            <Messenger img={MessengerIcon} onClick={close} />
-          ) : (
-            undefined
-          )}
+          {user.isLogin === true ? <Messenger img={MessengerIcon} onClick={close} /> : undefined}
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open}>
@@ -158,7 +124,7 @@ const Components = () => {
       </ListWrapper>
       <MainModal onClose={handleLoginClose} open={loginOpen} />
     </Container>
-  );
-};
+  )
+}
 
-export default Components;
+export default Components

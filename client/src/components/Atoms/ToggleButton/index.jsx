@@ -35,11 +35,9 @@ const Bar = styled.div`
   margin: auto 5px;
 `
 
-const Component = props => {
-  const { checked, onClick } = props
-
+const Component = ({ checked, onClick }) => {
   return (
-    <Container onClick={onClick}>
+    <Container onClick={undefined | onClick}>
       <Thumb checked={checked} />
       <Bar />
     </Container>

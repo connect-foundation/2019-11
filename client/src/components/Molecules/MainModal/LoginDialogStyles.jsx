@@ -25,7 +25,7 @@ const Input = styled.input`
 const SubmitButton = styled.button`
   padding: 1em;
   color: white;
-  background: #5c5749;
+  background: var(--color-quaternary);
   font-family: "BMJUA";
   border-radius: 20%;
 `;
@@ -42,16 +42,6 @@ const Footer = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 0.5em;
-`;
-
-const OAuthLoginButton = styled.button`
-  width: 80%;
-  background: ${props => props.color};
-  margin-bottom: ${BUTTON_MARGIN};
-  font-family: "BMJUA";
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
-  padding: 1em;
-  border-radius: 3px;
 `;
 
 const GoogleButton = styled(GoogleLogin)`
@@ -74,7 +64,7 @@ const GoogleButton = styled(GoogleLogin)`
 
 const KakaoButton = styled(KakaoLogin)`
   width: 80%;
-  background: yellow;
+  background: var(--color-secondary-plus1-lighter);
   margin-bottom: ${BUTTON_MARGIN};
   font-family: "BMJUA";
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
@@ -88,7 +78,7 @@ const SignUpButton = styled.button`
   padding: 1em;
   font-family: "BMJUA";
   margin-bottom: ${BUTTON_MARGIN};
-  background: #5c5749;
+  background: var(--color-quaternary);
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
   border-radius: 3px;
 `;
@@ -100,7 +90,6 @@ export {
   SubmitButton,
   DivisionLine,
   Footer,
-  OAuthLoginButton,
   SignUpButton,
   KakaoButton,
   GoogleButton
