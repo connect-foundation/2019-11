@@ -31,7 +31,7 @@ define(Products, (faker: typeof Faker, settings: any): Products => {
     ? moment(auctionDeadline)
         .add(randomBetween(1, 10), "d")
         .format("YYYY-MM-DD h:mm:ss")
-    : "";
+    : auctionDeadline;
   // 등록일과 경매종료일 중간값으로 설정
   const soldDate = extendMoment(Moment)
     .range(new Date(registerDate), new Date(auctionDeadline))
