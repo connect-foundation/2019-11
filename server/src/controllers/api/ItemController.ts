@@ -7,8 +7,8 @@ import {
   Param,
   QueryParam,
   HeaderParam
-} from "routing-controllers"
-import { ItemService } from "../../services/ItemService"
+} from "routing-controllers";
+import { ItemService } from "../../services/ItemService";
 
 @JsonController("/items")
 export class ItemController {
@@ -16,16 +16,18 @@ export class ItemController {
 
   @Get("/category/:code")
   public async find(@Param("code") categoryCode: number) {
-    return await this.itemService.find(Number(categoryCode))
+    return await this.itemService.find(Number(categoryCode));
   }
 
   @Get("/hot")
   public async findHot() {
-    return await this.itemService.findHot()
+    return await this.itemService.findHot();
   }
 
   @Get("/deadline")
   public async findDeadline() {
-    return await this.itemService.findDeadline()
+    return await this.itemService.findAndOrder(5, {
+      extensionDate: "ASC"
+    });
   }
 }
