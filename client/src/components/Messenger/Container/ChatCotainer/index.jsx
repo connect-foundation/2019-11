@@ -119,7 +119,7 @@ const InputButton = styled.button`
 `
 function ChatContainer(props) {
   const [chat, setChat] = useState({})
-  const [opponentUserName, setOpponentUserName] = useState("unknown")
+  const [opponentUserName, setOpponentUserName] = useState("nonamed")
   const [user, setUser] = useContext(userContext)
 
   let USERID = user.loginId
@@ -139,7 +139,9 @@ function ChatContainer(props) {
         return result.json()
       })
       .then(result => {
-        setOpponentUserName(result.name)
+        if (result.name !== "NotFoundError") {
+          setOpponentUserName(result.name)
+        }
       })
     firebase.getRoomChat(props.roomNumber).on("value", listener)
 

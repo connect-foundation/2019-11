@@ -28,10 +28,10 @@ const CategoryItems = ({ match }) => {
   const [itemlist, setItemslist] = useState([]);
 
   const fetcher = async () => {
-    setItemslist([]);
-    const url = `${apiUrl}${items}/${categoryCode}`;
-    let result = await fetch(url);
-    const list = await result.json();
+    setItemslist([])
+    const url = `${apiUrl}${items.category}/${categoryCode}`
+    let result = await fetch(url)
+    const list = await result.json()
 
     setItemslist(list[0]);
   };
