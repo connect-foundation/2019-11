@@ -37,26 +37,31 @@ const Content = styled.textarea`
   padding: 1rem;
 `
 
-const Component = props => {
-  const { title, maxLen, content, handler } = props
-
+const Component = ({ title, limit, content, handler, isBlockMode }) => {
   const [len, setLen] = useState(0)
 
   const handleContent = event => {
     const content = event.target.value
-    handler(content)
-    setLen(content.length)
+    const validContent =
+      isBlockMode && content.length > limit ? content.substring(0, limit) : content
+    handler(validContent)
+    setLen(validContent.length)
+  }
+
+  const handleBlock = e => {
+    if (e.target.value.length >= limit) e.preventDefault()
   }
 
   return (
     <Container>
       <Header>
         <Title>{title}</Title>
-        <Counter isOver={len > maxLen}>{`(${len} / ${maxLen})`}</Counter>
+        <Counter isOver={len > limit}>{`(${len} / ${limit})`}</Counter>
       </Header>
       <Content
-        placeholder={`최대 ${maxLen}글자 입니다.`}
+        placeholder={`최대 ${limit}글자 입니다.`}
         onChange={handleContent}
+        onKeyDown={isBlockMode ? handleBlock : undefined}
         value={content}
       />
     </Container>

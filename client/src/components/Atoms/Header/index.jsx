@@ -9,7 +9,7 @@ const Container = styled.div`
   height: 5rem;
   text-align: left;
   box-sizing: border-box;
-  align-items: center;
+  align-items: flex-start;
   padding: 0.5rem;
 `
 
@@ -19,10 +19,10 @@ const Text = styled.span`
   color: var(--color-secondary);
 `
 
-const Header = props => {
+const Header = ({ text }) => {
   return (
     <Container>
-      <Text>{props.text}</Text>
+      <Text>{text}</Text>
     </Container>
   )
 }

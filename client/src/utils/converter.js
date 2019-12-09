@@ -28,14 +28,42 @@ export const dateDiff2Str = date => {
   return "방금 전";
 };
 
-export const dateDiff2Dday = date => {
-    const gap = new Date().getTime() - new Date(date).getTime();
+export const term2ReaminString = (start, end) => {
+  const sDate = new Date(start)
+  const eDate = new Date(end)
+  let diff = eDate - sDate;
 
-    return Math.floor(gap / (1000 * 60 * 60 * 24)) * -1;
+  const y = Math.floor(diff / 1000 / 60 / 60 / 24 / 365);
+  diff -= y * 1000 * 60 * 60 * 24 * 365;
+
+  const M = Math.floor(diff / 1000 / 60 / 60 / 24 / 31);
+  diff -= M * 1000 * 60 * 60 * 24 * 30;
+
+  const d = Math.floor(diff / 1000 / 60 / 60 / 24);
+  diff -= d * 1000 * 60 * 60 * 24;
+
+  const h = Math.floor(diff / 1000 / 60 / 60);
+  diff -= h * 1000 * 60 * 60;
+
+  const m = Math.floor(diff / 1000 / 60);
+  diff -= m * 1000 * 60;
+
+  const s = Math.floor(diff / 1000);
+
+  if (y) return `${y} 년 남음`
+  else if (M) return `${M} 개월 남음`
+  if (d || h || m || s) return `${d ? `${d}일` : ""} ${h ? `${h}시간` : ''} ${m ? `${m}분` : ''} ${s ? `${s}초` : ''} 후 종료`
+  return `종료된 상품 입니다.`
+}
+
+export const dateDiff2Dday = date => {
+  const gap = new Date().getTime() - new Date(date).getTime();
+
+  return Math.floor(gap / (1000 * 60 * 60 * 24)) * -1;
 };
 
 export const base642Blob = (base64) => {
-    const byteString = window.atob(base64);
+  const byteString = window.atob(base64);
 
   // write the bytes of the string to an ArrayBuffer
   const ab = new ArrayBuffer(byteString.length);

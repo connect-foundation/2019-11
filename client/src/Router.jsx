@@ -8,6 +8,7 @@ import Register from "./pages/Register"
 import ProductPage from "./pages/Product/index"
 import MyItem from "./pages/MyItems"
 import CategoryItems from "./pages/CategoryItems"
+import ProductUpdate from "./pages/ProductUpdate"
 
 const Router = () => {
   return (
@@ -20,6 +21,7 @@ const Router = () => {
         <Route path="/tradelist" component={TradeList}></Route>
         <Route path="/register" exact component={Register}></Route>
         <Route path="/products/:id" component={ProductPage}></Route>
+        <Route path="/productUpdate/:id" component={ProductUpdate} />
         <Route path="/myItems" component={MyItem}></Route>
       </Switch>
     </>
