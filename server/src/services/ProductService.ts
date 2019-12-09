@@ -81,27 +81,11 @@ export class ProductsService {
     }
   }
 
-  /** Post */
   public async getOwnSale(userId: number, start: number, limits: number) {
     return await this.productRepository.onlyOwnSale(userId, start, limits)
   }
 
-  public update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
-    const product = new Products()
-    product.id = productId
-    product.soldPrice = soldPrice
-    product.soldDate = soldDate
-    product.buyerId = buyerId
-
-    return this.productRepository.update(product)
-  }
-
-  /** Delete */
-  public async remove(pid: number) {
-    return this.productRepository.remove(pid)
-  }
-
-  /** PUT */
+  /** Post */
   public async create(
     userId: number,
     title: string,
@@ -133,5 +117,26 @@ export class ProductsService {
     const image = await this.imageRepository.create(product.id, images)
 
     return product.id
+  }
+
+  /** Put */
+  public async updateInfo(productId: number, title: string, contents: string) {
+    return this.productRepository.updateInfo(productId, title, contents)
+  }
+
+  /* Patch */
+  public update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
+    const product = new Products()
+    product.id = productId
+    product.soldPrice = soldPrice
+    product.soldDate = soldDate
+    product.buyerId = buyerId
+
+    return this.productRepository.update(product)
+  }
+
+  /** Delete */
+  public async remove(pid: number) {
+    return this.productRepository.remove(pid)
   }
 }

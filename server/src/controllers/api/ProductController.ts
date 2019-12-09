@@ -1,6 +1,7 @@
 import {
   JsonController,
   Put,
+  Patch,
   BodyParam,
   Post,
   Get,
@@ -46,7 +47,7 @@ export class ProductController {
     return result
   }
 
-  @Put("/:id")
+  @Patch("/:id")
   public update(
     @Param("id") productId: string,
     @BodyParam("soldPrice") soldPrice: string,
@@ -59,6 +60,15 @@ export class ProductController {
       soldDate,
       parseInt(buyerId)
     )
+  }
+
+  @Put("/:id")
+  public updateInfo(
+    @Param("id") productId: number,
+    @BodyParam("title") title: string,
+    @BodyParam("contents") content: string
+  ) {
+    return this.productService.updateInfo(productId, title, content)
   }
 
   @Post()
