@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import { CardContainer } from "../../components"
+import CardContainer from "../../components/Molecules/CardContainer"
 import apiConfig from "../../config/api"
 import pathConfig from "../../config/path"
 const { apiUrl } = apiConfig
 const { items } = pathConfig
-
 
 const MainStyle = styled.div`
   display: flex;
