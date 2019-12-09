@@ -1,14 +1,14 @@
-import { Users } from "./../models/Users"
-import { Products } from "./../models/Products"
-import { BidRepository } from "./../repositories/BidRepository"
-import { BidResponseDTO } from "./../dto/BidResponseDTO"
-import { Service } from "typedi"
-import { InjectRepository } from "typeorm-typedi-extensions"
-import { ProductRepository } from "../repositories/ProductRepository"
-import { ImageRepository } from "../repositories/ImageRepository"
-import { ProductResponseDTO } from "../dto/ProductResponseDTO"
-import { UserResponseDTO } from "../dto/UserResponseDTO"
-import { ImageResponseDTO } from "../dto/ImageResponseDTO"
+import { Users } from "./../models/Users";
+import { Products } from "./../models/Products";
+import { BidRepository } from "./../repositories/BidRepository";
+import { BidResponseDTO } from "./../dto/BidResponseDTO";
+import { Service } from "typedi";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { ProductRepository } from "../repositories/ProductRepository";
+import { ImageRepository } from "../repositories/ImageRepository";
+import { ProductResponseDTO } from "../dto/ProductResponseDTO";
+import { UserResponseDTO } from "../dto/UserResponseDTO";
+import { ImageResponseDTO } from "../dto/ImageResponseDTO";
 
 @Service()
 export class ProductsService {
@@ -19,83 +19,87 @@ export class ProductsService {
   ) {}
 
   public async find(start?: number, limit?: number) {
-    return this.productRepository.find(start, limit)
+    return this.productRepository.find(start, limit);
   }
 
   public async findOne(productId: number) {
-    const product = await this.productRepository.findOne(productId)
-    if (product) {
-      const userResponse = new UserResponseDTO()
-      userResponse.email = product.seller.email
-      userResponse.mannerPoint = product.seller.mannerPoint
-      userResponse.name = product.seller.name
-      userResponse.profileUrl = product.seller.profileUrl
+    const product = await this.productRepository.findOne(productId);
+    if (!product) return;
 
-      const imageListResponse = product.images.map(image => {
-        const imageRespone = new ImageResponseDTO()
-        imageRespone.id = image.id
-        imageRespone.imageUrl = image.imageUrl
-        return imageRespone
-      })
+    const userResponse = new UserResponseDTO();
+    userResponse.loginId = product.seller.loginId;
+    userResponse.email = product.seller.email;
+    userResponse.mannerPoint = product.seller.mannerPoint;
+    userResponse.name = product.seller.name;
+    userResponse.profileUrl = product.seller.profileUrl;
 
-      const bids = await this.bidRepository.findByProductId(product.id)
-      console.log(bids)
+    const imageListResponse = product.images.map(image => {
+      const imageRespone = new ImageResponseDTO();
+      imageRespone.id = image.id;
+      imageRespone.imageUrl = image.imageUrl;
+      return imageRespone;
+    });
 
-      const bidListResponse =
-        product.bids &&
-        product.bids.map(bid => {
-          const bidResponseDTO = new BidResponseDTO()
-          bidResponseDTO.bidDate = bid.bidDate
-          bidResponseDTO.bidPrice = bid.bidPrice
-          bidResponseDTO.id = bid.id
-          bidResponseDTO.user = bid.user
-          return bidResponseDTO
-        })
+    const bids = await this.bidRepository.findByProductId(product.id);
 
-      const productResponse = new ProductResponseDTO()
-      productResponse.auctionDeadline = product.auctionDeadline
-      productResponse.bids = product.bids
-      productResponse.buyerId = product.buyerId
-      productResponse.categoryCode = product.categoryCode
-      productResponse.contents = product.contents
-      productResponse.extensionDate = product.extensionDate
-      productResponse.hopePrice = product.hopePrice
-      productResponse.id = product.id
-      productResponse.immediatePrice = product.immediatePrice
-      productResponse.isAuction = product.isAuction
-      productResponse.registerDate = product.registerDate
-      productResponse.soldDate = product.soldDate
-      productResponse.soldPrice = product.soldPrice
-      productResponse.startBidPrice = product.startBidPrice
-      productResponse.title = product.title
-      productResponse.thumbnailUrl = product.thumbnailUrl
+    const bidListResponse =
+      bids &&
+      bids.map(bid => {
+        const bidResponseDTO = new BidResponseDTO();
+        bidResponseDTO.bidDate = bid.bidDate;
+        bidResponseDTO.bidPrice = bid.bidPrice;
+        bidResponseDTO.id = bid.id;
+        bidResponseDTO.user = bid.user;
+        return bidResponseDTO;
+      });
 
-      productResponse.seller = userResponse
-      productResponse.images = imageListResponse
-      productResponse.bids = bidListResponse
+    const productResponse = new ProductResponseDTO();
+    productResponse.auctionDeadline = product.auctionDeadline;
+    productResponse.buyerId = product.buyerId;
+    productResponse.categoryCode = product.categoryCode;
+    productResponse.contents = product.contents;
+    productResponse.extensionDate = product.extensionDate;
+    productResponse.hopePrice = product.hopePrice;
+    productResponse.id = product.id;
+    productResponse.immediatePrice = product.immediatePrice;
+    productResponse.isAuction = product.isAuction;
+    productResponse.registerDate = product.registerDate;
+    productResponse.soldDate = product.soldDate;
+    productResponse.soldPrice = product.soldPrice;
+    productResponse.startBidPrice = product.startBidPrice;
+    productResponse.title = product.title;
+    productResponse.thumbnailUrl = product.thumbnailUrl;
 
-      return productResponse
-    }
+    productResponse.seller = userResponse;
+    productResponse.images = imageListResponse;
+    productResponse.bids = bidListResponse;
+
+    return productResponse;
   }
 
   /** Post */
   public async getOwnSale(userId: number, start: number, limits: number) {
-    return await this.productRepository.onlyOwnSale(userId, start, limits)
+    return await this.productRepository.onlyOwnSale(userId, start, limits);
   }
 
-  public update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
-    const product = new Products()
-    product.id = productId
-    product.soldPrice = soldPrice
-    product.soldDate = soldDate
-    product.buyerId = buyerId
+  public update(
+    productId: number,
+    soldPrice: number,
+    soldDate: string,
+    buyerId: number
+  ) {
+    const product = new Products();
+    product.id = productId;
+    product.soldPrice = soldPrice;
+    product.soldDate = soldDate;
+    product.buyerId = buyerId;
 
-    return this.productRepository.update(product)
+    return this.productRepository.update(product);
   }
 
   /** Delete */
   public async remove(pid: number) {
-    return this.productRepository.remove(pid)
+    return this.productRepository.remove(pid);
   }
 
   /** PUT */
@@ -125,10 +129,10 @@ export class ProductsService {
       thumbnail,
       category,
       isAuction
-    )
+    );
 
-    const image = await this.imageRepository.create(product.id, images)
+    const image = await this.imageRepository.create(product.id, images);
 
-    return product.id
+    return product.id;
   }
 }

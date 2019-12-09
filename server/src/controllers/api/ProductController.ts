@@ -7,12 +7,13 @@ import {
   Param,
   QueryParam,
   HeaderParam,
-  Delete
-} from "routing-controllers"
-import { ProductsService } from "../../services/ProductService"
+  Delete,
+  Patch
+} from "routing-controllers";
+import { ProductsService } from "../../services/ProductService";
 
-const startDefault = 0
-const limitDefault = 50
+const startDefault = 0;
+const limitDefault = 50;
 
 @JsonController("/products")
 export class ProductController {
@@ -23,12 +24,12 @@ export class ProductController {
     @QueryParam("start") start = startDefault,
     @QueryParam("limit") limit = limitDefault
   ) {
-    return this.productService.find(Number(start), Number(limit))
+    return this.productService.find(Number(start), Number(limit));
   }
 
   @Get("/:id")
   public async findOne(@Param("id") productId: string) {
-    return this.productService.findOne(Number(productId))
+    return this.productService.findOne(Number(productId));
   }
 
   @Get("/onlySale/:id/:start/:limits")
@@ -37,11 +38,11 @@ export class ProductController {
     @Param("start") start: number,
     @Param("limits") limits: number
   ) {
-    const result = await this.productService.getOwnSale(userId, start, limits)
-    return result
+    const result = await this.productService.getOwnSale(userId, start, limits);
+    return result;
   }
 
-  @Put("/:id")
+  @Patch("/:id")
   public update(
     @Param("id") productId: string,
     @BodyParam("soldPrice") soldPrice: string,
@@ -53,7 +54,7 @@ export class ProductController {
       parseInt(soldPrice),
       soldDate,
       parseInt(buyerId)
-    )
+    );
   }
 
   @Post()
@@ -84,8 +85,8 @@ export class ProductController {
       thumbnail,
       categoryCode,
       isAuction
-    )
-    return result
+    );
+    return result;
   }
 
   @Delete("/:id")
@@ -95,8 +96,8 @@ export class ProductController {
     @HeaderParam("x-uloginId") lid: string,
     @Param("id") pid: number
   ) {
-    const result = await this.productService.remove(pid)
+    const result = await this.productService.remove(pid);
 
-    return result
+    return result;
   }
 }
