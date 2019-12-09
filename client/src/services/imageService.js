@@ -9,9 +9,8 @@ export const createThumbnail = async (file) => {
             'JPEG',
             100,
             0,
-            uri => {
-                resolve(uri)
-            },
+            uri => resolve(uri.split(',')[1])
+            ,
             'base64'
         )
     });
