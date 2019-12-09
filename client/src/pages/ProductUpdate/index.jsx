@@ -14,8 +14,12 @@ import AlertDialog from "../../components/Molecules/AlertDialog"
 import apiConfig from "../../config/api"
 import pathConfig from "../../config/path"
 
-import { getFetch } from "../../services/fetchService"
+import { getFetch, putJsonFetch } from "../../services/fetchService"
 import { term2ReaminString } from "../../utils/converter"
+import { validDialog, invalidDialog } from "./constants"
+import { limits } from "../../constants/values"
+import { message } from "../../constants/strings"
+import { strEmpty } from "../../utils/validator"
 
 const { apiUrl } = apiConfig
 const { products } = pathConfig
@@ -111,18 +115,17 @@ const Component = ({ match }) => {
   const [newContent, setNewContent] = useState("")
   const [remainDate, setRemain] = useState("")
   const [open, setOpen] = useState(false)
+  const [valid, setValid] = useState(false)
 
   useEffect(() => {
     ;(async () => {
-      const json = await getFetch(`${apiUrl}${products}/${productId}`)
-      const { title, content, images } = json
-
-      console.dir(json)
+      const [json] = await getFetch(`${apiUrl}${products}/${productId}`)
+      const { title, contents, images } = json
 
       setOrigin(json)
       setNewTitle(title)
       setNewImgList(images.map(v => v.imageUrl))
-      setNewContent(content)
+      setNewContent(contents)
 
       setLoadding(false)
     })()
@@ -131,9 +134,31 @@ const Component = ({ match }) => {
   useEffect(() => {
     if (origin) {
       if (origin.auctionDeadline == null) setRemain("비 경매 상품입니다.")
-      else setRemain(term2ReaminString(origin.registerDate, origin.auctionDeadline))
+      else setRemain(term2ReaminString(Date.now(), origin.auctionDeadline))
     }
   }, [origin, remainDate, setRemain])
+
+  const validation = () => {
+    setValid(!strEmpty(newTitle) && !strEmpty(newContent))
+    setOpen(true)
+  }
+
+  const updateProduct = async () => {
+    const result = await putJsonFetch(
+      `${apiUrl}${products}/${origin.id}`,
+      {},
+      {
+        title: newTitle,
+        contents: newContent
+      }
+    )
+
+    if (result.id === origin.id) window.location = `/products/${origin.id}`
+    else {
+      alert(message.serverBusy)
+      window.location = `/`
+    }
+  }
 
   return isLoadding ? (
     <Spinner />
@@ -149,7 +174,7 @@ const Component = ({ match }) => {
             <TitleBox
               hint={"상품 제목"}
               value={newTitle}
-              limit={50}
+              limit={limits.productTitle}
               onChange={v => setNewTitle(v)}
               isBlockMode={true}
             />
@@ -187,23 +212,24 @@ const Component = ({ match }) => {
           title={"상품 설명"}
           content={newContent}
           handler={setNewContent}
-          limit={1000}
+          limit={limits.productContent}
           isBlockMode={true}
         />
         <ButtonContainer>
-          <Button text={"등록"} />
+          <Button text={"수정"} onClick={e => validation()} />
         </ButtonContainer>
       </ContentDiv>
-      {/* {open ? (
+      {open ? (
         <AlertDialog
-          {...dialogOption}
-          cancelAble={true}
-          onAccept={() => registerProduct(product)}
+          title={valid ? validDialog.title : invalidDialog.title}
+          content={valid ? validDialog.content : invalidDialog.content}
+          cancelAble={valid ? validDialog.cancelAble : invalidDialog.cancelAble}
+          onAccept={valid ? () => updateProduct() : undefined}
           onDismiss={() => setOpen(false)}
         />
       ) : (
         undefined
-      )} */}
+      )}
     </Container>
   )
 }
