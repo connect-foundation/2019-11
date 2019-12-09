@@ -38,7 +38,7 @@ const Content = styled.textarea`
 `
 
 const Component = ({ title, limit, content, handler, isBlockMode }) => {
-  const [len, setLen] = useState(content.length | 0)
+  const [len, setLen] = useState(content ? content.length : 0)
 
   const handleContent = event => {
     const content = event.target.value
