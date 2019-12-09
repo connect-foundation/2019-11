@@ -6,6 +6,7 @@ import KakaoLogo from "../../../assets/kakaoShareIcon.svg"
 import FacebookLogo from "../../../assets/fbShareIcon.svg"
 import TwitterLogo from "../../../assets/twitterShareIcon.svg"
 import URLLogo from "../../../assets/urlShareIcon.svg"
+import apiConfig from "../../../config/api"
 
 const Container = styled.div`
   position: relative;
@@ -58,7 +59,7 @@ const handleKakao = (url, object) => {
     objectType: "feed",
     content: {
       title: object.title,
-      description: object.content,
+      description: object.contents,
       imageUrl: object.thumbnail,
       link: {
         webUrl: url
@@ -77,7 +78,7 @@ const handleKakao = (url, object) => {
 
 const Component = ({ url, object, width }) => {
   useEffect(() => {
-    window.Kakao.init("3e60e52d3ff296f46273d8da0462dc40")
+    window.Kakao.init(apiConfig.kakaoKey)
   }, [])
 
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&amp;src=sdkpreparse`
