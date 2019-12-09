@@ -6,6 +6,7 @@ import pathConfig from "../../config/path"
 const { apiUrl } = apiConfig
 const { items } = pathConfig
 
+
 const MainStyle = styled.div`
   display: flex;
   font-family: "BMJUA";

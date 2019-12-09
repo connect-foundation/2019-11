@@ -14,7 +14,7 @@ const BuyNowPriceStyle = styled.div`
   display: flex;
   height: 1rem;
   font-size: small;
-  color: #beddbf;
+  color: var(--color-tertiary);
   label {
     color: black;
     margin-right: 0.5rem;
@@ -25,7 +25,7 @@ const TopBidStyle = styled.div`
   display: flex;
   height: 1rem;
   font-size: middle;
-  color: #feaa6e;
+  color: var(--color-secondary);
   label {
     color: black;
     margin-right: 0.5rem;

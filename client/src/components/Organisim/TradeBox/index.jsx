@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 
 import TradeBase from "../../Molecules/TradeBase"
+import { remove, update } from "./constants"
 
 const Container = styled.div`
   width: 100%;
@@ -55,7 +56,7 @@ const Components = ({ id, link, onDelete, onUpdate, ...otherProps }) => {
             onDelete()
           }}
         >
-          삭제
+          {remove}
         </Button>
         <Button
           className={"warning"}
@@ -63,7 +64,7 @@ const Components = ({ id, link, onDelete, onUpdate, ...otherProps }) => {
             onUpdate()
           }}
         >
-          수정
+          {update}
         </Button>
       </ButtonDiv>
     </Container>

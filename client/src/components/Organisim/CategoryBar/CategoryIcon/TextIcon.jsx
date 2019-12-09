@@ -5,7 +5,7 @@ const TextIcon = styled.span`
   font-size: 1.5em;
   position: absolute;
   display: grid;
-  color: #fef2c7;
+  color: var(--color-secondary-lighter);
   background: white;
 
   cursor: pointer;

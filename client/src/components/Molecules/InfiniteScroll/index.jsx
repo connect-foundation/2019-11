@@ -44,7 +44,7 @@ const renderNotFound = () => {
   )
 }
 
-const Component = ({ fetcher, drawer, reset, hasMore }) => {
+const Component = ({ fetcher, drawer, refresh, hasMore }) => {
   const [loadding, setLoadding] = useState(true)
   const [list, setList] = useState([])
 
@@ -55,11 +55,11 @@ const Component = ({ fetcher, drawer, reset, hasMore }) => {
   }, {})
 
   useEffect(() => {
-    if (reset) {
+    if (refresh) {
       setList([])
-      reset = false
+      setLoadding(true)
     }
-  }, [reset])
+  }, [refresh])
 
   const update = async () => {
     setLoadding(true)

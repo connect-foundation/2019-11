@@ -8,7 +8,7 @@
     "dev:build": "tsc -w",
     "dev": "concurrently npm:dev:*",
     "start": "rm -rf dist && tsc && cross-env NODE_ENV=development pm2-runtime dist/server.js --name 'web' ",
-    "build": "tsc",
+    "build": "tsc && cross-env NODE_ENV=production",
     "prod": "rm -rf dist && tsc && cross-env NODE_ENV=production pm2-runtime dist/server.js --name 'web' ",
     "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
