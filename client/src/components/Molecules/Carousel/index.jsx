@@ -67,7 +67,6 @@ const Lodding = styled.div`
 `
 
 const Components = ({ list, handler, readOnly }) => {
-  console.dir(readOnly)
   let onImageLoad = false
   let imageBuffer = []
   let onloadCount = 0
@@ -146,7 +145,7 @@ const Components = ({ list, handler, readOnly }) => {
         <BeforeButton visible={showIdx !== 0} onClick={handleLeft} />
       </LeftDiv>
       <RightDiv>
-        <NextButton visible={showIdx !== list.length - !!readOnly} onClick={handleRight} />
+        <NextButton visible={showIdx < list.length - !!readOnly} onClick={handleRight} />
       </RightDiv>
       <Window>
         <Panel idx={showIdx}>
@@ -155,6 +154,7 @@ const Components = ({ list, handler, readOnly }) => {
               <CarouselImage
                 key={value}
                 src={value}
+                readOnly={!!readOnly}
                 onRemove={() => {
                   list.splice(idx, 1)
                   handler([...list])
