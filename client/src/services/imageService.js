@@ -1,11 +1,13 @@
 import Resizer from 'react-image-file-resizer';
 
+const SIZE = 250
+
 export const createThumbnail = async (file) => {
     return new Promise(resolve => {
         Resizer.imageFileResizer(
             file,
-            100,
-            100,
+            SIZE,
+            SIZE,
             'JPEG',
             100,
             0,
