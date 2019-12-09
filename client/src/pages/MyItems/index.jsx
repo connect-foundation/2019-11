@@ -90,7 +90,8 @@ const Page = () => {
         onDelete: () => {
           setOpen(true)
           setRemoveId(value.id)
-        }
+        },
+        onUpdate: () => (window.location = `/productUpdate/${value.id}`)
       }
     })
   }
