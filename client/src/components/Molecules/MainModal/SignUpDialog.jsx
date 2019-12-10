@@ -21,6 +21,9 @@ const Label = styled.label`
   font-size: small;
   font-family: "BMJUA";
 `;
+const ToolTip = styled(ReactTooltip)`
+  font-family: "BMJUA";
+`;
 const SignUpDialog = ({ close }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -162,7 +165,7 @@ const SignUpDialog = ({ close }) => {
             placeholder="E-MAIL"
             onKeyUp={handleEmailKeyUp}
           />
-          <ReactTooltip place="right" effect="solid" />
+          <ToolTip place="right" effect="solid" />
         </InputContainer>
       </DialogContent>
       <DialogActions>
