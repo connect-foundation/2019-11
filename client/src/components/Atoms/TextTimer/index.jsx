@@ -6,7 +6,8 @@ import { getDiffDateTime } from "../../../utils/dateUtil";
 const TextTimerStyle = styled.span``;
 
 const TextTimer = ({ auctionDeadline }) => {
-  const [deadLine, setDeadLine] = useState();
+  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+  const [deadLine, setDeadLine] = useState(`D-${d} ${h}:${m}:${s}`);
 
   useEffect(() => {
     if (!auctionDeadline) return;
