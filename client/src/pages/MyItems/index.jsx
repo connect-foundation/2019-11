@@ -80,8 +80,12 @@ const Page = () => {
   };
 
   const fetcher = async () => {
+    if (!user.id) return [];
     const fetchUrl = `${apiUrl}${products}/onlySale/${user.id}/${offset.current}/${limits}`;
-    const [list, cnt] = await getFetch(fetchUrl);
+    const [list, cnt] = await getFetch(fetchUrl, {
+      "access-token": user.accessToken,
+      "refresh-token": user.refreshToken
+    });
     offset.current += list.length;
     setHasMore(offset.current < cnt);
 
