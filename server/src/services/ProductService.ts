@@ -1,14 +1,13 @@
-import { Users } from "./../models/Users";
-import { Products } from "./../models/Products";
-import { BidRepository } from "./../repositories/BidRepository";
-import { BidResponseDTO } from "./../dto/BidResponseDTO";
-import { Service } from "typedi";
-import { InjectRepository } from "typeorm-typedi-extensions";
-import { ProductRepository } from "../repositories/ProductRepository";
-import { ImageRepository } from "../repositories/ImageRepository";
-import { ProductResponseDTO } from "../dto/ProductResponseDTO";
-import { UserResponseDTO } from "../dto/UserResponseDTO";
-import { ImageResponseDTO } from "../dto/ImageResponseDTO";
+import { Products } from "./../models/Products"
+import { BidRepository } from "./../repositories/BidRepository"
+import { BidResponseDTO } from "./../dto/BidResponseDTO"
+import { Service } from "typedi"
+import { InjectRepository } from "typeorm-typedi-extensions"
+import { ProductRepository } from "../repositories/ProductRepository"
+import { ImageRepository } from "../repositories/ImageRepository"
+import { ProductResponseDTO } from "../dto/ProductResponseDTO"
+import { UserResponseDTO } from "../dto/UserResponseDTO"
+import { ImageResponseDTO } from "../dto/ImageResponseDTO"
 
 @Service()
 export class ProductsService {
@@ -19,11 +18,10 @@ export class ProductsService {
   ) {}
 
   public async find(start?: number, limit?: number) {
-    return this.productRepository.find(start, limit);
+    return this.productRepository.find(start, limit)
   }
 
   public async findOne(productId: number) {
-
     return await this.productRepository.findMyOne(productId)
   }
 
@@ -83,12 +81,7 @@ export class ProductsService {
   }
 
   public async getOwnSale(userId: number, start: number, limits: number) {
-    return await this.productRepository.onlyOwnSale(userId, start, limits);
-  }
-
-  /** Delete */
-  public async remove(pid: number) {
-    return this.productRepository.remove(pid);
+    return await this.productRepository.onlyOwnSale(userId, start, limits)
   }
 
   public async create(
@@ -117,11 +110,11 @@ export class ProductsService {
       thumbnail,
       category,
       isAuction
-    );
+    )
 
-    const image = await this.imageRepository.create(product.id, images);
+    const image = await this.imageRepository.create(product.id, images)
 
-    return product.id;
+    return product.id
   }
 
   /** Put */
@@ -129,23 +122,17 @@ export class ProductsService {
     return this.productRepository.updateInfo(productId, title, contents)
   }
 
-    /* Patch */
-  public update(
-    productId: number,
-    soldPrice: number,
-    soldDate: string,
-    buyerId: number
-  ) {
-    const product = new Products();
-    product.id = productId;
-    product.soldPrice = soldPrice;
-    product.soldDate = soldDate;
-    product.buyerId = buyerId;
+  /* Patch */
+  public update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
+    const product = new Products()
+    product.id = productId
+    product.soldPrice = soldPrice
+    product.soldDate = soldDate
+    product.buyerId = buyerId
 
-    return this.productRepository.update(product);
+    return this.productRepository.update(product)
   }
 
-  
   /** Delete */
   public async remove(pid: number) {
     return this.productRepository.remove(pid)
