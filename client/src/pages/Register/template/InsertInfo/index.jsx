@@ -93,21 +93,15 @@ const renderItemDescription = (idx, focusIdx) => {
 }
 
 const generateDayList = () => {
-  const endDates = []
+  const titles = termList.map(({ title }) => title)
+  const endDates = termList.map(({ term }) => {
+    const deadline = new Date()
+    deadline.setDate(deadline.getDate() + term)
+    return `${deadline.getFullYear()}.${deadline.getMonth() +
+      1}.${deadline.getDate()} ${deadline.getHours()}시 종료`
+  })
 
-  return [
-    termList.map(value => {
-      const { title, term } = value
-      const deadline = new Date()
-      deadline.setDate(deadline.getDate() + term)
-      const endDate = `${deadline.getFullYear()}.${deadline.getMonth() +
-        1}.${deadline.getDate()} ${deadline.getHours()}시 종료`
-
-      endDates.push(endDate)
-      return title
-    }),
-    endDates
-  ]
+  return [titles, endDates]
 }
 
 const validation = (result, successCallback, failCallback) => {
