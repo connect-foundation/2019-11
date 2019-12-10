@@ -14,35 +14,34 @@ import { convert2Price } from "../../utils/converter";
 
 const { chatUrl } = apiConfig;
 
-
 const ProductPageStyle = styled.div`
   display: flex;
   margin: 0 auto;
   width: 100%;
   max-width: 1440px;
   padding: var(--padding-md);
-`
+`;
 
 const MainColumn = styled.div`
   flex: 1;
   overflow-x: auto;
   overflow-x: hidden;
-`
+`;
 
 const TextStyle = styled.p`
   font-size: ${props => props.size};
-`
+`;
 
 const Section = styled.section`
   min-height: 400px;
   margin-bottom: var(--margin-xl);
   display: flex;
   ${props => (props.center ? "justify-content: center" : undefined)}
-`
+`;
 
 const ChatColumn = styled.div`
   width: 400px;
-`
+`;
 
 const Loading = styled.div`
   width: 100%;
@@ -51,7 +50,7 @@ const Loading = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid red;
-`
+`;
 
 const chatList = [
   {
@@ -182,7 +181,6 @@ const productPageReducer = (state, action) => {
   }
 };
 
-
 const DEFAULT_PROFILE_URL =
   "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
 
@@ -195,7 +193,6 @@ const ProductPage = ({ match }) => {
   const [user, setUser] = useContext(UserContext);
 
   const productId = match.params.id;
-
 
   const handleFetchSuccess = response => {
     dispatchProductPage({
@@ -211,7 +208,7 @@ const ProductPage = ({ match }) => {
   };
 
   useFetch(
-    `${pathConfig.products}/${productId}`,
+    `${pathConfig.productsWithBids}/${productId}`,
     handleFetchSuccess,
     handleFetchError
   );
@@ -282,7 +279,6 @@ const ProductPage = ({ match }) => {
   return productPageState.loading ? (
     <Spinner />
   ) : (
-
     <ProductPageContext.Provider
       value={[productPageState, dispatchProductPage]}
     >
@@ -303,4 +299,4 @@ const ProductPage = ({ match }) => {
   );
 };
 
-export default ProductPage
+export default ProductPage;
