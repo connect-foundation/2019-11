@@ -20,9 +20,7 @@ const Button = styled.button`
   }
 `
 
-const Component = props => {
-  const { onClick, text } = props
-
+const Component = ({ onClick, text }) => {
   return <Button onClick={onClick}>{text}</Button>
 }
 

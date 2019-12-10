@@ -23,78 +23,67 @@ export class ProductsService {
   }
 
   public async findOne(productId: number) {
-    const product = await this.productRepository.findOne(productId);
-    if (!product) return;
 
-    const userResponse = new UserResponseDTO();
-    userResponse.loginId = product.seller.loginId;
-    userResponse.email = product.seller.email;
-    userResponse.mannerPoint = product.seller.mannerPoint;
-    userResponse.name = product.seller.name;
-    userResponse.profileUrl = product.seller.profileUrl;
-
-    const imageListResponse = product.images.map(image => {
-      const imageRespone = new ImageResponseDTO();
-      imageRespone.id = image.id;
-      imageRespone.imageUrl = image.imageUrl;
-      return imageRespone;
-    });
-
-    const bids = await this.bidRepository.findByProductId(product.id);
-
-    const bidListResponse =
-      bids &&
-      bids.map(bid => {
-        const bidResponseDTO = new BidResponseDTO();
-        bidResponseDTO.bidDate = bid.bidDate;
-        bidResponseDTO.bidPrice = bid.bidPrice;
-        bidResponseDTO.id = bid.id;
-        bidResponseDTO.user = bid.user;
-        return bidResponseDTO;
-      });
-
-    const productResponse = new ProductResponseDTO();
-    productResponse.auctionDeadline = product.auctionDeadline;
-    productResponse.buyerId = product.buyerId;
-    productResponse.categoryCode = product.categoryCode;
-    productResponse.contents = product.contents;
-    productResponse.extensionDate = product.extensionDate;
-    productResponse.hopePrice = product.hopePrice;
-    productResponse.id = product.id;
-    productResponse.immediatePrice = product.immediatePrice;
-    productResponse.isAuction = product.isAuction;
-    productResponse.registerDate = product.registerDate;
-    productResponse.soldDate = product.soldDate;
-    productResponse.soldPrice = product.soldPrice;
-    productResponse.startBidPrice = product.startBidPrice;
-    productResponse.title = product.title;
-    productResponse.thumbnailUrl = product.thumbnailUrl;
-
-    productResponse.seller = userResponse;
-    productResponse.images = imageListResponse;
-    productResponse.bids = bidListResponse;
-
-    return productResponse;
+    return await this.productRepository.findMyOne(productId)
   }
 
-  /** Post */
+  public async findOneWithBids(productId: number) {
+    const product = await this.productRepository.findOne(productId)
+    if (product) {
+      const userResponse = new UserResponseDTO()
+      userResponse.email = product.seller.email
+      userResponse.mannerPoint = product.seller.mannerPoint
+      userResponse.name = product.seller.name
+      userResponse.profileUrl = product.seller.profileUrl
+
+      const imageListResponse = product.images.map(image => {
+        const imageRespone = new ImageResponseDTO()
+        imageRespone.id = image.id
+        imageRespone.imageUrl = image.imageUrl
+        return imageRespone
+      })
+
+      const bids = await this.bidRepository.findByProductId(product.id)
+
+      const bidListResponse =
+        bids &&
+        bids.map(bid => {
+          const bidResponseDTO = new BidResponseDTO()
+          bidResponseDTO.bidDate = bid.bidDate
+          bidResponseDTO.bidPrice = bid.bidPrice
+          bidResponseDTO.id = bid.id
+          bidResponseDTO.user = bid.user
+          return bidResponseDTO
+        })
+
+      const productResponse = new ProductResponseDTO()
+      productResponse.auctionDeadline = product.auctionDeadline
+      productResponse.bids = product.bids
+      productResponse.buyerId = product.buyerId
+      productResponse.categoryCode = product.categoryCode
+      productResponse.contents = product.contents
+      productResponse.extensionDate = product.extensionDate
+      productResponse.hopePrice = product.hopePrice
+      productResponse.id = product.id
+      productResponse.immediatePrice = product.immediatePrice
+      productResponse.isAuction = product.isAuction
+      productResponse.registerDate = product.registerDate
+      productResponse.soldDate = product.soldDate
+      productResponse.soldPrice = product.soldPrice
+      productResponse.startBidPrice = product.startBidPrice
+      productResponse.title = product.title
+      productResponse.thumbnailUrl = product.thumbnailUrl
+
+      productResponse.seller = userResponse
+      productResponse.images = imageListResponse
+      productResponse.bids = bidListResponse
+
+      return productResponse
+    }
+  }
+
   public async getOwnSale(userId: number, start: number, limits: number) {
     return await this.productRepository.onlyOwnSale(userId, start, limits);
-  }
-
-  public update(
-    productId: number,
-    soldPrice: number,
-    soldDate: string,
-    buyerId: number
-  ) {
-    const product = new Products();
-    product.id = productId;
-    product.soldPrice = soldPrice;
-    product.soldDate = soldDate;
-    product.buyerId = buyerId;
-
-    return this.productRepository.update(product);
   }
 
   /** Delete */
@@ -102,7 +91,6 @@ export class ProductsService {
     return this.productRepository.remove(pid);
   }
 
-  /** PUT */
   public async create(
     userId: number,
     title: string,
@@ -134,5 +122,32 @@ export class ProductsService {
     const image = await this.imageRepository.create(product.id, images);
 
     return product.id;
+  }
+
+  /** Put */
+  public async updateInfo(productId: number, title: string, contents: string) {
+    return this.productRepository.updateInfo(productId, title, contents)
+  }
+
+    /* Patch */
+  public update(
+    productId: number,
+    soldPrice: number,
+    soldDate: string,
+    buyerId: number
+  ) {
+    const product = new Products();
+    product.id = productId;
+    product.soldPrice = soldPrice;
+    product.soldDate = soldDate;
+    product.buyerId = buyerId;
+
+    return this.productRepository.update(product);
+  }
+
+  
+  /** Delete */
+  public async remove(pid: number) {
+    return this.productRepository.remove(pid)
   }
 }

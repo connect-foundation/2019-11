@@ -56,8 +56,9 @@ const registerProduct = async ({ data, callback }) => {
   const imageUrl = `${apiUrl}${storage.image}`
   const productUrl = `${apiUrl}${products}`
 
-  data.thumbnail = await createThumbnail(base642Blob(data.images[0]))
-  data.thumbnail = await postJsonFetch(imageUrl, imageHeader, { uri: data.thumbnail })
+  data.thumbnail = await postJsonFetch(imageUrl, imageHeader, {
+    uri: await createThumbnail(base642Blob(data.images[0]))
+  })
 
   for (let i = 0; i < data.images.length; i++)
     data.images[i] = await postJsonFetch(imageUrl, imageHeader, { uri: data.images[i] })

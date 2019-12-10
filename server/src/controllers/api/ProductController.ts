@@ -1,6 +1,7 @@
 import {
   JsonController,
   Put,
+  Patch,
   BodyParam,
   Post,
   Get,
@@ -32,6 +33,11 @@ export class ProductController {
     return this.productService.findOne(Number(productId));
   }
 
+  @Get("/withBids/:id")
+  public async findOneWithBids(@Param("id") productId: string) {
+    return this.productService.findOneWithBids(Number(productId))
+  }
+
   @Get("/onlySale/:id/:start/:limits")
   public async sale(
     @Param("id") userId: number,
@@ -55,6 +61,15 @@ export class ProductController {
       soldDate,
       parseInt(buyerId)
     );
+  }
+
+  @Put("/:id")
+  public updateInfo(
+    @Param("id") productId: number,
+    @BodyParam("title") title: string,
+    @BodyParam("contents") content: string
+  ) {
+    return this.productService.updateInfo(productId, title, content)
   }
 
   @Post()

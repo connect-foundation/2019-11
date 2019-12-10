@@ -27,6 +27,15 @@ export class ProductRepository {
     return this.em.save(product);
   }
 
+  public updateInfo(productId: number, title: string, contents: string) {
+    const products = new Products()
+    products.id = productId
+    products.title = title
+    products.contents = contents
+
+    return this.em.save(products)
+  }
+
   /*GET*/
   public async onlyOwnSale(userId: number, start: number, limits: number) {
     return await this.em.findAndCount(Products, {
@@ -41,6 +50,16 @@ export class ProductRepository {
       take: limits,
       cache: true
     });
+  }
+
+  public findMyOne(productId: number) {
+    return this.em.find(Products, {
+      relations: ["images"],
+      where: {
+        id: productId,
+        ["images.product.id"]: productId
+      }
+    })
   }
 
   /* DELETE */

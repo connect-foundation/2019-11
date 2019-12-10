@@ -12,6 +12,7 @@ export default {
     google: "/api/sign/google"
   },
   products: "/api/products",
+  productsWithBids: "/api/products/withBids",
   users: "/api/users",
   items: {
     category: "/api/items/category",

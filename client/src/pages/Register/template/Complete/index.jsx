@@ -3,7 +3,8 @@ import styled from "styled-components"
 
 import PageBase from "../../../../components/PageBase"
 import ShareBox from "../../../../components/Molecules/ShareBox"
-import { notice, shareConfig } from "../../constants"
+import { notice } from "../../../../constants/strings"
+import apiConfig from "../../../../config/api"
 
 import productContext from "../../context"
 
@@ -75,7 +76,7 @@ const Component = ({ width }) => {
           <NoticeText>{notice.successRegister}</NoticeText>
         </NoticeDiv>
         <ShareDiv>
-          <ShareBox url={shareConfig.url + `/${obj.productId}`} object={obj} />
+          <ShareBox url={apiConfig.url + `/products/${obj.productId}`} object={obj} />
         </ShareDiv>
         <ButtonDiv>
           <LinkBox href={`/products/${obj.productId}`}>상품 확인</LinkBox>
