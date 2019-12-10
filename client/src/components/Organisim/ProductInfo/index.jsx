@@ -148,6 +148,7 @@ const ProductInfo = () => {
   const [user, setUser] = useContext(UserContext);
   const [productPageState, dispatchProductPage] = useContext(ProductPageContext);
 
+  const [test, setTest] = useState(false);
   const { socketClient, product, chats } = productPageState;
   const [modal, setModal] = useContext(ModalContext);
   /*   
@@ -186,10 +187,46 @@ const ProductInfo = () => {
     return Math.floor(topbid + topbid * 0.2);
   }
 
+  /**
+   * 현재 입력된 채팅에서 즉시 구매가 된 메시지를 찾아낸다.
+   *
+   * @param {Array} chatlist
+   */
+  function findsoldmessage(chatlist) {
+    let alertchat = chatlist.filter(
+      chat => chat.type === "alert" && chat.text.split("즉시 구매").length > 1
+    );
+    return alertchat.length > 0;
+  }
+  /**
+   * 현재 입력된 채팅중 알림의 마지막을 뽑는다.
+   *
+   * @param {Array} chatlist
+   */
+  function findlastalert(chatlist) {
+    let alertchat = chatlist.filter(chat => chat.type === "alert");
+    if (alertchat.length) {
+      return alertchat[alertchat.length - 1].text;
+    } else {
+      return false;
+    }
+  }
+
+  let isSold = false;
+  if (product.soldPrice) {
+    isSold = true;
+  }
   let settedimmediatePrice = immediatePrice;
   let minimumbid = Setbidprice(product.bids[product.bids.length - 1].bidPrice);
   if (chats.length) {
-    minimumbid = Setbidprice(parsing(chats[chats.length - 1].text));
+    if (findsoldmessage(chats)) {
+      isSold = true;
+    } else {
+      let lastalert = findlastalert(chats);
+      if (lastalert) {
+        minimumbid = Setbidprice(parsing(lastalert));
+      }
+    }
   }
   if (immediatePrice < minimumbid) {
     settedimmediatePrice = Math.floor(minimumbid + minimumbid * 0.4);
@@ -205,6 +242,13 @@ const ProductInfo = () => {
       });
     }
 
+    if (isSold) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "구매가 완료된 상품입니다."
+      });
+    }
     const params = {
       bidPrice: e.target.bidPrice.value,
       bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
@@ -256,6 +300,14 @@ const ProductInfo = () => {
         isOpen: true,
         component: FailModal,
         message: "로그인이 필요합니다."
+      });
+    }
+
+    if (isSold) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "구매가 완료된 상품입니다."
       });
     }
 
@@ -328,11 +380,7 @@ const ProductInfo = () => {
         <ProductBid onSubmit={handleBidSubmit}>
           <BidTootip>
             최소:
-            {chats.length === 0
-              ? `${convert2Price(minimumbid)} 원`
-              : chats[chats.length - 1].type === "alert"
-              ? `${convert2Price(minimumbid)} 원`
-              : `${convert2Price(minimumbid)} 원`}
+            {`${convert2Price(minimumbid)} 원`}
           </BidTootip>
           <BidInput name="bidPrice" placeholder="바로입찰" />
           <BidButton>입찰</BidButton>
