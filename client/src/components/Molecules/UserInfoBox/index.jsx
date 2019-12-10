@@ -1,23 +1,23 @@
-import React, { useContext } from "react"
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import userContext from "../../../context/UserContext"
-import DefaultProfileIcon from "../../../assets/default-profile.svg"
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import userContext from "../../../context/UserContext";
+import DefaultProfileIcon from "../../../assets/default-profile.svg";
 
 const InfoDiv = styled.div`
   display: flex;
   flex-direction: column;
+  font-family: "BMJUA";
   background-color: var(--color-gray-lighter);
 
-  width: 100%
+  width: 100%;
   height: 100%;
-
-`
+`;
 const ProfileWrap = styled.div`
   display: flex;
   margin: 1rem 0;
   justify-content: center;
-`
+`;
 
 const ProfileBig = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const ProfileBig = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`
+`;
 const UserWrap = styled.div`
   display: flex;
   justify-content: space-between;
@@ -42,14 +42,14 @@ const UserWrap = styled.div`
   margin: 1rem 0.2rem;
   border-bottom: solid 2px var(--color-gray-darker);
   height: 2rem;
-`
+`;
 
 const ButtonWrap = styled.div`
   display: flex;
   flex-direction: column;
 
   flex-grow: 1;
-`
+`;
 const Buttons = styled.button`
   all: unset;
   margin-bottom: 0.5rem;
@@ -59,7 +59,7 @@ const Buttons = styled.button`
     color: white;
     cursor: pointer;
   }
-`
+`;
 const StyledLink = styled(Link)`
   text-decoration: none;
   all: unset;
@@ -70,7 +70,7 @@ const StyledLink = styled(Link)`
     color: white;
     cursor: pointer;
   }
-`
+`;
 const LogoutButtons = styled.button`
   all: unset;
   color: white;
@@ -79,23 +79,26 @@ const LogoutButtons = styled.button`
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 function Component(props) {
-  const [user, setUser] = useContext(userContext)
+  const [user, setUser] = useContext(userContext);
   const handleLogoutClick = () => {
-    localStorage.removeItem("access-token")
-    localStorage.removeItem("refresh-token")
-    setUser({})
-    props.onClick()
-  }
-  console.log(user)
+    localStorage.removeItem("access-token");
+    localStorage.removeItem("refresh-token");
+    setUser({});
+    props.onClick();
+  };
   return (
     <InfoDiv>
       <ProfileWrap>
         <ProfileBig>
           <img
-            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
+            src={
+              user.profileUrl === (undefined || null)
+                ? DefaultProfileIcon
+                : user.profileUrl
+            }
           />
         </ProfileBig>
       </ProfileWrap>
@@ -117,7 +120,7 @@ function Component(props) {
       </ButtonWrap>
       <LogoutButtons onClick={handleLogoutClick}>로그아웃</LogoutButtons>
     </InfoDiv>
-  )
+  );
 }
 
-export default Component
+export default Component;
