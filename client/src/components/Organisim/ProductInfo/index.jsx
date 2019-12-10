@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import ShareCollection from "../../Product/ShareCollection";
+import ShareCollection from "../../Molecules/ShareBox";
 import { convert2Price } from "../../../utils/converter";
 import axios from "axios";
 import apiConfig from "../../../config/api";
@@ -9,6 +9,15 @@ import moment from "moment";
 import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
+import UserContext from "../../../context/UserContext";
+import ShareBox from "../../Molecules/ShareBox";
+import TextTimer from "../../Atoms/TextTimer";
+import ProductPageContext from "../../../context/ProductPageContext";
+import { getDiffDateTime } from "../../../utils/dateUtil";
+
+import MessengerCreateButton from "../../Messenger/CreateButton";
+import userContext from "../../../context/UserContext";
+import ReportButton from "../../Atoms/ReportButton";
 
 const { apiUrl } = apiConfig;
 
@@ -111,53 +120,61 @@ const PurchaseButton = styled(BidButton)`
   border-color: var(--color-primary);
 `;
 
-const ProductInfo = ({ product }) => {
+const ProductInfo = () => {
+  const [user, setUser] = useContext(UserContext);
+  const [productPageState, dispatchProductPage] = useContext(
+    ProductPageContext
+  );
+
+  const { socketClient, product } = productPageState;
+  const [modal, setModal] = useContext(ModalContext);
+
+  /*   
+  'dispatchProductPage' 
+  'buyerId' 
+  'categoryCode' 
+  'contents' 
+  'startBidPrice' 
+  'hopePrice' 
+  'images' 
+  'soldPrice' 
+  'soldDate' 
+  'registerDate' 
+  'extensionDate' 
+  'modal',
+  */
+
   const {
     id,
-    buyerId,
-    categoryCode,
     title,
-    contents,
-    startBidPrice,
-    hopePrice,
     immediatePrice,
     thumbnailUrl,
     isAuction,
-    images,
-    soldPrice,
-    soldDate,
-    registerDate,
     auctionDeadline,
-    extensionDate,
     seller
   } = product;
-
-  const getDiffDateTime = (end, start) => {
-    const t1 = moment(start);
-    const t2 = moment(end);
-    const diff = t2.diff(t1);
-
-    const d = moment.duration(diff).days();
-    const h = moment.duration(diff).hours();
-    const m = moment.duration(diff).minutes();
-    const s = moment.duration(diff).seconds();
-
-    return { diff, d, h, m, s };
-  };
+  const [user] = useContext(userContext);
 
   const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(
-    diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감"
-  );
+  const [deadLine, setDeadLine] = useState(diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감");
 
   const baseURL = apiUrl;
 
   const handleBidSubmit = e => {
     e.preventDefault();
+
+    if (Object.keys(user).length === 0) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "로그인이 필요합니다."
+      });
+    }
+
     const params = {
       bidPrice: e.target.bidPrice.value,
       bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
-      userId: 1,
+      userId: user.id,
       productId: id
     };
 
@@ -165,6 +182,14 @@ const ProductInfo = ({ product }) => {
       .post(`${baseURL}${pathConfig.bids}`, params)
       .then(response => {
         if (response.status < 300) {
+          socketClient.emit("bid", {
+            type: "alert",
+            roomId: id,
+            sender: { ...user, sessionId: user.sessionId },
+            bid: response.data,
+            createdAt: Date.now()
+          });
+
           setModal({
             isOpen: true,
             component: SuccessModal,
@@ -179,14 +204,31 @@ const ProductInfo = ({ product }) => {
 
   const handleImmediateSubmit = price => e => {
     e.preventDefault();
+
+    if (Object.keys(user).length === 0) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "로그인이 필요합니다."
+      });
+    }
+
     const params = {
       soldPrice: price,
       soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
-      buyerId: 1
+      buyerId: user.id
     };
+
     axios
-      .put(`${baseURL}${pathConfig.products}/${id}`, params)
+      .patch(`${baseURL}${pathConfig.products}/${id}`, params)
       .then(response => {
+        socketClient.emit("purchase", {
+          roomId: id,
+          sender: { ...user, sessionId: socketClient.id },
+          sold: response.data,
+          createdAt: Date.now()
+        });
+
         setModal({
           isOpen: true,
           component: SuccessModal,
@@ -201,6 +243,7 @@ const ProductInfo = ({ product }) => {
         });
       });
   };
+
 
   const [modal, setModal] = useContext(ModalContext);
 
@@ -226,9 +269,15 @@ const ProductInfo = ({ product }) => {
       <ProductImageBox>
         <ProductImage src={thumbnailUrl} />
       </ProductImageBox>
+
       <ProductDescBox>
-        <ProductTitle>{title}</ProductTitle>
+        <ProductTitle>
+          {title}
+          <ReportButton isUser={false} targetId={id} />
+        </ProductTitle>
         <ProductSeller>
+          <ReportButton isUser={true} targetId={seller.loginId} />
+          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -237,9 +286,7 @@ const ProductInfo = ({ product }) => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -247,7 +294,7 @@ const ProductInfo = ({ product }) => {
           <ProductDueDate>
             <ProductDescText size="sm">남은 시간</ProductDescText>
             <ProductDescText primary bold>
-              {deadLine || "비경매 상품"}
+              {<TextTimer auctionDeadline={auctionDeadline} /> || "비경매 상품"}
             </ProductDescText>
           </ProductDueDate>
         ) : null}
@@ -256,6 +303,7 @@ const ProductInfo = ({ product }) => {
           <BidInput name="bidPrice" placeholder="입찰 가격" />
           <BidButton>입찰</BidButton>
         </ProductBid>
+
         <ProductPurchase onSubmit={handleImmediateSubmit(immediatePrice)}>
           <PurchasePrice>
             즉시 구매가
@@ -265,7 +313,7 @@ const ProductInfo = ({ product }) => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection></ShareCollection>
+        <ShareCollection width={10}></ShareCollection>
       </ProductDescBox>
     </ProductInfoStyle>
   );

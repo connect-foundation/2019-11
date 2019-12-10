@@ -9,6 +9,7 @@ import FoundImg from "../../../assets/found.png";
 
 const MessengerDiv = styled.div`
   position: absolute;
+  font-family: "BMJUA";
   left: 6rem;
   bottom: 1rem;
   width: ${props => (props.show ? "20" : 0)}rem;
