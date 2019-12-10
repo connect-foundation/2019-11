@@ -153,10 +153,6 @@ const ProductInfo = () => {
     auctionDeadline,
     seller
   } = product;
-  const [user] = useContext(userContext);
-
-  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감");
 
   const baseURL = apiUrl;
 
@@ -244,26 +240,6 @@ const ProductInfo = () => {
       });
   };
 
-
-  const [modal, setModal] = useContext(ModalContext);
-
-  useEffect(() => {
-    if (auctionDeadline) {
-      const timer = setInterval(() => {
-        const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-        if (diff > 0) {
-          setDeadLine(`D-${d} ${h}:${m}:${s}`);
-        } else {
-          clearInterval(timer);
-          setDeadLine(`경매 마감`);
-        }
-      }, 1000);
-      return () => {
-        clearInterval(timer);
-      };
-    }
-  }, [auctionDeadline, setDeadLine]);
-
   return (
     <ProductInfoStyle>
       <ProductImageBox>
@@ -277,7 +253,10 @@ const ProductInfo = () => {
         </ProductTitle>
         <ProductSeller>
           <ReportButton isUser={true} targetId={seller.loginId} />
-          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
+          <MessengerCreateButton
+            userId={user.loginId}
+            sellerId={seller.loginId}
+          />
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -286,7 +265,9 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
+            {auctionDeadline
+              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
+              : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
