@@ -9,9 +9,7 @@ const initialFetchState = {
   loading: true
 };
 
-export const useFetch = path => {
-  const [fetchState, setFetchState] = React.useState(initialFetchState);
-
+export const useFetch = (path, handleFetchSuccess, handleFetchError) => {
   React.useEffect(() => {
     let isUnmounted = false;
 
@@ -19,11 +17,11 @@ export const useFetch = path => {
       try {
         const response = await axios.get(`${apiUrl}${path}`);
         if (!isUnmounted) {
-          setFetchState(state => ({ ...state, response, loading: false }));
+          handleFetchSuccess(response);
         }
       } catch (error) {
         if (!isUnmounted) {
-          setFetchState(state => ({ ...state, error }));
+          handleFetchError(error);
         }
       }
     };
@@ -31,6 +29,4 @@ export const useFetch = path => {
 
     return () => (isUnmounted = true);
   }, []);
-
-  return fetchState;
 };

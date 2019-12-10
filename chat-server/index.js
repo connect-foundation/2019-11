@@ -10,11 +10,31 @@ server.listen(4000, () => {
 const rooms = {};
 
 io.on("connection", function(socket) {
-  socket.on("message", ({ roomId, sessionId, userId, text, createdAt }) => {
+  socket.on("message", ({ roomId, sender, type, text, createdAt }) => {
     console.log(
-      `##### USER(${sessionId}, ${userId})가 ${roomId}방에 ${text} 문자 전송 #####`
+      `##### USER(${sender.sessionId}, ${sender.loginId})가 ${roomId}방에 ${text} 문자 전송 #####`
     );
-    io.to(roomId).emit("message", { sessionId, userId, text, createdAt });
+    io.to(roomId).emit("message", {
+      roomId,
+      sender,
+      type,
+      text,
+      createdAt
+    });
+  });
+
+  socket.on("bid", ({ roomId, sender, bid, createdAt }) => {
+    console.log(
+      `##### USER(${sender.sessionId}, ${sender.loginId})가 ${roomId}방에서 ${bid.bidPrice} 입찰 #####`
+    );
+    io.to(roomId).emit("bid", { roomId, sender, bid, createdAt });
+  });
+
+  socket.on("purchase", ({ roomId, sender, sold, createdAt }) => {
+    console.log(
+      `##### USER(${sender.sessionId}, ${sender.loginId})가 ${roomId}방에서 ${sold.soldPrice} 즉시 구매 #####`
+    );
+    io.to(roomId).emit("purchase", { roomId, sender, sold, createdAt });
   });
 
   socket.on("joinRoom", ({ roomId, sessionId, userId }) => {

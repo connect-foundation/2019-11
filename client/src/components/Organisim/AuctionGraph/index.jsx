@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import {
   LineChart,
@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip
 } from "recharts";
+import ProductPageContext from "../../../context/ProductPageContext";
 
 const AuctionGraphStyle = styled.div`
   display: flex;
@@ -29,49 +30,32 @@ const AuctionGraphTitle = styled.div`
   color: var(--color-darkgray);
 `;
 
-const data = [
-  {
-    time: "2019/10/11 15:00:00",
-    bidPrice: 1000
-  },
-  {
-    time: "2019/10/11 16:00:00",
-    bidPrice: 2000
-  },
-  {
-    time: "2019/10/11 17:00:00",
-    bidPrice: 5000
-  },
-  {
-    time: "2019/10/11 18:00:00",
-    bidPrice: 10000
-  },
-  {
-    time: "2019/10/11 19:00:00",
-    bidPrice: 15000
-  },
-  {
-    time: "2019/10/11 20:00:00",
-    bidPrice: 30000
-  },
-  {
-    time: "2019/10/11 21:00:00",
-    bidPrice: 50000
-  }
-];
+const AuctionCountText = styled.span`
+  margin-left: 16px;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+`;
 
 const AuctionGraph = () => {
+  const [productPageState, dispatchProductPage] = useContext(
+    ProductPageContext
+  );
+
+  const { bids } = productPageState;
+
   return (
     <AuctionGraphStyle>
-      <AuctionGraphTitle>경매 현황</AuctionGraphTitle>
+      <AuctionGraphTitle>
+        경매 현황<AuctionCountText>총 {bids.length}건</AuctionCountText>
+      </AuctionGraphTitle>
       <LineChart
         width={900}
         height={300}
-        data={data}
+        data={bids}
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="time" />
+        <XAxis dataKey="bidDate" />
         <YAxis />
         <Tooltip contentStyle={{ borderRadius: "8px", fontSize: "0.8rem" }} />
         <Line type="monotone" dataKey="bidPrice" stroke="#ff3466" />
