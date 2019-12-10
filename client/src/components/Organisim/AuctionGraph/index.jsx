@@ -57,7 +57,11 @@ const AuctionGraph = () => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="bidDate" />
         <YAxis />
-        <Tooltip contentStyle={{ borderRadius: "8px", fontSize: "0.8rem" }} />
+        {bids.length > 0 ? (
+          <Tooltip contentStyle={{ borderRadius: "8px", fontSize: "0.8rem" }} />
+        ) : (
+          undefined
+        )}
         <Line type="monotone" dataKey="bidPrice" stroke="#ff3466" />
       </LineChart>
     </AuctionGraphStyle>
