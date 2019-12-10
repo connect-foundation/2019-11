@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import ShareCollection from "../../Product/ShareCollection";
+import ShareCollection from "../../Molecules/ShareBox";
 import { convert2Price } from "../../../utils/converter";
 import axios from "axios";
 import apiConfig from "../../../config/api";
@@ -9,6 +9,10 @@ import moment from "moment";
 import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
+
+import MessengerCreateButton from "../../Messenger/CreateButton";
+import userContext from "../../../context/UserContext";
+import ReportButton from "../../Atoms/ReportButton";
 
 const { apiUrl } = apiConfig;
 
@@ -131,6 +135,7 @@ const ProductInfo = ({ product }) => {
     extensionDate,
     seller
   } = product;
+  const [user] = useContext(userContext);
 
   const getDiffDateTime = (end, start) => {
     const t1 = moment(start);
@@ -146,9 +151,7 @@ const ProductInfo = ({ product }) => {
   };
 
   const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(
-    diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감"
-  );
+  const [deadLine, setDeadLine] = useState(diff > 0 ? `D-${d} ${h}:${m}:${s}` : "경매 마감");
 
   const baseURL = apiUrl;
 
@@ -220,15 +223,19 @@ const ProductInfo = ({ product }) => {
       };
     }
   }, [auctionDeadline, setDeadLine]);
-
   return (
     <ProductInfoStyle>
       <ProductImageBox>
         <ProductImage src={thumbnailUrl} />
       </ProductImageBox>
       <ProductDescBox>
-        <ProductTitle>{title}</ProductTitle>
+        <ProductTitle>
+          {title}
+          <ReportButton isUser={false} targetId={id} />
+        </ProductTitle>
         <ProductSeller>
+          <ReportButton isUser={true} targetId={seller.loginId} />
+          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -237,9 +244,7 @@ const ProductInfo = ({ product }) => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -265,7 +270,7 @@ const ProductInfo = ({ product }) => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection></ShareCollection>
+        <ShareCollection width={10}></ShareCollection>
       </ProductDescBox>
     </ProductInfoStyle>
   );

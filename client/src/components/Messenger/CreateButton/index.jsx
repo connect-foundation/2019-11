@@ -1,25 +1,20 @@
 import React from "react"
 import styled from "styled-components"
 import firebase from "../../../shared/firebase"
+import letmessengerbutton from "../../../assets/letmessengerbutton.svg"
 
 const Button = styled.button`
   all: unset;
 
-  border-color: var(--color-primary);
-  border: solid 0.1rem;
-  text-align: center;
-  color: var(--color-primary);
-  width: 10rem;
-  height: 3rem;
-  border-radius: 0.5rem;
+  width: 2rem;
+  heigth: 2rem;
 
   &:hover {
     cursor: pointer;
   }
-
-  &:active {
-    background-color: var(--color-primary);
-    color: white;
+  img {
+    width: 100%;
+    heigth: 100%;
   }
 `
 
@@ -27,7 +22,11 @@ const CreateButton = props => {
   function makeRoom() {
     firebase.makeRoom(props.userId, props.sellerId)
   }
-  return <Button onClick={makeRoom}>판매자와 대화나누기</Button>
+  return (
+    <Button onClick={makeRoom}>
+      <img src={letmessengerbutton}></img>
+    </Button>
+  )
 }
 
 export default CreateButton
