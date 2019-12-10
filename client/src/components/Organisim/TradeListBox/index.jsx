@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import TradeBox from "../../Molecules/TradeBase"
+import React, { useState } from "react";
+import styled from "styled-components";
+import TradeBox from "../../Molecules/TradeBase";
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
   flex-direction: row;
@@ -8,30 +8,32 @@ const TradeContents = styled.div`
   margin-bottom: 0.5rem;
   background-color: white;
   border-bottom: solid 1px;
-`
+`;
 const RegistDate = styled.span`
   flex-grow: 1;
   min-width: 5rem;
   margin: auto 0.5rem;
   font-weight: 700;
-`
+`;
 const HopePrice = styled.span`
   min-width: 5rem;
   margin: auto 0.5rem;
   font-weight: 700;
-`
+`;
 const Deviation = styled.span`
   min-width: 5rem;
   margin: auto 0.5rem;
   font-weight: 700;
   color: ${props => (props.setColor > 0 ? "green" : "red")};
-`
+`;
 
 const OptionPriceCheck = styled.div`
   display: ${props => (props.isCheck === null ? "none" : "block")};
-`
+`;
 const Component = props => {
-  const [isHover, setIsHover] = useState(false)
+  const [isHover, setIsHover] = useState(false);
+  let soldDate = new Date(props.solddate);
+  let soldseconds = soldDate.getTime();
   return (
     <div onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)}>
       <TradeBox
@@ -39,7 +41,7 @@ const Component = props => {
         thumbnail={props.thumbnail}
         status={props.status}
         price={props.soldprice}
-        time={props.solddate}
+        time={soldseconds}
       />
       <TradeContents isHover={isHover}>
         <RegistDate>등록 날짜:{props.registdate}</RegistDate>
@@ -49,7 +51,7 @@ const Component = props => {
         </OptionPriceCheck>
       </TradeContents>
     </div>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
