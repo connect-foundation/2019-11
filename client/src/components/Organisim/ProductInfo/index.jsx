@@ -12,6 +12,8 @@ import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import userContext from "../../../context/UserContext";
+import ReportButton from "../../Atoms/ReportButton";
+
 const { apiUrl } = apiConfig;
 
 const ProductInfoStyle = styled.div`
@@ -227,8 +229,12 @@ const ProductInfo = ({ product }) => {
         <ProductImage src={thumbnailUrl} />
       </ProductImageBox>
       <ProductDescBox>
-        <ProductTitle>{title}</ProductTitle>
+        <ProductTitle>
+          {title}
+          <ReportButton isUser={false} targetId={id} />
+        </ProductTitle>
         <ProductSeller>
+          <ReportButton isUser={true} targetId={seller.loginId} />
           <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
@@ -264,7 +270,7 @@ const ProductInfo = ({ product }) => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection></ShareCollection>
+        <ShareCollection width={10}></ShareCollection>
       </ProductDescBox>
     </ProductInfoStyle>
   );
