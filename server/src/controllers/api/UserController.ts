@@ -76,18 +76,29 @@ export class UserController {
   }
 
   @Post()
-  public async create(
+  public async createOrUpdate(
+    @BodyParam("uid") id: number,
     @BodyParam("id") loginId: string,
     @BodyParam("password") password: string,
     @BodyParam("name") name: string,
     @BodyParam("email") email: string,
+    @BodyParam("signUp") isSignUp: boolean,
     @Req() req: any
   ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
+    if (!isSignUp) {
+      const user = await this.userService.update(
+        id,
+        loginId,
+        password,
+        name,
+        email
+      );
+      return { msg: true, user };
+    }
     if (await this.userService.checkDuplicate(loginId)) {
       return { msg: false, user: null };
     }
-
     const accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
       expiresIn: "2h"
     });
@@ -104,7 +115,7 @@ export class UserController {
       accessToken,
       refreshToken
     );
-
+    console.log(user);
     return { msg: true, user };
   }
 
