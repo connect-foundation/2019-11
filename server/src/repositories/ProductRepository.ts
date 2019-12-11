@@ -62,6 +62,14 @@ export class ProductRepository {
     });
   }
 
+  public checkSold(productId: number) {
+    return this.em.findOne(Products, {
+      where: {
+        id: productId,
+        soldPrice: IsNull()
+      }
+    });
+  }
   /* DELETE */
 
   public async remove(pid: number) {
