@@ -1,13 +1,13 @@
-
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import UserInfoBox from "../../../Molecules/UserInfoBox"
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import UserInfoBox from "../../../Molecules/UserInfoBox";
+import NotifyList from "../../../Molecules/NotifyList";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 15em;
+  width: ${props => (props.idx === "999" ? 20 : 15)}rem;
   height: 100%;
   overflow-y: auto;
   background-color: var(--color-secondary-minus1);
@@ -37,17 +37,17 @@ const StyledLink = styled(Link)`
 `;
 
 const Components = ({ idx, open, details, onClick }) => {
-
-  let detailCategoryList = null
+  let detailCategoryList = null;
   if (details !== undefined) {
-    detailCategoryList = details.details
+    detailCategoryList = details.details;
   }
-
 
   return (
     <Container idx={idx} open={open}>
       {Number(idx) === 0 ? (
         <UserInfoBox onClick={onClick} />
+      ) : Number(idx) === 999 ? (
+        <NotifyList />
       ) : (
         detailCategoryList.map(category => (
           <StyledLink

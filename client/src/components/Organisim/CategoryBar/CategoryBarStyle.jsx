@@ -17,7 +17,7 @@ const OriginWrapper = styled.div`
 
 const ListWrapper = styled.div`
   position: absolute;
-  width: ${props => (props.open ? 15 : 0)}rem;
+  width: ${props => (props.open ? (props.idx === "999" ? 20 : 15) : 0)}rem;
   height: 100%;
   left: ${WIDTH}em;
   z-index: 999;
