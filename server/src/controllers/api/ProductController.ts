@@ -9,9 +9,10 @@ import {
   QueryParam,
   HeaderParam,
   Delete,
-  UseBefore
+  UseAfter
 } from "routing-controllers";
 import { ProductsService } from "../../services/ProductService";
+import { SystemLogger } from "../../middlewares/SystemLogger";
 const startDefault = 0;
 const limitDefault = 50;
 
@@ -37,6 +38,7 @@ export class ProductController {
     return this.productService.findOneWithBids(Number(productId));
   }
 
+  @UseAfter(SystemLogger)
   @Get("/onlySale/:id/:start/:limits")
   public async sale(
     @Param("id") userId: number,

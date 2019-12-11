@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import useIntersect from "./useIntersect"
-import loaddingGIF from "../../../assets/loadding.gif"
-import NotFoundImage from "../../../assets/notFound.png"
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import useIntersect from "./useIntersect";
+import Loadding from "../../Atoms/LoadingBar";
+import NotFoundImage from "../../../assets/notFound.png";
 
 const Container = styled.div`
   position: relative;
@@ -10,15 +10,19 @@ const Container = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-`
+`;
 
-const Loadding = styled.div`
+const LoaddingContainer = styled.div`
   position: absolute;
-  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
   width: 100%;
   height: 100%;
-  background: ${props => `url(${props.src})`} center no-repeat;
-`
+  opacity: 0.7;
+  background-color: white;
+`;
 
 const NotFoundDiv = styled.div`
   width: 100%;
@@ -27,13 +31,13 @@ const NotFoundDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const NotFoundSpan = styled.span`
   font-weight: "BMJUA";
   font-size: 1rem;
   font-weight: bold;
-`
+`;
 
 const renderNotFound = () => {
   return (
@@ -41,49 +45,50 @@ const renderNotFound = () => {
       <img src={NotFoundImage} />
       <NotFoundSpan>검색 기록이 없습니다 ㅠㅠ</NotFoundSpan>
     </NotFoundDiv>
-  )
-}
+  );
+};
 
 const Component = ({ fetcher, drawer, refresh, hasMore }) => {
-  const [loadding, setLoadding] = useState(true)
-  const [list, setList] = useState([])
+  const [loadding, setLoadding] = useState(true);
+  const [list, setList] = useState([]);
 
   const [, setRef] = useIntersect(async (entry, observer) => {
-    observer.unobserve(entry.target)
-    await update()
-    observer.observe(entry.target)
-  }, {})
+    setLoadding(true);
+    observer.unobserve(entry.target);
+    await update();
+    observer.observe(entry.target);
+    setLoadding(false);
+  }, {});
 
   useEffect(() => {
     if (refresh) {
-      setList([])
-      setLoadding(true)
+      setList([]);
+      setLoadding(true);
     }
-  }, [refresh])
+  }, [refresh]);
 
   const update = async () => {
-    setLoadding(true)
-    const data = await fetcher()
-    const components = drawer(data)
-    setLoadding(false)
+    const data = await fetcher();
+    const components = drawer(data);
 
-    setList(prev => [...prev, ...components])
+    setList(prev => [...prev, ...components]);
 
-    return components.length
-  }
+    return components.length;
+  };
 
   return (
     <Container className={"hide-scroll"}>
       {loadding ? (
-        <Loadding src={loaddingGIF} />
-      ) : list.length ? (
-        list.map(value => value)
+        <LoaddingContainer>
+          <Loadding />
+        </LoaddingContainer>
       ) : (
-        renderNotFound()
+        undefined
       )}
+      {list.length ? list.map(v => v) : renderNotFound()}
       {hasMore ? <div ref={setRef} /> : undefined}
     </Container>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
