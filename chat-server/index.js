@@ -8,8 +8,18 @@ server.listen(4000, () => {
 // WARNING: app.listen(4000) will NOT work here!
 
 const rooms = {};
+const userMapper = {};
 
 io.on("connection", function(socket) {
+  socket.on("auctionResult", ({ userId, type, product }) => {
+    const sessionId = userMapper[userId];
+    console.log(
+      `${userId}(${sessionId})에게 ${type}에 대한 이벤트를 전송합니다. 아래는 프러덕트 정보 입니다.`
+    );
+    console.dir(product);
+    io.to(sessionId).emit("auctionResult", { type, product });
+  });
+
   socket.on("message", ({ roomId, sender, type, text, createdAt }) => {
     console.log(
       `##### USER(${sender.sessionId}, ${sender.loginId})가 ${roomId}방에 ${text} 문자 전송 #####`
@@ -37,10 +47,12 @@ io.on("connection", function(socket) {
     io.to(roomId).emit("purchase", { roomId, sender, sold, createdAt });
   });
 
-  socket.on("joinRoom", ({ roomId, sessionId, userId }) => {
+  socket.on("joinRoom", ({ roomId, sessionId, user }) => {
     console.log(
-      `##### USER(${sessionId}, ${userId})가 ${roomId}방에 접속 #####`
+      `##### USER(${sessionId}, ${user.id})가 ${roomId}방에 접속 #####`
     );
+
+    const userId = user.id;
     //해당 socket(client)를 특정 room에 Join 시킨다.
     socket.join(roomId, () => {
       // 특정 room에 입장해있는 user를 전역객체에 저장한다.
@@ -52,6 +64,10 @@ io.on("connection", function(socket) {
 
       io.to(roomId).emit("joinRoom", `${userId}님이 입장하셨습니다.`);
     });
+
+    //userId를 사용하여 socketID에 mappding 될 수 있도록 한다.
+    //TODO: 연결시점으로 변경할 수 있도록 하면 좋겠다.
+    userMapper[userId] = sessionId;
   });
 
   socket.on("leaveRoom", (roomId, sessionId, userId) => {
