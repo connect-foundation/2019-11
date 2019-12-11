@@ -8,12 +8,13 @@ import {
   Param,
   QueryParam,
   HeaderParam,
-  Delete
-} from "routing-controllers"
-import { ProductsService } from "../../services/ProductService"
-
-const startDefault = 0
-const limitDefault = 50
+  Delete,
+  UseAfter
+} from "routing-controllers";
+import { ProductsService } from "../../services/ProductService";
+import { SystemLogger } from "../../middlewares/SystemLogger";
+const startDefault = 0;
+const limitDefault = 50;
 
 @JsonController("/products")
 export class ProductController {
@@ -24,42 +25,43 @@ export class ProductController {
     @QueryParam("start") start = startDefault,
     @QueryParam("limit") limit = limitDefault
   ) {
-    return this.productService.find(Number(start), Number(limit))
+    return this.productService.find(Number(start), Number(limit));
   }
 
   @Get("/:id")
   public async findOne(@Param("id") productId: string) {
-    return this.productService.findOne(Number(productId))
+    return this.productService.findOne(Number(productId));
   }
 
   @Get("/withBids/:id")
   public async findOneWithBids(@Param("id") productId: string) {
-    return this.productService.findOneWithBids(Number(productId))
+    return this.productService.findOneWithBids(Number(productId));
   }
 
+  @UseAfter(SystemLogger)
   @Get("/onlySale/:id/:start/:limits")
   public async sale(
     @Param("id") userId: number,
     @Param("start") start: number,
     @Param("limits") limits: number
   ) {
-    const result = await this.productService.getOwnSale(userId, start, limits)
-    return result
+    const result = await this.productService.getOwnSale(userId, start, limits);
+    return result;
   }
 
   @Patch("/:id")
-  public update(
+  public async update(
     @Param("id") productId: string,
     @BodyParam("soldPrice") soldPrice: string,
     @BodyParam("soldDate") soldDate: string,
     @BodyParam("buyerId") buyerId: string
   ) {
-    return this.productService.update(
+    return await this.productService.update(
       parseInt(productId),
       parseInt(soldPrice),
       soldDate,
       parseInt(buyerId)
-    )
+    );
   }
 
   @Put("/:id")
@@ -68,7 +70,7 @@ export class ProductController {
     @BodyParam("title") title: string,
     @BodyParam("contents") content: string
   ) {
-    return this.productService.updateInfo(productId, title, content)
+    return this.productService.updateInfo(productId, title, content);
   }
 
   @Post()
@@ -99,8 +101,8 @@ export class ProductController {
       thumbnail,
       categoryCode,
       isAuction
-    )
-    return result
+    );
+    return result;
   }
 
   @Delete("/:id")
@@ -110,8 +112,8 @@ export class ProductController {
     @HeaderParam("x-uloginId") lid: string,
     @Param("id") pid: number
   ) {
-    const result = await this.productService.remove(pid)
+    const result = await this.productService.remove(pid);
 
-    return result
+    return result;
   }
 }

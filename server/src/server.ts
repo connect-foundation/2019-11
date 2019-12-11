@@ -7,9 +7,15 @@ import "reflect-metadata";
 import { Container } from "typedi";
 import {
   useExpressServer,
-  useContainer as routingUseContainer
+  useContainer as routingUseContainer,
+  Action
 } from "routing-controllers";
-import { createConnection, useContainer as ormUseContainer } from "typeorm";
+import {
+  getRepository,
+  createConnection,
+  useContainer as ormUseContainer
+} from "typeorm";
+
 
 /**
  * Custom Setting Import
@@ -20,6 +26,7 @@ import { CustomNamingStrategy } from "./custom/CustomNamingStrategy";
  * Load Apps(web, database etc)
  */
 import app from "./app";
+import { Users } from "./models/Users";
 
 routingUseContainer(Container);
 ormUseContainer(Container);
@@ -45,7 +52,18 @@ createConnection({
 const expressApp = useExpressServer(app, {
   routePrefix: "api",
   controllers: [__dirname + "/controllers/**/*.js"],
-  middlewares: [__dirname + "/middlewares/**/*.js"]
+  middlewares: [__dirname + "/middlewares/**/*.js"],
+  authorizationChecker: async (action: Action) => {
+    const token = action.request.headers["access-token"];
+    const user = await getRepository(Users).findOne({
+      where: { accessToken: token }
+    });
+    if (user === undefined) return false;
+    return !!(action.request.user = {
+      id: (<Users>user).id,
+      name: (<Users>user).name
+    });
+  }
   // interceptors: [__dirname + "/interceptors/**/*.js"]
 });
 

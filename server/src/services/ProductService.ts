@@ -124,7 +124,7 @@ export class ProductsService {
   }
 
   /* Patch */
-  public update(
+  public async update(
     productId: number,
     soldPrice: number,
     soldDate: string,
@@ -135,8 +135,12 @@ export class ProductsService {
     product.soldPrice = soldPrice;
     product.soldDate = soldDate;
     product.buyerId = buyerId;
-
-    return this.productRepository.update(product);
+    const check = await this.productRepository.checkSold(productId);
+    if (check) {
+      return await this.productRepository.update(product);
+    } else {
+      return false;
+    }
   }
 
   /** Delete */

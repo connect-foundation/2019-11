@@ -10,20 +10,13 @@ import Electronic from "../../../assets/television.svg";
 import LifeStyle from "../../../assets/geek.svg";
 import MessengerIcon from "../../../assets/messenger.svg";
 import detailCategoryList from "../../../data/detail-category-list";
-import {
-  Container,
-  OriginWrapper,
-  ListWrapper,
-  Bar,
-  List,
-  DivisionLine
-} from "./CategoryBarStyle";
+import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from "./CategoryBarStyle";
 import userContext from "../../../context/UserContext";
 import Messenger from "../../Messenger";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
 import { getFetch } from "../../../services/fetchService";
-
+import Notify from "../../../assets/notify.svg";
 const { apiUrl } = apiConfig;
 const { users } = pathConfig;
 
@@ -123,13 +116,23 @@ const Components = () => {
             />
           </List>
           {user.isLogin === true ? (
-            <Messenger img={MessengerIcon} onClick={close} />
+            <>
+              <CategoryIcon
+                color="#FFE1A2"
+                img={Notify}
+                text="알림"
+                active={open}
+                onClick={handleClick}
+                idx={999}
+              />
+              <Messenger img={MessengerIcon} onClick={close} />
+            </>
           ) : (
             undefined
           )}
         </Bar>
       </OriginWrapper>
-      <ListWrapper open={open}>
+      <ListWrapper open={open} idx={selectIdx}>
         <ExpandList
           open={open}
           idx={selectIdx}
