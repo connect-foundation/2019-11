@@ -1,39 +1,39 @@
-import styled from "styled-components"
-import React, { useState, useContext, useEffect } from "react"
-import ButtonSelect from "../../components/Atoms/SelectOptionButton"
-import ButtonDays from "../../components/Atoms/DayButton"
-import Header from "../../components/Atoms/Header"
-import Footer from "../../components/Atoms/Footer"
-import TradeListBox from "../../components/Organisim/TradeListBox"
-import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
+import styled from "styled-components";
+import React, { useState, useContext, useEffect } from "react";
+import ButtonSelect from "../../components/Atoms/SelectOptionButton";
+import ButtonDays from "../../components/Atoms/DayButton";
+import Header from "../../components/Atoms/Header";
+import Footer from "../../components/Atoms/Footer";
+import TradeListBox from "../../components/Organisim/TradeListBox";
+import InfiniteScroll from "../../components/Molecules/InfiniteScroll";
 
-import userContext from "../../context/UserContext"
+import userContext from "../../context/UserContext";
 
-import apiConfig from "../../config/api"
-import pathConfig from "../../config/path"
+import apiConfig from "../../config/api";
+import pathConfig from "../../config/path";
 
-const { apiUrl } = apiConfig
-const { logfilter } = pathConfig
+const { apiUrl } = apiConfig;
+const { logfilter } = pathConfig;
 
 const Wraper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-`
+`;
 const TradeWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
   height: 100%;
-`
+`;
 
 const RightAlign = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 2rem;
   margin: 0 0 0.5rem;
-`
+`;
 const TradeContents = styled.div`
   height: 100%;
   overflow: auto;
@@ -43,17 +43,17 @@ const TradeContents = styled.div`
     display: none !important; // 윈도우 크롬 등
   }
   margin-bottom: 0.5rem;
-`
+`;
 function TradeList(props) {
-  const [data, setData] = useState([])
-  const [isSale, setIsSale] = useState(true)
-  const [isBuy, setIsBuy] = useState(true)
-  const [dayago, setDayago] = useState(1)
-  const [page, setPage] = useState(1)
-  const [user, setUser] = useContext(userContext)
+  const [data, setData] = useState([]);
+  const [isSale, setIsSale] = useState(true);
+  const [isBuy, setIsBuy] = useState(true);
+  const [dayago, setDayago] = useState(1);
+  const [page, setPage] = useState(1);
+  const [user, setUser] = useContext(userContext);
 
   function getData(sale, buy, day, page) {
-    let url = apiUrl + logfilter
+    let url = apiUrl + logfilter;
     fetch(url, {
       method: "POST",
       headers: {
@@ -69,7 +69,7 @@ function TradeList(props) {
       })
     })
       .then(resultJson => {
-        return resultJson.json()
+        return resultJson.json();
       })
       .then(result => {
         let resultData = result[0].reduce((acc, ele) => {
@@ -82,37 +82,37 @@ function TradeList(props) {
             registdate: ele.registerDate,
             hopeprice: ele.hopePrice,
             deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
-          }
-          acc.push(data)
-          return acc
-        }, [])
-        setPageNumber(page++)
-        setData(resultData)
-      })
+          };
+          acc.push(data);
+          return acc;
+        }, []);
+        setPageNumber(page++);
+        setData(resultData);
+      });
   }
 
   function setPageNumber(num) {
-    setPage(num)
+    setPage(num);
   }
   function setSale() {
-    setPage(1)
-    setIsSale(!isSale)
+    setPage(1);
+    setIsSale(!isSale);
   }
 
   function setBuy() {
-    setPage(1)
-    setIsBuy(!isBuy)
+    setPage(1);
+    setIsBuy(!isBuy);
   }
 
   function setDay(day) {
-    setPage(1)
-    setDayago(day)
+    setPage(1);
+    setDayago(day);
   }
 
   useEffect(() => {
-    getData(isSale, isBuy, dayago, page)
-  }, [dayago, isBuy, isSale])
-  const drawer = item => item.map(value => <TradeListBox {...value} />)
+    getData(isSale, isBuy, dayago, page);
+  }, [dayago, isBuy, isSale, user.id]);
+  const drawer = item => item.map(value => <TradeListBox {...value} />);
   //랜더링.
 
   return (
@@ -145,7 +145,7 @@ function TradeList(props) {
       </TradeWrap>
       <Footer />
     </Wraper>
-  )
+  );
 }
 
-export default TradeList
+export default TradeList;

@@ -1,7 +1,7 @@
-import { EntityRepository, EntityManager, Equal, Not, IsNull } from "typeorm";
+import { EntityRepository, EntityManager, Equal, Not, IsNull, MoreThan } from "typeorm";
 import { ProductsDTO } from "../dto/ProductDTO";
 import { Products } from "../models/Products";
-
+import { Today } from "../util/DateUtils";
 @EntityRepository()
 export class ProductRepository {
   constructor(private readonly em: EntityManager) {}
@@ -28,12 +28,12 @@ export class ProductRepository {
   }
 
   public updateInfo(productId: number, title: string, contents: string) {
-    const products = new Products()
-    products.id = productId
-    products.title = title
-    products.contents = contents
+    const products = new Products();
+    products.id = productId;
+    products.title = title;
+    products.contents = contents;
 
-    return this.em.save(products)
+    return this.em.save(products);
   }
 
   /*GET*/
@@ -59,9 +59,17 @@ export class ProductRepository {
         id: productId,
         ["images.product.id"]: productId
       }
-    })
+    });
   }
 
+  public checkSold(productId: number) {
+    return this.em.findOne(Products, {
+      where: {
+        id: productId,
+        soldPrice: IsNull()
+      }
+    });
+  }
   /* DELETE */
 
   public async remove(pid: number) {
@@ -72,7 +80,8 @@ export class ProductRepository {
     return this.em.findAndCount(Products, {
       where: {
         categoryCode: categoryCode,
-        soldPrice: IsNull()
+        soldPrice: IsNull(),
+        extensionDate: MoreThan(Today())
       },
       order: { registerDate: "DESC" },
       cache: true
@@ -84,7 +93,8 @@ export class ProductRepository {
       where: {
         id: productId,
         isAuction: true,
-        soldDate: IsNull()
+        soldDate: IsNull(),
+        extensionDate: MoreThan(Today())
       },
       cache: true
     });
@@ -94,7 +104,8 @@ export class ProductRepository {
     return this.em.find(Products, {
       where: {
         soldPrice: IsNull(),
-        isAuction: true
+        isAuction: true,
+        extensionDate: MoreThan(Today())
       },
       order: orderOption,
       skip: 0,

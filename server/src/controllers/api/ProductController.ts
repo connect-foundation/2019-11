@@ -13,7 +13,6 @@ import {
 } from "routing-controllers";
 import { ProductsService } from "../../services/ProductService";
 import { SystemLogger } from "../../middlewares/SystemLogger";
-
 const startDefault = 0;
 const limitDefault = 50;
 
@@ -51,13 +50,13 @@ export class ProductController {
   }
 
   @Patch("/:id")
-  public update(
+  public async update(
     @Param("id") productId: string,
     @BodyParam("soldPrice") soldPrice: string,
     @BodyParam("soldDate") soldDate: string,
     @BodyParam("buyerId") buyerId: string
   ) {
-    return this.productService.update(
+    return await this.productService.update(
       parseInt(productId),
       parseInt(soldPrice),
       soldDate,

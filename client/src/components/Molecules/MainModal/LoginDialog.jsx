@@ -25,18 +25,21 @@ const LoginDialog = ({ signUp, close }) => {
   const [user, setUser] = useContext(UserContext);
   const handleSubmit = async e => {
     e.preventDefault();
-    const body = {
-      username: id,
-      password: pwd
-    };
-    const res = await postJsonFetch(`${apiUrl}${sign.in}`, {}, body);
-    const { msg, user } = res;
-    if (msg) {
-      setUser(user);
-      localStorage.setItem("access-token", user.accessToken);
-      localStorage.setItem("refresh-token", user.refreshToken);
-      close();
-    } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    if (id === "" || pwd === "") alert("필수 정보가 입력되지 않았습니다.");
+    else {
+      const body = {
+        username: id,
+        password: pwd
+      };
+      const res = await postJsonFetch(`${apiUrl}${sign.in}`, {}, body);
+      const { msg, user } = res;
+      if (msg) {
+        setUser(user);
+        localStorage.setItem("access-token", user.accessToken);
+        localStorage.setItem("refresh-token", user.refreshToken);
+        close();
+      } else alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    }
   };
   const onSuccessKakaoLogin = async result => {
     const { profile, response } = result;
