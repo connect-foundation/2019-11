@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js",
     "start": "cross-env NODE_ENV=development pm2-runtime index.js",
     "prod": "pm2-runtime index.js"
   },
@@ -13,6 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
     "mysql2": "^2.0.2",
     "node-cron": "^2.0.3",
     "socket.io-client": "^2.3.0"
