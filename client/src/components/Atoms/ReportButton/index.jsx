@@ -36,11 +36,7 @@ const Component = props => {
       <Button onClick={ReportWrite}>
         <img src={report} />
       </Button>
-      {show ? (
-        <ReportDialog onClick={ReportWrite} isUser={props.isUser} targetId={props.targetId} />
-      ) : (
-        undefined
-      )}
+      {show ? <ReportDialog onClick={ReportWrite} targetId={props.targetId} /> : undefined}
     </ButtonWrap>
   );
 };
