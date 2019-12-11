@@ -120,6 +120,27 @@ const PurchaseButton = styled(BidButton)`
   border-color: var(--color-primary);
 `;
 
+const Badge = styled.div`
+  margin: 0 var(--margin-xs);
+  padding: var(--padding-xs);
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: ${props =>
+    props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+  border-radius: 16px;
+  display: inline-block;
+  border: 1px solid
+    ${props =>
+      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+
+  &:hover {
+    color: white;
+    background-color: ${props =>
+      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+    cursor: pointer;
+  }
+`;
+
 const ProductInfo = () => {
   const [user, setUser] = useContext(UserContext);
   const [productPageState, dispatchProductPage] = useContext(
@@ -249,14 +270,17 @@ const ProductInfo = () => {
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <ReportButton isUser={false} targetId={id} />
+          <Badge>판매자 신고</Badge>
+          <Badge secondary>판매자와 대화하기</Badge>
+          {/* <ReportButton isUser={false} targetId={id} /> */}
         </ProductTitle>
+        {/* <RightComponent></RightComponent> */}
         <ProductSeller>
-          <ReportButton isUser={true} targetId={seller.loginId} />
+          {/* <ReportButton isUser={true} targetId={seller.loginId} />
           <MessengerCreateButton
             userId={user.loginId}
             sellerId={seller.loginId}
-          />
+          /> */}
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
