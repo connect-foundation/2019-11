@@ -18,10 +18,10 @@ const SpinnerText = styled.div`
   margin-bottom: var(--margin-md);
 `;
 
-const Spinner = () => {
+const Spinner = ({ text }) => {
   return (
     <SpinnerStyle>
-      <SpinnerText>상품 준비중</SpinnerText>
+      <SpinnerText>{text || "Loading.."}</SpinnerText>
       <ClipLoader color="#ff3466" />
     </SpinnerStyle>
   );
