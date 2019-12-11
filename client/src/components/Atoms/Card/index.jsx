@@ -34,7 +34,9 @@ const Card = ({ item }) => {
       <CardStyle>
         <Thumbnail thumbnail={thumbnailUrl} />
         <TagContainer isAuction={isAuction} date={extensionDate} />
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <label>{title}</label>
+        </CardTitle>
         <InfoContainer>
           <Bids bids={countBids} />
           <PriceContainer buyNowPrice={immediatePrice} topBid={topBid} />
