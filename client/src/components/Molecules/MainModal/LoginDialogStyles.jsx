@@ -7,6 +7,8 @@ const BUTTON_MARGIN = "0.5em";
 const DialogStyle = styled.div`
   display: flex;
   flex-direction: column;
+  background: white;
+  border-radius: 5px;
 `;
 
 const InputContainer = styled.div`

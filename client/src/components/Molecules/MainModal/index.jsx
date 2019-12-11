@@ -20,7 +20,7 @@ const MainModal = ({ open, onClose }) => {
       {signUpOpen === false ? (
         <LoginDialog close={handleOnClose} signUp={handleSignUpClick} />
       ) : (
-        <SignUpDialog close={handleOnClose} />
+        <SignUpDialog close={handleOnClose} isSignUp={true} />
       )}
     </Dialog>
   );
