@@ -120,15 +120,37 @@ const PurchaseButton = styled(BidButton)`
   border-color: var(--color-primary);
 `;
 
+const BidTootip = styled.div`
+  display: none;
+  position: relative;
+  width: 10rem;
+  background-color: black;
+  color: white;
+  padding: 0.7rem 0 0.7rem 0.2rem;
+  margin-right: 1rem;
+  border-radius: 5px;
+  text-align: left;
+  &::after {
+    content: "";
+    position: absolute;
+    border-left: 1rem solid black;
+    border-top: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid transparent;
+    top: 0.8rem;
+    right: -1rem;
+  }
+  ${ProductBid}:hover & {
+    display: inline-block;
+  }
+`;
+
 const ProductInfo = () => {
   const [user, setUser] = useContext(UserContext);
-  const [productPageState, dispatchProductPage] = useContext(
-    ProductPageContext
-  );
+  const [productPageState, dispatchProductPage] = useContext(ProductPageContext);
 
-  const { socketClient, product } = productPageState;
+  const [test, setTest] = useState(false);
+  const { socketClient, product, chats } = productPageState;
   const [modal, setModal] = useContext(ModalContext);
-
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -144,18 +166,74 @@ const ProductInfo = () => {
   'modal',
   */
 
-  const {
-    id,
-    title,
-    immediatePrice,
-    thumbnailUrl,
-    isAuction,
-    auctionDeadline,
-    seller
-  } = product;
+  const { id, title, immediatePrice, thumbnailUrl, isAuction, auctionDeadline, seller } = product;
 
   const baseURL = apiUrl;
+  /**
+   * "~~님이 ~~원에 입찰" 에서 가격만 추출
+   * @param {string} text
+   */
+  function parsing(text) {
+    let word = text.split(" ")[1];
+    let num = word.split("원")[0];
+    return Number(num.split(",").join(""));
+  }
 
+  /**
+   * 현재 최고 입찰가 다음 입찰할 가격을 계산
+   * @param {number} topbid
+   */
+  function Setbidprice(topbid) {
+    return Math.floor(topbid + topbid * 0.2);
+  }
+
+  /**
+   * 현재 입력된 채팅에서 즉시 구매가 된 메시지를 찾아낸다.
+   *
+   * @param {Array} chatlist
+   */
+  function findsoldmessage(chatlist) {
+    let alertchat = chatlist.filter(
+      chat => chat.type === "alert" && chat.text.split("즉시 구매").length > 1
+    );
+    return alertchat.length > 0;
+  }
+  /**
+   * 현재 입력된 채팅중 알림의 마지막을 뽑는다.
+   *
+   * @param {Array} chatlist
+   */
+  function findlastalert(chatlist) {
+    let alertchat = chatlist.filter(chat => chat.type === "alert");
+    if (alertchat.length) {
+      return alertchat[alertchat.length - 1].text;
+    } else {
+      return false;
+    }
+  }
+
+  let isSold = false;
+  if (product.soldPrice) {
+    isSold = true;
+  }
+  let settedimmediatePrice = immediatePrice;
+  let minimumbid = Setbidprice(product.startBidPrice);
+  if (product.bids.length) {
+    minimumbid = Setbidprice(product.bids[product.bids.length - 1].bidPrice);
+  }
+  if (chats.length) {
+    if (findsoldmessage(chats)) {
+      isSold = true;
+    } else {
+      let lastalert = findlastalert(chats);
+      if (lastalert) {
+        minimumbid = Setbidprice(parsing(lastalert));
+      }
+    }
+  }
+  if (immediatePrice < minimumbid) {
+    settedimmediatePrice = Math.floor(minimumbid + minimumbid * 0.4);
+  }
   const handleBidSubmit = e => {
     e.preventDefault();
 
@@ -167,6 +245,13 @@ const ProductInfo = () => {
       });
     }
 
+    if (isSold) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "구매가 완료된 상품입니다."
+      });
+    }
     const params = {
       bidPrice: e.target.bidPrice.value,
       bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
@@ -174,28 +259,40 @@ const ProductInfo = () => {
       productId: id
     };
 
-    axios
-      .post(`${baseURL}${pathConfig.bids}`, params)
-      .then(response => {
-        if (response.status < 300) {
-          socketClient.emit("bid", {
-            type: "alert",
-            roomId: id,
-            sender: { ...user, sessionId: user.sessionId },
-            bid: response.data,
-            createdAt: Date.now()
-          });
+    if (params.bidPrice === "") {
+      params.bidPrice = minimumbid;
+    }
 
-          setModal({
-            isOpen: true,
-            component: SuccessModal,
-            message: "입찰 성공"
-          });
-        }
-      })
-      .catch(e => {
-        setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
+    if (minimumbid > params.bidPrice) {
+      setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "최소 경매가격을 확인해주세요."
       });
+    } else {
+      axios
+        .post(`${baseURL}${pathConfig.bids}`, params)
+        .then(response => {
+          if (response.status < 300) {
+            socketClient.emit("bid", {
+              type: "alert",
+              roomId: id,
+              sender: { ...user, sessionId: user.sessionId },
+              bid: response.data,
+              createdAt: Date.now()
+            });
+
+            setModal({
+              isOpen: true,
+              component: SuccessModal,
+              message: "입찰 성공"
+            });
+          }
+        })
+        .catch(e => {
+          setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
+        });
+    }
   };
 
   const handleImmediateSubmit = price => e => {
@@ -206,6 +303,14 @@ const ProductInfo = () => {
         isOpen: true,
         component: FailModal,
         message: "로그인이 필요합니다."
+      });
+    }
+
+    if (isSold) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "구매가 완료된 상품입니다."
       });
     }
 
@@ -253,10 +358,7 @@ const ProductInfo = () => {
         </ProductTitle>
         <ProductSeller>
           <ReportButton isUser={true} targetId={seller.loginId} />
-          <MessengerCreateButton
-            userId={user.loginId}
-            sellerId={seller.loginId}
-          />
+          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -265,9 +367,7 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -281,15 +381,19 @@ const ProductInfo = () => {
         ) : null}
 
         <ProductBid onSubmit={handleBidSubmit}>
-          <BidInput name="bidPrice" placeholder="입찰 가격" />
+          <BidTootip>
+            최소:
+            {`${convert2Price(minimumbid)} 원`}
+          </BidTootip>
+          <BidInput name="bidPrice" placeholder="바로입찰" />
           <BidButton>입찰</BidButton>
         </ProductBid>
 
-        <ProductPurchase onSubmit={handleImmediateSubmit(immediatePrice)}>
+        <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
           <PurchasePrice>
             즉시 구매가
             <ProductDescText primary bold size="sm">
-              {`${convert2Price(immediatePrice)} 원`}
+              {`${convert2Price(settedimmediatePrice)} 원`}
             </ProductDescText>
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
