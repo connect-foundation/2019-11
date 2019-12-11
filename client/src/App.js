@@ -10,7 +10,8 @@ function App() {
   const [modal, setModal] = useState({
     isOpen: false,
     component: null,
-    message: ""
+    message: "",
+    props: {}
   });
   const ModalContent = modal.component;
 
@@ -21,15 +22,15 @@ function App() {
   return (
     <BrowserRouter>
       <ModalContext.Provider value={[modal, setModal]}>
-        {modal.isOpen ? (
-          <div id="modal">
-            <div className="background" onClick={handleClickModalBack}></div>
-            <div className="content">
-              <ModalContent message={modal.message} />
-            </div>
-          </div>
-        ) : null}
         <UserContext.Provider value={[user, setUser]}>
+          {modal.isOpen ? (
+            <div id="modal">
+              <div className="background" onClick={handleClickModalBack}></div>
+              <div className="content">
+                <ModalContent message={modal.message} {...modal.props} />
+              </div>
+            </div>
+          ) : null}
           <div className="App">
             <Router />
           </div>
