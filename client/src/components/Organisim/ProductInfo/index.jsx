@@ -217,7 +217,10 @@ const ProductInfo = () => {
     isSold = true;
   }
   let settedimmediatePrice = immediatePrice;
-  let minimumbid = Setbidprice(product.bids[product.bids.length - 1].bidPrice);
+  let minimumbid = Setbidprice(product.startBidPrice);
+  if (product.bids.length) {
+    minimumbid = Setbidprice(product.bids[product.bids.length - 1].bidPrice);
+  }
   if (chats.length) {
     if (findsoldmessage(chats)) {
       isSold = true;
