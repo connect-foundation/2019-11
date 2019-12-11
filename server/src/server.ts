@@ -1,6 +1,5 @@
 import "dotenv/config";
 import "reflect-metadata";
-import FireStore from "./services/FireStoreService";
 
 /**
  * IOC Container, DI based on Decorator, ORM
@@ -46,7 +45,6 @@ const expressApp = useExpressServer(app, {
   middlewares: [__dirname + "/middlewares/**/*.js"]
   // interceptors: [__dirname + "/interceptors/**/*.js"]
 });
-FireStore.init();
 
 expressApp.listen(3000, () => {
   console.log("=====Express Server Started=====");

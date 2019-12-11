@@ -7,7 +7,9 @@ export class SystemLogger implements ExpressMiddlewareInterface {
   use(req: any, res: Response, next: () => any): void {
     //const { id, name } = req.user;
     const url = req.url;
-    addLog(3, "관리자", url);
+    const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    addLog(3, "관리자", ip, url);
 
     next();
   }

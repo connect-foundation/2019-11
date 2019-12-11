@@ -1,26 +1,29 @@
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
-import { fireConfig } from "../config/firestore";
+import * as admin from "firebase-admin";
+import serviceAccount from "../config/firestore";
 import { Today } from "../util/DateUtils";
 
-const init = () => {
-  firebase.initializeApp(fireConfig); //설정 초기화
-};
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.FIRESTORE_BASE_URL
+});
 
-export const addLog = (id: number, name: string, path: string) => {
-  const db = firebase.database();
-  db.ref(`/API/${Today()}`).push({
-    id,
-    name,
-    path,
-    timeStamp: new Date()
-  });
+export const addLog = (id: number, name: string, ip: string, path: string) => {
+  const db = admin.firestore();
+  db.collection("API")
+    .doc(Today())
+    .set({
+      id,
+      name,
+      ip,
+      path,
+      timestamp: Date.now()
+    });
 };
 
 export const readLog = (date: string) => {
-  const db = firebase.database();
-  return db.ref(`/API/${Today()}`).toJSON();
+  const db = admin.firestore();
+  return db
+    .collection("API")
+    .doc(date)
+    .get();
 };
-
-export default { init };
