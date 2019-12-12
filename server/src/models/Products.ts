@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToOne
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 import { Images } from "./Images";
 import { Users } from "./Users";
 import { Bids } from "./Bids";
@@ -55,6 +49,12 @@ export class Products {
 
   @Column({ default: false })
   isEnd: boolean;
+
+  @Column({ default: false })
+  sellerCheck: boolean;
+
+  @Column({ default: false })
+  buyerCheck: boolean;
 
   @OneToMany(
     type => Images,

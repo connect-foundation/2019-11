@@ -64,7 +64,7 @@ function Container(props) {
 
   const [user] = useContext(userContext);
 
-  let USERID = user.loginId;
+  let USERID = user.id;
 
   useEffect(() => {
     firebase.getRoomList(String(USERID)).on("value", function listener(result) {
@@ -150,7 +150,7 @@ function Container(props) {
                   setRoomUserId(value.opponentUserId);
                   clickRoomList(false);
                 }}
-                userLoginId={value.opponentUserId}
+                roomUserId={value.opponentUserId}
                 RecentMsg={value.RecentMeg}
               />
             );
