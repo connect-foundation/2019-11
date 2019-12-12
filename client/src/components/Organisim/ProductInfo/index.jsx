@@ -146,11 +146,13 @@ const Badge = styled.div`
   padding: var(--padding-xs);
   font-size: 0.5rem;
   font-weight: bold;
-  color: ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
+  color: ${props =>
+    props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
   border-radius: 16px;
   display: inline-block;
   border: 1px solid
-    ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
+    ${props =>
+      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
 
   &:hover {
     color: white;
@@ -169,7 +171,7 @@ const ProductInfo = () => {
   const [user] = useContext(UserContext);
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
-  const [setModal] = useContext(ModalContext);
+  const [, setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -185,7 +187,15 @@ const ProductInfo = () => {
   'modal',
   */
 
-  const { id, title, immediatePrice, thumbnailUrl, isAuction, auctionDeadline, seller } = product;
+  const {
+    id,
+    title,
+    immediatePrice,
+    thumbnailUrl,
+    isAuction,
+    auctionDeadline,
+    seller
+  } = product;
 
   const baseURL = apiUrl;
   /**
@@ -421,7 +431,9 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
+            {auctionDeadline
+              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
+              : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -449,7 +461,11 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
+        <ShareBox
+          width={10}
+          url={apiConfig.url + `/products/${id}`}
+          object={product}
+        />
       </ProductDescBox>
     </ProductInfoStyle>
   );
