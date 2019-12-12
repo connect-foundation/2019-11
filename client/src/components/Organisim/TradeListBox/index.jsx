@@ -81,7 +81,7 @@ const Component = props => {
               <RatingButton
                 isSeller={false}
                 targetId={props.targetId}
-                productId={props.productId}
+                productId={props.id}
                 text="판매자 평가하기"
               />
             )}

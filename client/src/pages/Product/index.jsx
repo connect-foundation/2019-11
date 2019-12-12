@@ -117,7 +117,6 @@ const ProductPage = ({ match }) => {
     const socket = io(chatUrl);
     socket.on("connect", () => {
       dispatchProductPage({ type: "SET_SOCKET", socket });
-      console.log(user);
       socket.emit("joinRoom", {
         roomId: productId,
         sessionId: socket.id,

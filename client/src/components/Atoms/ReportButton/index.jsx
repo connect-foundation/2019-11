@@ -11,6 +11,7 @@ const Button = styled.button`
   border-radius: 16px;
   display: inline-block;
   border: 1px solid var(--color-primary);
+  background-color: white;
 
   &:hover {
     color: white;

@@ -1,9 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import Container from "./Container";
 import CategoryIcon from "../Organisim/CategoryBar/CategoryIcon";
+import MessengerContext from "../../context/MessengerContext";
+
 function Messenger(props) {
+  const [messengerOpen, setMessengerOpen] = useContext(MessengerContext);
   const [show, setShow] = useState(false);
   const node = useRef();
+  useEffect(() => {
+    if (messengerOpen) {
+      OpenMessenger();
+      setMessengerOpen(false);
+    }
+  }, [messengerOpen]);
   useEffect(() => {
     document.addEventListener("mousedown", handleOnBlur);
   });
@@ -18,9 +27,14 @@ function Messenger(props) {
     props.onClick();
     setShow(!show);
   }
+
+  function OpenMessenger() {
+    setShow(true);
+  }
+
   return (
     <div ref={node}>
-      <Container show={show} />
+      <Container show={show} open={OpenMessenger} />
       <CategoryIcon
         color="var(--color-primary);"
         img={props.img}
