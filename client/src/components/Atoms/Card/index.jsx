@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
 import { dateDiff2Dday } from "../../../utils/converter";
@@ -64,20 +64,28 @@ const TagContainerStyle = styled.div`
   padding: 0.1rem;
 `;
 
-const IsAuctionTag = styled.div`
+const TagCommonCss = css`
   border-radius: 0.5rem;
-  border: red solid 0.1rem;
-  color: red;
   padding: 0.1rem 0.3rem 0.1rem 0.3rem;
   margin: 0.25rem;
 `;
 
+const IsAuctionTag = styled.div`
+  ${TagCommonCss}
+  border: var(--color-primary) solid 0.1rem;
+  color: var(--color-primary);
+`;
+
 const DDayTag = styled.div`
-  border-radius: 0.5rem;
+  ${TagCommonCss}
   border: var(--color-secondary) solid 0.1rem;
   color: var(--color-secondary);
-  padding: 0.1rem 0.3rem 0.1rem 0.3rem;
-  margin: 0.25rem;
+`;
+
+const IsSaleTag = styled.div`
+  ${TagCommonCss}
+  border: var(--color-on-sale) solid 0.1rem;
+  color: var(--color-on-sale);
 `;
 
 const ThumbnailStyle = styled.div`
@@ -145,8 +153,12 @@ const Card = ({ item }) => {
           <label>{title}</label>
         </CardTitle>
         <InfoContainer>
-          <Bids bids={countBids} />
-          <PriceContainer buyNowPrice={immediatePrice} topBid={topBid} />
+          {isAuction && <Bids bids={countBids} />}
+          <PriceContainer
+            buyNowPrice={immediatePrice}
+            topBid={topBid}
+            isAuction={isAuction}
+          />
         </InfoContainer>
       </CardStyle>
     </StyledLink>
@@ -167,7 +179,8 @@ const TagContainer = ({ isAuction, date }) => {
 
   return (
     <TagContainerStyle>
-      {isAuction === true && <IsAuctionTag>경매중</IsAuctionTag>}
+      {isAuction && <IsAuctionTag>경매중</IsAuctionTag>}
+      {!isAuction && <IsSaleTag>판매중</IsSaleTag>}
       <DDayTag>D - {day}</DDayTag>
     </TagContainerStyle>
   );
@@ -180,12 +193,11 @@ const Thumbnail = ({ thumbnail }) => {
     </ThumbnailStyle>
   );
 };
-const PriceContainer = props => {
-  const { buyNowPrice, topBid } = props;
+const PriceContainer = ({ buyNowPrice, topBid, isAuction }) => {
   return (
     <PriceContainerStyle>
-      {buyNowPrice === null ? <></> : <BuyNowPrice buyNowPrice={buyNowPrice} />}
-      <TopBid topBid={topBid} />
+      <BuyNowPrice buyNowPrice={buyNowPrice} />
+      {isAuction && <TopBid topBid={topBid} />}
     </PriceContainerStyle>
   );
 };
