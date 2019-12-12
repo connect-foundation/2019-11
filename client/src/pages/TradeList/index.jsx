@@ -39,7 +39,7 @@ const TradeContents = styled.div`
   border: solid 1px;
   border-radius: 5px;
   &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
+    display: none !important;
   }
   margin-bottom: 0.5rem;
 `;
@@ -118,8 +118,6 @@ function TradeList() {
   useEffect(() => {
     getData(isSale, isBuy, dayago, page);
   }, [dayago, isBuy, isSale, user.id]);
-  // const drawer = item => item.map(value => <TradeListBox {...value} />);
-  //랜더링.
 
   return (
     <Wraper>

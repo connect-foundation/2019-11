@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TradeBox from "../../Molecules/TradeBase";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import ReportButton from "../../Atoms/ReportButton";
+import RatingButton from "../../Atoms/RatingButton";
 
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
@@ -34,8 +35,6 @@ const OptionPriceCheck = styled.div`
   display: ${props => (props.isCheck === null ? "none" : "block")};
 `;
 
-const RatingButton = styled.button``;
-
 const Component = props => {
   const [isHover, setIsHover] = useState(false);
   let soldDate = new Date(props.solddate);
@@ -57,7 +56,11 @@ const Component = props => {
         </OptionPriceCheck>
         {props.status === "판매" ? (
           <div>
-            <RatingButton>구매자 평가하기</RatingButton>
+            {props.sellerCheck ? (
+              undefined
+            ) : (
+              <RatingButton userId={props.targetId} text="구매자 평가하기" />
+            )}
             <MessengerCreateButton
               userId={props.userId}
               sellerId={props.targetId}
@@ -67,7 +70,11 @@ const Component = props => {
           </div>
         ) : (
           <div>
-            <RatingButton>판매자 평가하기</RatingButton>
+            {props.buyerCheck ? (
+              undefined
+            ) : (
+              <RatingButton userId={props.targetId} text="판매자 평가하기" />
+            )}
             <MessengerCreateButton
               userId={props.userId}
               sellerId={props.targetId}
