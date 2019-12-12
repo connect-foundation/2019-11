@@ -92,7 +92,7 @@ cron.schedule("*/10 * * * * *", () => {
     // 해당 상품의 user가 입찰한 가장 비싼 가격(가장 최근) 입찰 정보를 쿼리로 가져온다.
     // 가장 비싸게 입찰한 유저순으로 쿼리를 가져온다.
     pool.query(
-      `SELECT user_id, MAX(bid_price), MAX(bid_date) FROM bids WHERE product_id=? GROUP BY user_id ORDER BY MAX(bid_price) DESC;`,
+      `SELECT user_id, MAX(bid_price) as bid_price, MAX(bid_date) as bid_date FROM bids WHERE product_id=? GROUP BY user_id ORDER BY MAX(bid_price) DESC;`,
       [product.id],
       (err, rows, filed) => {
         const bids = rows;
@@ -146,6 +146,9 @@ cron.schedule("*/10 * * * * *", () => {
             //3-2. 낙찰인 경우
             // 가장 비싼 가격으로 구매한 buyer_id의 값을 product 테이블에 업데이트 한다.
             const buyerId = bids[0].user_id;
+            product.soldDate = bids[0].bid_date;
+            product.soldPrice = bids[0].bid_price;
+
             pool.query(
               `Update products SET buyer_id=? WHERE id=?`,
               [product.id, buyerId],
