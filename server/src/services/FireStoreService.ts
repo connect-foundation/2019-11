@@ -9,21 +9,19 @@ admin.initializeApp({
 
 export const addLog = (id: number, name: string, ip: string, path: string) => {
   const db = admin.firestore();
-  db.collection("API")
-    .doc(Today())
+  const timestamp = Date.now().toString();
+
+  db.collection(Today())
+    .doc(timestamp)
     .set({
       id,
       name,
       ip,
-      path,
-      timestamp: Date.now()
+      path
     });
 };
 
 export const readLog = (date: string) => {
   const db = admin.firestore();
-  return db
-    .collection("API")
-    .doc(date)
-    .get();
+  return db.collection(date).get();
 };

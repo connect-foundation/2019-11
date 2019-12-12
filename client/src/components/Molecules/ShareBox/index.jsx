@@ -1,12 +1,13 @@
-import React, { useEffect } from "react"
-import { CopyToClipboard } from "react-copy-to-clipboard"
+import React, { useEffect } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import styled from "styled-components"
-import KakaoLogo from "../../../assets/kakaoShareIcon.svg"
-import FacebookLogo from "../../../assets/fbShareIcon.svg"
-import TwitterLogo from "../../../assets/twitterShareIcon.svg"
-import URLLogo from "../../../assets/urlShareIcon.svg"
-import apiConfig from "../../../config/api"
+import styled from "styled-components";
+import KakaoLogo from "../../../assets/kakaoShareIcon.svg";
+import FacebookLogo from "../../../assets/fbShareIcon.svg";
+import TwitterLogo from "../../../assets/twitterShareIcon.svg";
+import URLLogo from "../../../assets/urlShareIcon.svg";
+
+import apiConfig from "../../../config/api";
 
 const Container = styled.div`
   position: relative;
@@ -17,7 +18,7 @@ const Container = styled.div`
   background: var(--color-gary-lighter);
   padding: 5px 10px;
   justify-content: space-between;
-`
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,27 +33,27 @@ const Wrapper = styled.div`
   &:hover {
     color: var(--color-primary);
   }
-`
+`;
 
 const LinkWrapper = styled.a`
   outline: none;
   border: none;
   text-decoration: none;
   color: inherit;
-`
+`;
 
 const Logo = styled.img`
   width: 40px;
   height: 40px;
   object-fit: cover;
-`
+`;
 
 const Title = styled.span`
   width: 100%;
   font-size: 12px;
   font-weight: 700;
   margin: 3px 5px;
-`
+`;
 
 const handleKakao = (url, object) => {
   window.Kakao.Link.sendDefault({
@@ -73,20 +74,20 @@ const handleKakao = (url, object) => {
         }
       }
     ]
-  })
-}
+  });
+};
 
 const Component = ({ url, object, width }) => {
   useEffect(() => {
-    window.Kakao.init(apiConfig.kakaoKey)
-  }, [])
+    if (!window.Kakao.isInitialized()) window.Kakao.init(apiConfig.kakaoKey);
+  }, []);
 
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&amp;src=sdkpreparse`
-  const twitterUrl = `https://twitter.com/intent/tweet?text=지금 경매에 참여하세요%0A${url}`
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&amp;src=sdkpreparse`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=지금 경매에 참여하세요%0A${url}`;
 
   return (
-    <Container>
-      <Wrapper width={width}>
+    <Container width={width}>
+      <Wrapper>
         <LinkWrapper target="_blank" href={facebookUrl}>
           <Logo src={FacebookLogo} />
           <Title>Facebook</Title>
@@ -100,7 +101,7 @@ const Component = ({ url, object, width }) => {
       </Wrapper>
       <Wrapper
         onClick={ev => {
-          handleKakao(url, object)
+          handleKakao(url, object);
         }}
       >
         <Logo id={"#kakaoLink"} src={KakaoLogo} />
@@ -113,7 +114,7 @@ const Component = ({ url, object, width }) => {
         </Wrapper>
       </CopyToClipboard>
     </Container>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
