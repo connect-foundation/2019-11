@@ -130,6 +130,9 @@ const BidTootip = styled.div`
   margin-right: 1rem;
   border-radius: 5px;
   text-align: left;
+  font-size: 0.7rem;
+  text-align: center;
+  font-weight: bold;
   &::after {
     content: "";
     position: absolute;
@@ -272,7 +275,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "로그인이 필요합니다."
+        props: { message: "로그인이 필요합니다." }
       });
     }
 
@@ -280,7 +283,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "구매가 완료된 상품입니다."
+        props: { message: "구매가 완료된 상품입니다." }
       });
     }
     const params = {
@@ -298,7 +301,7 @@ const ProductInfo = () => {
       setModal({
         isOpen: true,
         component: FailModal,
-        message: "최소 경매가격을 확인해주세요."
+        props: { message: "최소 경매가격을 확인해주세요." }
       });
     } else {
       axios
@@ -316,7 +319,7 @@ const ProductInfo = () => {
             setModal({
               isOpen: true,
               component: SuccessModal,
-              message: "입찰 성공"
+              props: { message: "입찰 성공" }
             });
           }
         })
@@ -324,7 +327,7 @@ const ProductInfo = () => {
           setModal({
             isOpen: true,
             component: FailModal,
-            message: "입찰 실패"
+            props: { message: "입찰 실패" }
           });
         });
     }
@@ -337,7 +340,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "로그인이 필요합니다."
+        props: { message: "로그인이 필요합니다." }
       });
     }
 
@@ -345,7 +348,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "구매가 완료된 상품입니다."
+        props: { message: "구매가 완료된 상품입니다." }
       });
     }
 
@@ -368,14 +371,14 @@ const ProductInfo = () => {
         setModal({
           isOpen: true,
           component: SuccessModal,
-          message: "즉시 구매 성공"
+          props: { message: "즉시 구매 성공" }
         });
       })
       .catch(() => {
         setModal({
           isOpen: true,
           component: FailModal,
-          message: "즉시 구매 실패"
+          props: { message: "즉시 구매 실패" }
         });
       });
   };
@@ -424,10 +427,7 @@ const ProductInfo = () => {
         ) : null}
 
         <ProductBid onSubmit={handleBidSubmit}>
-          <BidTootip>
-            최소:
-            {`${convert2Price(minimumbid)} 원`}
-          </BidTootip>
+          <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
           <BidInput name="bidPrice" placeholder="바로입찰" />
           <BidButton>입찰</BidButton>
         </ProductBid>
