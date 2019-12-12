@@ -4,7 +4,7 @@ import styled from "styled-components";
 import userContext from "../../../context/UserContext";
 import DefaultProfileIcon from "../../../assets/default-profile.svg";
 import ModalContext from "../../../context/ModalContext";
-import SignUpDialog from "../MainModal/SignUpDialog";
+import SignUpModal from "../CustomModal/SignUpModal";
 
 const InfoDiv = styled.div`
   display: flex;
@@ -85,13 +85,13 @@ const LogoutButtons = styled.button`
 
 function Component(props) {
   const [user, setUser] = useContext(userContext);
-  const [setModal] = useContext(ModalContext);
+  const [, setModal] = useContext(ModalContext);
   const [token, setToken] = useState("");
   useEffect(() => {
     if (localStorage.getItem("access-token")) {
       setToken(localStorage.getItem("access-token"));
     }
-  }, [setToken]);
+  });
   const handleUpdateDone = () => {
     setModal(state => ({ ...state, isOpen: false }));
   };
@@ -104,7 +104,7 @@ function Component(props) {
   const handleUpdateUserInfoClick = () => {
     setModal({
       isOpen: true,
-      component: SignUpDialog,
+      component: SignUpModal,
       message: "",
       props: { close: handleUpdateDone, isSignUp: false }
     });
@@ -114,7 +114,11 @@ function Component(props) {
       <ProfileWrap>
         <ProfileBig>
           <img
-            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
+            src={
+              user.profileUrl === (undefined || null)
+                ? DefaultProfileIcon
+                : user.profileUrl
+            }
             alt={"Profile Image"}
           />
         </ProfileBig>
