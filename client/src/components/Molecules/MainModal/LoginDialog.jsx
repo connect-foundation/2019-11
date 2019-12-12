@@ -8,7 +8,6 @@ import {
   SubmitButton,
   DivisionLine,
   Footer,
-  OAuthLoginButton,
   SignUpButton,
   KakaoButton,
   GoogleButton
@@ -22,7 +21,7 @@ const { sign } = pathConfig;
 const LoginDialog = ({ signUp, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [user, setUser] = useContext(UserContext);
+  const [, setUser] = useContext(UserContext);
   const handleSubmit = async e => {
     e.preventDefault();
     if (id === "" || pwd === "") alert("필수 정보가 입력되지 않았습니다.");

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import ShareCollection from "../../Molecules/ShareBox";
 import { convert2Price } from "../../../utils/converter";
 import axios from "axios";
 import apiConfig from "../../../config/api";
@@ -12,11 +11,7 @@ import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 import UserContext from "../../../context/UserContext";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
-import { getDiffDateTime } from "../../../utils/dateUtil";
-
-import MessengerCreateButton from "../../Messenger/CreateButton";
-import userContext from "../../../context/UserContext";
-import ReportButton from "../../Atoms/ReportButton";
+import ShareBox from "../../Molecules/ShareBox";
 
 const { apiUrl } = apiConfig;
 
@@ -151,13 +146,11 @@ const Badge = styled.div`
   padding: var(--padding-xs);
   font-size: 0.5rem;
   font-weight: bold;
-  color: ${props =>
-    props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+  color: ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
   border-radius: 16px;
   display: inline-block;
   border: 1px solid
-    ${props =>
-      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+    ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
 
   &:hover {
     color: white;
@@ -167,20 +160,16 @@ const Badge = styled.div`
   }
 `;
 
-const ShareWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
+// const ShareWrapper = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+// `;
 
 const ProductInfo = () => {
-  const [user, setUser] = useContext(UserContext);
-  const [productPageState, dispatchProductPage] = useContext(
-    ProductPageContext
-  );
-
-  const [test, setTest] = useState(false);
+  const [user] = useContext(UserContext);
+  const [productPageState] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
-  const [modal, setModal] = useContext(ModalContext);
+  const [setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -196,15 +185,7 @@ const ProductInfo = () => {
   'modal',
   */
 
-  const {
-    id,
-    title,
-    immediatePrice,
-    thumbnailUrl,
-    isAuction,
-    auctionDeadline,
-    seller
-  } = product;
+  const { id, title, immediatePrice, thumbnailUrl, isAuction, auctionDeadline, seller } = product;
 
   const baseURL = apiUrl;
   /**
@@ -440,9 +421,7 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -470,9 +449,7 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareWrapper>
-          <ShareCollection width={10}></ShareCollection>
-        </ShareWrapper>
+        <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
       </ProductDescBox>
     </ProductInfoStyle>
   );

@@ -1,20 +1,20 @@
-import React, { Component } from "react"
-import styled from "styled-components"
-import Card from "../../Atoms/Card"
-import NotFoundImg from "../../../assets/notFound.png"
+import React from "react";
+import styled from "styled-components";
+import Card from "../../Atoms/Card";
+import NotFoundImg from "../../../assets/notFound.png";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 8rem;
-`
+`;
 
 const Title = styled.label`
   display: flex;
   font-size: xx-large;
   justify-content: flex-start;
-`
+`;
 
 const CardContainerStyle = styled.div`
   display: flex;
@@ -24,12 +24,12 @@ const CardContainerStyle = styled.div`
   margin-bottom: 2rem;
   flex-wrap: ${props => (props.isWrap ? "wrap" : "")};
   overflow: ${props => (props.isWrap ? "auto" : "")};
-`
+`;
 
 const NotItemInfo = styled.div`
   margin: auto;
   text-align: center;
-`
+`;
 
 const CardContainer = ({ title, items, isWrap }) => {
   return (
@@ -46,7 +46,7 @@ const CardContainer = ({ title, items, isWrap }) => {
         )}
       </CardContainerStyle>
     </Container>
-  )
-}
+  );
+};
 
-export default CardContainer
+export default CardContainer;

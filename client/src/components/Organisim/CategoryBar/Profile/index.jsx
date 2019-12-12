@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react"
-import styled from "styled-components"
-import DefaultProfileIcon from "../../../../assets/default-profile.svg"
-import userContext from "../../../../context/UserContext"
+import React, { useContext } from "react";
+import styled from "styled-components";
+import DefaultProfileIcon from "../../../../assets/default-profile.svg";
+import userContext from "../../../../context/UserContext";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const ProfileContainer = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`
+`;
 
 const Profile = ({ onClick }) => {
   const [user] = useContext(userContext);
@@ -28,9 +28,10 @@ const Profile = ({ onClick }) => {
         src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
         onClick={onClick}
         data-idx={0}
+        alt={"Profile Image"}
       />
     </ProfileContainer>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

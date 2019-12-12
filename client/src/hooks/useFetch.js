@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import apiConfig from "../config/api";
 import axios from "axios";
 
 const { apiUrl } = apiConfig;
-const initialFetchState = {
-  response: null,
-  error: null,
-  loading: true
-};
+
 
 export const useFetch = (path, handleFetchSuccess, handleFetchError) => {
   React.useEffect(() => {

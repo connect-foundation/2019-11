@@ -85,13 +85,13 @@ const LogoutButtons = styled.button`
 
 function Component(props) {
   const [user, setUser] = useContext(userContext);
-  const [modal, setModal] = useContext(ModalContext);
+  const [setModal] = useContext(ModalContext);
   const [token, setToken] = useState("");
   useEffect(() => {
     if (localStorage.getItem("access-token")) {
       setToken(localStorage.getItem("access-token"));
     }
-  });
+  }, [setToken]);
   const handleUpdateDone = () => {
     setModal(state => ({ ...state, isOpen: false }));
   };
@@ -114,11 +114,8 @@ function Component(props) {
       <ProfileWrap>
         <ProfileBig>
           <img
-            src={
-              user.profileUrl === (undefined || null)
-                ? DefaultProfileIcon
-                : user.profileUrl
-            }
+            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
+            alt={"Profile Image"}
           />
         </ProfileBig>
       </ProfileWrap>

@@ -22,7 +22,7 @@ const ImgIconStyle = styled.div`
 const ImgIcon = ({ color, img }) => {
   return (
     <ImgIconStyle color={color}>
-      <img src={img} />
+      <img src={img} alt={"Category Icon"} />
     </ImgIconStyle>
   );
 };
