@@ -4,36 +4,30 @@ import Router from "./Router";
 import UserContext from "./context/UserContext";
 import "./style/App.css";
 import ModalContext from "./context/ModalContext";
+import { Modal } from "../src/components/Molecules/CustomModal/Modal";
+import NotificationContext from "./context/NotificationContext";
 
 function App() {
   const [user, setUser] = useState({});
   const [modal, setModal] = useState({
     isOpen: false,
     component: null,
-    message: "",
     props: {}
   });
-  const ModalContent = modal.component;
-
-  const handleClickModalBack = e => {
-    setModal(state => ({ ...state, isOpen: false }));
-  };
+  const [notifications, setNotifications] = useState([]);
 
   return (
     <BrowserRouter>
       <ModalContext.Provider value={[modal, setModal]}>
         <UserContext.Provider value={[user, setUser]}>
-          {modal.isOpen ? (
-            <div id="modal">
-              <div className="background" onClick={handleClickModalBack}></div>
-              <div className="content">
-                <ModalContent message={modal.message} {...modal.props} />
-              </div>
+          <NotificationContext.Provider
+            value={[notifications, setNotifications]}
+          >
+            {modal.isOpen ? <Modal /> : null}
+            <div className="App">
+              <Router />
             </div>
-          ) : null}
-          <div className="App">
-            <Router />
-          </div>
+          </NotificationContext.Provider>
         </UserContext.Provider>
       </ModalContext.Provider>
     </BrowserRouter>

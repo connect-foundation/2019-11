@@ -10,7 +10,6 @@ import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 import UserContext from "../../../context/UserContext";
-import ShareBox from "../../Molecules/ShareBox";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
 import { getDiffDateTime } from "../../../utils/dateUtil";
@@ -130,6 +129,9 @@ const BidTootip = styled.div`
   margin-right: 1rem;
   border-radius: 5px;
   text-align: left;
+  font-size: 0.7rem;
+  text-align: center;
+  font-weight: bold;
   &::after {
     content: "";
     position: absolute;
@@ -144,9 +146,37 @@ const BidTootip = styled.div`
   }
 `;
 
+const Badge = styled.div`
+  margin: 0 var(--margin-xs);
+  padding: var(--padding-xs);
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: ${props =>
+    props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+  border-radius: 16px;
+  display: inline-block;
+  border: 1px solid
+    ${props =>
+      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+
+  &:hover {
+    color: white;
+    background-color: ${props =>
+      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
+    cursor: pointer;
+  }
+`;
+
+const ShareWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const ProductInfo = () => {
   const [user, setUser] = useContext(UserContext);
-  const [productPageState, dispatchProductPage] = useContext(ProductPageContext);
+  const [productPageState, dispatchProductPage] = useContext(
+    ProductPageContext
+  );
 
   const [test, setTest] = useState(false);
   const { socketClient, product, chats } = productPageState;
@@ -166,7 +196,15 @@ const ProductInfo = () => {
   'modal',
   */
 
-  const { id, title, immediatePrice, thumbnailUrl, isAuction, auctionDeadline, seller } = product;
+  const {
+    id,
+    title,
+    immediatePrice,
+    thumbnailUrl,
+    isAuction,
+    auctionDeadline,
+    seller
+  } = product;
 
   const baseURL = apiUrl;
   /**
@@ -241,7 +279,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "로그인이 필요합니다."
+        props: { message: "로그인이 필요합니다." }
       });
     }
     console.log("---------------------");
@@ -260,7 +298,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "구매가 완료된 상품입니다."
+        props: { message: "구매가 완료된 상품입니다." }
       });
     }
     const params = {
@@ -278,7 +316,7 @@ const ProductInfo = () => {
       setModal({
         isOpen: true,
         component: FailModal,
-        message: "최소 경매가격을 확인해주세요."
+        props: { message: "최소 경매가격을 확인해주세요." }
       });
     } else {
       axios
@@ -296,12 +334,16 @@ const ProductInfo = () => {
             setModal({
               isOpen: true,
               component: SuccessModal,
-              message: "입찰 성공"
+              props: { message: "입찰 성공" }
             });
           }
         })
         .catch(e => {
-          setModal({ isOpen: true, component: FailModal, message: "입찰 실패" });
+          setModal({
+            isOpen: true,
+            component: FailModal,
+            props: { message: "입찰 실패" }
+          });
         });
     }
   };
@@ -313,7 +355,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "로그인이 필요합니다."
+        props: { message: "로그인이 필요합니다." }
       });
     }
 
@@ -335,7 +377,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "구매가 완료된 상품입니다."
+        props: { message: "구매가 완료된 상품입니다." }
       });
     }
 
@@ -358,14 +400,14 @@ const ProductInfo = () => {
         setModal({
           isOpen: true,
           component: SuccessModal,
-          message: "즉시 구매 성공"
+          props: { message: "즉시 구매 성공" }
         });
       })
       .catch(() => {
         setModal({
           isOpen: true,
           component: FailModal,
-          message: "즉시 구매 실패"
+          props: { message: "즉시 구매 실패" }
         });
       });
   };
@@ -379,11 +421,17 @@ const ProductInfo = () => {
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <ReportButton isUser={false} targetId={id} />
+          <Badge>판매자 신고</Badge>
+          <Badge secondary>판매자와 대화하기</Badge>
+          {/* <ReportButton isUser={false} targetId={id} /> */}
         </ProductTitle>
+        {/* <RightComponent></RightComponent> */}
         <ProductSeller>
-          <ReportButton isUser={true} targetId={seller.loginId} />
-          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
+          {/* <ReportButton isUser={true} targetId={seller.loginId} />
+          <MessengerCreateButton
+            userId={user.loginId}
+            sellerId={seller.loginId}
+          /> */}
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -392,7 +440,9 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
+            {auctionDeadline
+              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
+              : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
 
@@ -406,10 +456,7 @@ const ProductInfo = () => {
         ) : null}
 
         <ProductBid onSubmit={handleBidSubmit}>
-          <BidTootip>
-            최소:
-            {`${convert2Price(minimumbid)} 원`}
-          </BidTootip>
+          <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
           <BidInput name="bidPrice" placeholder="바로입찰" />
           <BidButton>입찰</BidButton>
         </ProductBid>
@@ -423,7 +470,9 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection width={10}></ShareCollection>
+        <ShareWrapper>
+          <ShareCollection width={10}></ShareCollection>
+        </ShareWrapper>
       </ProductDescBox>
     </ProductInfoStyle>
   );

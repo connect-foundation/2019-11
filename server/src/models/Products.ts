@@ -53,6 +53,9 @@ export class Products {
   @Column()
   isAuction: boolean;
 
+  @Column({ default: false })
+  isEnd: boolean;
+
   @OneToMany(
     type => Images,
     image => image.product
