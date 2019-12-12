@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { convert2Price } from "../../../utils/converter";
 import axios from "axios";
@@ -11,12 +11,7 @@ import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 import UserContext from "../../../context/UserContext";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
-import { getDiffDateTime } from "../../../utils/dateUtil";
 import ShareBox from "../../Molecules/ShareBox";
-
-import MessengerCreateButton from "../../Messenger/CreateButton";
-import userContext from "../../../context/UserContext";
-import ReportButton from "../../Atoms/ReportButton";
 
 const { apiUrl } = apiConfig;
 
@@ -165,18 +160,16 @@ const Badge = styled.div`
   }
 `;
 
-const ShareWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
+// const ShareWrapper = styled.div`
+//   display: flex;
+//   justify-content: flex-end;
+// `;
 
 const ProductInfo = () => {
-  const [user, setUser] = useContext(UserContext);
-  const [productPageState, dispatchProductPage] = useContext(ProductPageContext);
-
-  const [test, setTest] = useState(false);
+  const [user] = useContext(UserContext);
+  const [productPageState] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
-  const [modal, setModal] = useContext(ModalContext);
+  const [setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 

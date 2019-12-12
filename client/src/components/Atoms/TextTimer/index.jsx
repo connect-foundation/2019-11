@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import moment from "moment";
 import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const TextTimerStyle = styled.span``;
 
 const TextTimer = ({ auctionDeadline }) => {
-  const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+  const { d, h, m, s } = getDiffDateTime(auctionDeadline);
   const [deadLine, setDeadLine] = useState(`D-${d} ${h}:${m}:${s}`);
 
   useEffect(() => {

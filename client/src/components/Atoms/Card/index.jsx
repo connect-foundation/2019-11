@@ -49,7 +49,7 @@ const Card = ({ item }) => {
 const Bids = ({ bids }) => {
   return (
     <BidsStyle>
-      <img src={personIcon} />
+      <img src={personIcon} alt={"profile Image"} />
       {bids}
     </BidsStyle>
   );
@@ -69,7 +69,7 @@ const TagContainer = ({ isAuction, date }) => {
 const Thumbnail = ({ thumbnail }) => {
   return (
     <ThumbnailStyle>
-      <img src={thumbnail} />
+      <img src={thumbnail} alt={"thumbnail"} />
     </ThumbnailStyle>
   );
 };

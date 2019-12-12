@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import userContext from "../../../context/UserContext";
 import { NotifyItem } from "./NotifyItem";
 import NotificationContext from "../../../context/NotificationContext";
 
@@ -23,19 +22,14 @@ const InfoDiv = styled.div`
   width: 100%;
 `;
 
-function Component(props) {
-  const [notifications, setNotifications] = useContext(NotificationContext);
+function Component() {
+  const [notifications] = useContext(NotificationContext);
 
   return (
     <BackColor>
       <InfoDiv>
         {notifications.map(noti => {
-          return (
-            <NotifyItem
-              key={`${noti.product.id}${noti.product.title}`}
-              {...noti}
-            />
-          );
+          return <NotifyItem key={`${noti.product.id}${noti.product.title}`} {...noti} />;
         })}
       </InfoDiv>
     </BackColor>

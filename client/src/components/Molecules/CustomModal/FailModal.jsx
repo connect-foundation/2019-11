@@ -60,7 +60,7 @@ const CheckButton = styled.button`
 `;
 
 const FailModal = ({ message }) => {
-  const [modal, setModal] = useContext(ModalContext);
+  const [setModal] = useContext(ModalContext);
   const handleClickCheckBtn = e => {
     setModal(state => ({ ...state, isOpen: false }));
   };

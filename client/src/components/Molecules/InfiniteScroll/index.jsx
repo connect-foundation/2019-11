@@ -42,7 +42,7 @@ const NotFoundSpan = styled.span`
 const renderNotFound = () => {
   return (
     <NotFoundDiv>
-      <img src={NotFoundImage} />
+      <img src={NotFoundImage} alt={"Not Found bee"} />
       <NotFoundSpan>검색 기록이 없습니다 ㅠㅠ</NotFoundSpan>
     </NotFoundDiv>
   );

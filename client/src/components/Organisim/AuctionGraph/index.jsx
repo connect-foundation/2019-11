@@ -1,13 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import ProductPageContext from "../../../context/ProductPageContext";
 
 const AuctionGraphStyle = styled.div`
@@ -37,9 +30,7 @@ const AuctionCountText = styled.span`
 `;
 
 const AuctionGraph = () => {
-  const [productPageState, dispatchProductPage] = useContext(
-    ProductPageContext
-  );
+  const [productPageState] = useContext(ProductPageContext);
 
   const { bids } = productPageState;
 
