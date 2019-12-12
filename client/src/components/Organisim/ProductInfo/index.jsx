@@ -147,7 +147,7 @@ const ProductInfo = () => {
   const [user] = useContext(UserContext);
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
-  const [setModal] = useContext(ModalContext);
+  const [, setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -246,7 +246,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "자신의 상품은 구매가 불가 합니다."
+        props: { message: "자신의 상품은 구매가 불가 합니다." }
       });
     }
     if (isSold) {
@@ -318,7 +318,7 @@ const ProductInfo = () => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "자신의 상품은 구매가 불가 합니다."
+        props: { message: "자신의 상품은 구매가 불가 합니다." }
       });
     }
 
@@ -371,7 +371,7 @@ const ProductInfo = () => {
         <ProductTitle>
           {title}
           <ReportButton targetId={seller.loginId} />
-          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />{" "}
+          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
         </ProductTitle>
         <ProductSeller>
           <ProductDescText size="sm">판매자</ProductDescText>
