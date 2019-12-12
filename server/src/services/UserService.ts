@@ -86,6 +86,37 @@ export class UserService {
     return userResponse;
   }
 
+  public async update(
+    id: number,
+    loginId: string,
+    password: string,
+    name: string,
+    email: string
+  ) {
+    const user = new Users();
+    const { salt, result } = encryptPassword(password);
+    user.id = id;
+    user.loginId = loginId;
+    user.salt = salt;
+    user.password = result;
+    user.name = name;
+    user.email = email;
+
+    const res = await this.userRepository.save(user);
+    const userResponse = new UserDTO();
+    userResponse.id = res.id;
+    userResponse.loginId = res.loginId;
+    userResponse.name = res.name;
+    userResponse.email = res.email;
+    userResponse.mannerPoint = res.mannerPoint;
+    userResponse.profileUrl = res.profileUrl;
+    userResponse.accessToken = res.accessToken;
+    userResponse.refreshToken = res.refreshToken;
+    userResponse.isLogin = true;
+
+    return userResponse;
+  }
+
   public async createAuth(
     loginId: string,
     password: string,

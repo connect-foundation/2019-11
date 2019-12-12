@@ -19,10 +19,15 @@ const CardStyle = styled.div`
   }
 `;
 
-const CardTitle = styled.div`
-  display: block;
-  text-align: center;
+const CardTitle = styled.span`
+  display: inline-block;
   font-size: x-large;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
 `;
 
 const InfoContainer = styled.div`

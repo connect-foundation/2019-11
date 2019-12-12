@@ -49,7 +49,7 @@ export class ItemService {
     const bids = await this.bidRepository.findHotItems();
     let hotProducts = await bids.reduce(async (acc: any, bid) => {
       const result = await acc.then();
-      if (result.length <= 5) {
+      if (result.length < 5) {
         const product = await this.productRepository.findOneAuction(
           bid.product_id
         );
