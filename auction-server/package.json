@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js",
-    "start": "cross-env NODE_ENV=development pm2-runtime index.js",
-    "prod": "pm2-runtime index.js"
+    "start": "cross-env NODE_ENV=production pm2-runtime index.js"
   },
   "keywords": [],
   "author": "",

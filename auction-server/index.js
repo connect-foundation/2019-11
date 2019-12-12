@@ -28,9 +28,9 @@ moment.tz.setDefault("Asia/Seoul");
 
 const pool = mysql.createPool({
   host:
-    process.env.NODE_ENV === "development"
-      ? process.env.DB_DOCKER_COMPOSE_SERVICE_HOST
-      : process.env.DB_HOST,
+    process.env.NODE_ENV === "production"
+      ? process.env.DB_HOST
+      : process.env.DB_DOCKER_COMPOSE_SERVICE_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -39,9 +39,14 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-const socket = require("socket.io-client")("http://localhost:4000");
+const chatURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.CHAT_SERVER
+    : process.env.CHAT_DEV_SERVER;
+const socket = require("socket.io-client")(chatURL);
+console.log(chatURL);
 socket.on("connect", () => {
-  console.log("connected socket");
+  console.log(` => ${chatURL} connected`);
 });
 socket.on("event", data => {});
 socket.on("disconnect", () => {});
