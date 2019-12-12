@@ -64,6 +64,10 @@ const Page = () => {
     }, 1000);
   });
 
+  useEffect(() => {
+    if (!user.id) window.location.href = "/";
+  }, [user]);
+
   const refresh = () => {
     offset.current = 0;
     setHasMore(true);
@@ -111,7 +115,7 @@ const Page = () => {
   const drawer = item => item.map(value => <TradeBox {...value} />);
 
   return onlazy ? (
-    <Spinner />
+    <Spinner text={"로딩 중입니다."} />
   ) : (
     <Container>
       <ContentContainer>

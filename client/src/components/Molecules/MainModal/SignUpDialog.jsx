@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -24,7 +24,8 @@ const Label = styled.label`
 const ToolTip = styled(ReactTooltip)`
   font-family: "BMJUA";
 `;
-const SignUpDialog = ({ close }) => {
+const SignUpDialog = ({ close, isSignUp }) => {
+  const [uid, setUid] = useState(-1);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [retypePwd, setRetypePwd] = useState("");
@@ -36,6 +37,13 @@ const SignUpDialog = ({ close }) => {
   const [isValidateRetypePwd, setIsValidateRetypePwd] = useState(false);
   const [isValidateEmail, setIsValidateEmail] = useState(false);
   const [isValidateName, setIsValidateName] = useState(false);
+  useEffect(() => {
+    if (!isSignUp) {
+      setId(user.loginId);
+      setIsValidateId(true);
+      setUid(user.id);
+    }
+  }, []);
 
   const checkIdIsValidate = text => {
     setIsValidateId(validate.id.test(text));
@@ -105,10 +113,12 @@ const SignUpDialog = ({ close }) => {
       alert(alertMsg);
     } else {
       const body = {
+        uid,
         id,
         password,
         name,
-        email
+        email,
+        signUp: isSignUp
       };
       const result = await postJsonFetch(`${apiUrl}${users}`, {}, body);
       const { msg, user } = result;
@@ -116,10 +126,12 @@ const SignUpDialog = ({ close }) => {
         setUser(user);
         localStorage.setItem("access-token", user.accessToken);
         localStorage.setItem("refresh-token", user.refreshToken);
-        alert("회원가입 완료");
+        isSignUp ? alert("회원가입 완료") : alert("회원정보수정 완료");
         close();
       } else {
-        alert("이미 존재하는 아이디입니다.");
+        isSignUp
+          ? alert("이미 존재하는 아이디입니다.")
+          : alert("회원 정보 수정에 실패하였습니다.");
       }
     }
   };
@@ -135,6 +147,8 @@ const SignUpDialog = ({ close }) => {
             placeholder="ID"
             onKeyUp={handleIdKeyUp}
             onBlur={handleOnBlurIdInput}
+            {...(isSignUp ? undefined : { value: user.loginId })}
+            disabled={!isSignUp}
           />
           <Label>비밀번호</Label>
           <Input
@@ -170,7 +184,7 @@ const SignUpDialog = ({ close }) => {
       </DialogContent>
       <DialogActions>
         <SubmitButton onClick={handleSubmit} type="submit">
-          가입하기
+          {isSignUp ? "가입하기" : "수정완료"}
         </SubmitButton>
       </DialogActions>
     </DialogStyle>

@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   position: relative;
@@ -8,7 +8,7 @@ const Container = styled.div`
   border: none;
   outline: none;
   display: flex;
-`
+`;
 
 const Thumb = styled.span`
   position: absolute;
@@ -25,7 +25,7 @@ const Thumb = styled.span`
 
   transition: transform 0.15s ease-in-out;
   ${props => (props.checked ? `transform: translateX(-40px)` : "")};
-`
+`;
 
 const Bar = styled.div`
   width: 100%;
@@ -33,15 +33,15 @@ const Bar = styled.div`
   background: #dfdfdf;
   border-radius: 7px;
   margin: auto 5px;
-`
+`;
 
 const Component = ({ checked, onClick }) => {
   return (
-    <Container onClick={undefined | onClick}>
+    <Container onClick={onClick || undefined}>
       <Thumb checked={checked} />
       <Bar />
     </Container>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

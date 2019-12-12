@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import userContext from "../../../context/UserContext";
 import DefaultProfileIcon from "../../../assets/default-profile.svg";
+import ModalContext from "../../../context/ModalContext";
+import SignUpDialog from "../MainModal/SignUpDialog";
 
 const InfoDiv = styled.div`
   display: flex;
@@ -83,11 +85,29 @@ const LogoutButtons = styled.button`
 
 function Component(props) {
   const [user, setUser] = useContext(userContext);
+  const [modal, setModal] = useContext(ModalContext);
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    if (localStorage.getItem("access-token")) {
+      setToken(localStorage.getItem("access-token"));
+    }
+  });
+  const handleUpdateDone = () => {
+    setModal(state => ({ ...state, isOpen: false }));
+  };
   const handleLogoutClick = () => {
     localStorage.removeItem("access-token");
     localStorage.removeItem("refresh-token");
     setUser({});
     props.onClick();
+  };
+  const handleUpdateUserInfoClick = () => {
+    setModal({
+      isOpen: true,
+      component: SignUpDialog,
+      message: "",
+      props: { close: handleUpdateDone, isSignUp: false }
+    });
   };
   return (
     <InfoDiv>
@@ -107,7 +127,11 @@ function Component(props) {
         <div>매너지수 : {user.mannerPoint}</div>
       </UserWrap>
       <ButtonWrap>
-        <Buttons>회원정보수정 ></Buttons>
+        {token.includes("kakao_") || token.includes("google_") ? (
+          undefined
+        ) : (
+          <Buttons onClick={handleUpdateUserInfoClick}>회원정보수정 ></Buttons>
+        )}
         <StyledLink to={`/register/`} onClick={props.onClick}>
           상품등록하기 >
         </StyledLink>

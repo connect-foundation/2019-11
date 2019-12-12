@@ -1,45 +1,47 @@
-import React, { useState, useContext } from "react"
-import styled from "styled-components"
+import React, { useState, useContext, useEffect } from "react";
+import styled from "styled-components";
 
-import Footer from "../../components/Atoms/Footer"
-import Progress from "../../components/Organisim/RegisterProgress"
-import SelectCategory from "./template/SelectCategory"
-import InsertInfo from "./template/InsertInfo"
-import Complete from "./template/Complete"
-import AlertDialog from "../../components/Molecules/AlertDialog"
+import Footer from "../../components/Atoms/Footer";
+import Progress from "../../components/Organisim/RegisterProgress";
+import SelectCategory from "./template/SelectCategory";
+import InsertInfo from "./template/InsertInfo";
+import Complete from "./template/Complete";
+import AlertDialog from "../../components/Molecules/AlertDialog";
+import Spinner from "../../components/Atoms/Spinner";
 
-import { base642Blob } from "../../utils/converter"
-import { postJsonFetch } from "../../services/fetchService"
-import { createThumbnail } from "../../services/imageService"
-import { phaseList, defaultData, dialogOption } from "./constants"
-import apiConfig from "../../config/api"
-import pathConfig from "../../config/path"
+import { base642Blob } from "../../utils/converter";
+import { postJsonFetch } from "../../services/fetchService";
+import { createThumbnail } from "../../services/imageService";
+import { phaseList, defaultData, dialogOption } from "./constants";
+import apiConfig from "../../config/api";
+import pathConfig from "../../config/path";
 
-import productContext from "./context"
+import productContext from "./context";
+import UserContext from "../../context/UserContext";
 
-const { apiUrl } = apiConfig
-const { storage, products } = pathConfig
+const { apiUrl } = apiConfig;
+const { storage, products } = pathConfig;
 
-const WIDTH = 80
+const WIDTH = 80;
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
-`
+`;
 
 const TemplateContainer = styled.div`
   width: ${WIDTH}rem;
   box-sizing: border-box;
   margin: 0 auto;
   min-height: 100%;
-`
+`;
 
 const Content = styled.div`
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
-`
+`;
 
 const Window = styled.div`
   display: flex;
@@ -47,34 +49,49 @@ const Window = styled.div`
 
   transform: ${props => `translateX(${-props.phase * WIDTH}rem)`};
   transition: transform 0.2s ease-in-out;
-`
+`;
 
 const registerProduct = async ({ data, callback }) => {
-  const timestamp = new Date().toUTCString()
-  const productsHeader = { "x-timestamp": timestamp }
-  const imageHeader = Object.assign(productsHeader, { "x-auth": "user" })
-  const imageUrl = `${apiUrl}${storage.image}`
-  const productUrl = `${apiUrl}${products}`
+  const timestamp = new Date().toUTCString();
+  const productsHeader = { "x-timestamp": timestamp };
+  const imageHeader = Object.assign(productsHeader, { "x-auth": "user" });
+  const imageUrl = `${apiUrl}${storage.image}`;
+  const productUrl = `${apiUrl}${products}`;
 
   data.thumbnail = await postJsonFetch(imageUrl, imageHeader, {
     uri: await createThumbnail(base642Blob(data.images[0]))
-  })
+  });
 
   for (let i = 0; i < data.images.length; i++)
-    data.images[i] = await postJsonFetch(imageUrl, imageHeader, { uri: data.images[i] })
+    data.images[i] = await postJsonFetch(imageUrl, imageHeader, { uri: data.images[i] });
 
-  callback(await postJsonFetch(productUrl, productsHeader, data))
-}
+  callback(await postJsonFetch(productUrl, productsHeader, data));
+};
 
 const Page = () => {
-  const product = useContext(productContext)
-  product.data = defaultData
+  const [user] = useContext(UserContext);
+  const product = useContext(productContext);
+  product.data = defaultData;
 
-  const [phase, setPhase] = useState(0)
-  const [maxPhase, setMaxPhase] = useState(0)
-  const [open, setOpen] = useState(false)
+  const [phase, setPhase] = useState(0);
+  const [maxPhase, setMaxPhase] = useState(0);
+  const [open, setOpen] = useState(false);
 
-  return (
+  const [onlazy, setOnlazy] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOnlazy(false);
+    }, 1000);
+  });
+
+  useEffect(() => {
+    if (!user.id) window.location.href = "/";
+  }, [user]);
+
+  return onlazy ? (
+    <Spinner text={"Loooooddddddddding"} />
+  ) : (
     <Container>
       <TemplateContainer>
         <Progress maxPhase={maxPhase} phase={phase} list={phaseList} event={setPhase} />
@@ -83,15 +100,15 @@ const Page = () => {
             <SelectCategory
               width={80}
               next={() => {
-                setPhase(1)
-                setMaxPhase(1)
+                setPhase(1);
+                setMaxPhase(1);
               }}
             />
             <InsertInfo
               width={80}
               next={() => {
-                setPhase(2)
-                setMaxPhase(2)
+                setPhase(2);
+                setMaxPhase(2);
               }}
               registItem={() => setOpen(true)}
             />
@@ -111,7 +128,7 @@ const Page = () => {
         undefined
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

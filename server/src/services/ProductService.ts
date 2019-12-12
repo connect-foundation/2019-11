@@ -136,7 +136,7 @@ export class ProductsService {
     product.soldDate = soldDate;
     product.buyerId = buyerId;
     const check = await this.productRepository.checkSold(productId);
-    if (check) {
+    if (check && check.seller.id !== buyerId) {
       return await this.productRepository.update(product);
     } else {
       return false;

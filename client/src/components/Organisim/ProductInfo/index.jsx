@@ -278,7 +278,18 @@ const ProductInfo = () => {
         props: { message: "로그인이 필요합니다." }
       });
     }
+    console.log("---------------------");
+    console.log(user.loginId);
+    console.log(seller.loginId);
+    console.log(user.loginId === seller.loginId);
 
+    if (user.loginId === seller.loginId) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "자신의 상품은 구매가 불가 합니다."
+      });
+    }
     if (isSold) {
       return setModal({
         isOpen: true,
@@ -341,6 +352,20 @@ const ProductInfo = () => {
         isOpen: true,
         component: FailModal,
         props: { message: "로그인이 필요합니다." }
+      });
+    }
+
+    console.log("---------------------");
+    console.log(seller);
+    console.log(user.loginId);
+    console.log(seller.loginId);
+    console.log(user.loginId === seller.loginId);
+
+    if (user.loginId === seller.loginId) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        message: "자신의 상품은 구매가 불가 합니다."
       });
     }
 
