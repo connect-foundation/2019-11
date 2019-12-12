@@ -40,7 +40,8 @@ const user = {
   password: process.env.DAITNU_PASSWORD
 }
 
-export const mailService = (toEmail, content, isSeller, isSold) => {
+const mailService = (toEmail, content, isSeller, isSold) => {
+  if (!toEmail) return;
   // text html 택1 (html이 우선순위 높음)
   const mail = {
     to: toEmail,
@@ -49,7 +50,7 @@ export const mailService = (toEmail, content, isSeller, isSold) => {
   }
 
   const instance = axios.create({
-    baseURL: "https://v1.daitnu.com",
+    baseURL: process.env.MAIL_BASE,
     headers: {
       "content-type": "application/json",
       Accept: "application/json"
@@ -84,4 +85,12 @@ export const mailService = (toEmail, content, isSeller, isSold) => {
   }
 
   run()
+}
+
+export const sendMail = (pool, userid, title, isSeller, isSold) => {
+  pool.query('select email from users where id = ?', [userid],
+    (err, row, field) => {
+      if (!row) return;
+      mailService(row[0].email, title, isSeller, isSold)
+    })
 }
