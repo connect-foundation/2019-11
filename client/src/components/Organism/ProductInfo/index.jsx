@@ -153,7 +153,7 @@ const ProductInfo = () => {
   const [user] = useContext(UserContext);
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
-  const [, setModal] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -385,8 +385,16 @@ const ProductInfo = () => {
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <ReportButton userId={seller.id} productId={id} text={"판매자 신고"} />
-          <MessengerCreateButton userId={user.id} sellerId={seller.id} text={"판매자와 대화하기"} />
+          <ReportButton
+            userId={seller.id}
+            productId={id}
+            text={"판매자 신고"}
+          />
+          <MessengerCreateButton
+            userId={user.id}
+            sellerId={seller.id}
+            text={"판매자와 대화하기"}
+          />
         </ProductTitle>
         <ProductSeller>
           <ProductDescText size="sm">판매자</ProductDescText>
@@ -394,25 +402,30 @@ const ProductInfo = () => {
             {seller.name}
           </ProductDescText>
         </ProductSeller>
+
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
+            {auctionDeadline &&
+              moment(auctionDeadline).format("YYYY년 MM월 DD일")}
           </ProductDescText>
         </ProductDueDate>
+
+        <ProductDueDate>
+          <ProductDescText size="sm">남은 시간</ProductDescText>
+          <ProductDescText primary bold>
+            {<TextTimer auctionDeadline={auctionDeadline} /> || "비경매 상품"}
+          </ProductDescText>
+        </ProductDueDate>
+
         {isAuction ? (
-          <ProductDueDate>
-            <ProductDescText size="sm">남은 시간</ProductDescText>
-            <ProductDescText primary bold>
-              {<TextTimer auctionDeadline={auctionDeadline} /> || "비경매 상품"}
-            </ProductDescText>
-          </ProductDueDate>
+          <ProductBid onSubmit={handleBidSubmit}>
+            <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
+            <BidInput name="bidPrice" placeholder="바로입찰" />
+            <BidButton>입찰</BidButton>
+          </ProductBid>
         ) : null}
-        <ProductBid onSubmit={handleBidSubmit}>
-          <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
-          <BidInput name="bidPrice" placeholder="바로입찰" />
-          <BidButton>입찰</BidButton>
-        </ProductBid>
+
         <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
           <PurchasePrice>
             즉시 구매가
@@ -423,7 +436,11 @@ const ProductInfo = () => {
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
         <ShareWrapper>
-          <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
+          <ShareBox
+            width={10}
+            url={apiConfig.url + `/products/${id}`}
+            object={product}
+          />
         </ShareWrapper>
       </ProductDescBox>
     </ProductInfoStyle>
