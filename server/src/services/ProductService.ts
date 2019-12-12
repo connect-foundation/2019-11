@@ -124,7 +124,12 @@ export class ProductsService {
   }
 
   /* Patch */
-  public async update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
+  public async update(
+    productId: number,
+    soldPrice: number,
+    soldDate: string,
+    buyerId: number
+  ) {
     const product = new Products();
     product.id = productId;
     product.soldPrice = soldPrice;

@@ -72,7 +72,7 @@ const ChatBox = ({ productId, user }) => {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "로그인이 필요합니다."
+        props: { message: "로그인이 필요합니다." }
       });
     }
 

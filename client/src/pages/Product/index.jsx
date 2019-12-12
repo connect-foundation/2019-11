@@ -11,6 +11,8 @@ import apiConfig from "../../config/api";
 import io from "socket.io-client";
 import ProductPageContext from "../../context/ProductPageContext";
 import { convert2Price } from "../../utils/converter";
+import { NotifyItem } from "../../components/Molecules/NotifyList/NotifyItem";
+import NotificationContext from "../../context/NotificationContext";
 
 const { chatUrl } = apiConfig;
 
@@ -51,100 +53,6 @@ const Loading = styled.div`
   align-items: center;
   border: 1px solid red;
 `;
-
-const chatList = [
-  {
-    type: "message",
-    id: "mockData",
-    src: "https://i.pravatar.cc/150?img=50",
-    text: "만나서 반갑습니다. 이 제품은 제가 가져가도록 하겠습니다.",
-    key: "1"
-  },
-  {
-    type: "message",
-    id: "masigun",
-    src: "https://i.pravatar.cc/150?img=51",
-    text:
-      "애플 스마트 워치 3세대 제품 예전 부터 갖고 싶었던 제품인데, 제가 구매하겠습니다. 수고하세요",
-    key: "2"
-  },
-  {
-    type: "message",
-    id: "chsch1028",
-    src: "https://i.pravatar.cc/150?img=1",
-    text: "만나서 반갑습니다. 이 제품은 제가 가져가도록 하겠습니다.",
-    key: "3"
-  },
-  {
-    type: "message",
-    id: "paldaGoalSupan",
-    src: "https://i.pravatar.cc/150?img=2",
-    text:
-      "애플 스마트 워치 3세대 제품 예전 부터 갖고 싶었던 제품인데, 제가 구매하겠습니다. 수고하세요",
-    key: "4"
-  },
-  {
-    type: "message",
-    id: "JesseJacobs",
-    src: "https://i.pravatar.cc/150?img=3",
-    text: "경매 고고",
-    key: "5"
-  },
-  {
-    type: "message",
-    id: "chsch1028",
-    src: "https://i.pravatar.cc/150?img=4",
-    text: "음..........아ㅏ.....오....에...이...우....",
-    key: "6"
-  },
-  {
-    type: "message",
-    id: "BrianBanks",
-    src: "https://i.pravatar.cc/150?img=5",
-    text: "40,000원에 사면 손해 일까요????",
-    key: "7"
-  },
-  {
-    type: "alert",
-    text: "hwangSJ님께서 50,000원에 구매하셨습니다.",
-    key: "8"
-  },
-  {
-    type: "message",
-    id: "SeoJunBae",
-    src: "https://i.pravatar.cc/150?img=6",
-    text: "저는 데이터 베이스 디자인을 하고 있습니다. 너무 어렵고 힘듭니다.",
-    key: "9"
-  },
-  {
-    type: "message",
-    id: "HwangSeonJun",
-    src: "https://i.pravatar.cc/150?img=7",
-    text: "공유 버튼 관련해서 고민되는 내용이 있네요.",
-    key: "10"
-  },
-  {
-    type: "message",
-    id: "HongSeongPyo",
-    src: "https://i.pravatar.cc/150?img=8",
-    text: "오늘은 월요일이라 피곤하네요.",
-    key: "11"
-  },
-  {
-    type: "message",
-    id: "baegopa",
-    src: "https://i.pravatar.cc/150?img=9",
-    text: "오늘 한끼 두끼 떡볶이를 먹었습니다. 내일은 뭐 먹을까요??",
-    key: "12"
-  },
-  {
-    type: "message",
-    id: "JJajangMyeon",
-    src: "https://i.pravatar.cc/150?img=10",
-    text: "화요일은 짜장면을 먹어보면 어떨까요?? 맛있겠다.",
-    key: "13"
-  }
-];
 
 const initialProductPageState = {
   error: null,
@@ -191,6 +99,7 @@ const ProductPage = ({ match }) => {
   );
 
   const [user, setUser] = useContext(UserContext);
+  const [notifications, setNotifications] = useContext(NotificationContext);
 
   const productId = match.params.id;
 
@@ -214,14 +123,15 @@ const ProductPage = ({ match }) => {
   );
 
   useEffect(() => {
+    if (Object.keys(user).length === 0) return;
     const socket = io(chatUrl);
     socket.on("connect", () => {
       dispatchProductPage({ type: "SET_SOCKET", socket });
-
+      console.log(user);
       socket.emit("joinRoom", {
         roomId: productId,
         sessionId: socket.id,
-        userId: user.loginId
+        user: user
       });
     });
 
@@ -267,6 +177,10 @@ const ProductPage = ({ match }) => {
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
 
+    socket.on("auctionResult", ({ type, product }) => {
+      setNotifications(notis => [...notis, { type, product }]);
+    });
+
     socket.on("joinRoom", message => {
       // console.log(message);
     });
@@ -274,10 +188,10 @@ const ProductPage = ({ match }) => {
     socket.on("disconnect", reason => {
       // console.log(reason);
     });
-  }, [chatUrl, dispatchProductPage]);
+  }, [user, chatUrl, dispatchProductPage]);
 
   return productPageState.loading ? (
-    <Spinner />
+    <Spinner text="상품 준비중" />
   ) : (
     <ProductPageContext.Provider
       value={[productPageState, dispatchProductPage]}

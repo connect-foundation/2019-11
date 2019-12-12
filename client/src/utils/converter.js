@@ -29,8 +29,8 @@ export const dateDiff2Str = date => {
 };
 
 export const term2ReaminString = (start, end) => {
-  const sDate = new Date(start)
-  const eDate = new Date(end)
+  const sDate = new Date(start);
+  const eDate = new Date(end);
   let diff = eDate - sDate;
 
   const y = Math.floor(diff / 1000 / 60 / 60 / 24 / 365);
@@ -50,11 +50,14 @@ export const term2ReaminString = (start, end) => {
 
   const s = Math.floor(diff / 1000);
 
-  if (y) return `${y} 년 남음`
-  else if (M) return `${M} 개월 남음`
-  if (d || h || m || s) return `${d ? `${d}일` : ""} ${h ? `${h}시간` : ''} ${m ? `${m}분` : ''} ${s ? `${s}초` : ''} 후 종료`
-  return `종료된 상품 입니다.`
-}
+  if (y) return `${y} 년 남음`;
+  else if (M) return `${M} 개월 남음`;
+  if (d || h || m || s)
+    return `${d ? `${d}일` : ""} ${h ? `${h}시간` : ""} ${m ? `${m}분` : ""} ${
+      s ? `${s}초` : ""
+    } 후 종료`;
+  return `종료된 상품 입니다.`;
+};
 
 export const dateDiff2Dday = date => {
   const gap = new Date().getTime() - new Date(date).getTime();
@@ -62,7 +65,7 @@ export const dateDiff2Dday = date => {
   return Math.floor(gap / (1000 * 60 * 60 * 24)) * -1;
 };
 
-export const base642Blob = (base64) => {
+export const base642Blob = base64 => {
   const byteString = window.atob(base64);
 
   // write the bytes of the string to an ArrayBuffer
@@ -85,8 +88,16 @@ export const keyValue2Str = obj => {
   return arr.join("&");
 };
 
-export const convert2Price = number => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export const convert2Price = (number = 0) =>
+  number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-export const sec2date = secs => new Date(secs)
+export const sec2date = secs => new Date(secs);
 
-export default { dateDiff2Str, dateDiff2Dday, base642Blob, convert2Price, sec2date, keyValue2Str }
+export default {
+  dateDiff2Str,
+  dateDiff2Dday,
+  base642Blob,
+  convert2Price,
+  sec2date,
+  keyValue2Str
+};
