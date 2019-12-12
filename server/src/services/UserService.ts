@@ -7,9 +7,7 @@ import { UserDTO } from "../dto/UserDTO";
 
 @Service()
 export class UserService {
-  constructor(
-    @InjectRepository() private readonly userRepository: UserRepository
-  ) {}
+  constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
 
   /** GET */
   public find() {
@@ -18,6 +16,24 @@ export class UserService {
 
   public async findOne(loginId: string) {
     const result = await this.userRepository.findOne(loginId);
+    if (result !== undefined) {
+      const userResponse = new UserDTO();
+      userResponse.id = result.id;
+      userResponse.loginId = result.loginId;
+      userResponse.name = result.name;
+      userResponse.email = result.email;
+      userResponse.mannerPoint = result.mannerPoint;
+      userResponse.profileUrl = result.profileUrl;
+      userResponse.accessToken = result.accessToken;
+      userResponse.refreshToken = result.refreshToken;
+      userResponse.isLogin = true;
+      return userResponse;
+    }
+    return result;
+  }
+
+  public async findOnebyIdx(id: number) {
+    const result = await this.userRepository.findOnebyIdx(id);
     if (result !== undefined) {
       const userResponse = new UserDTO();
       userResponse.id = result.id;
@@ -86,13 +102,7 @@ export class UserService {
     return userResponse;
   }
 
-  public async update(
-    id: number,
-    loginId: string,
-    password: string,
-    name: string,
-    email: string
-  ) {
+  public async update(id: number, loginId: string, password: string, name: string, email: string) {
     const user = new Users();
     const { salt, result } = encryptPassword(password);
     user.id = id;
@@ -161,11 +171,7 @@ export class UserService {
   }
 
   /** PUT, PATCH */
-  public async updateToken(
-    loginId: string,
-    accessToken: string,
-    refreshToken: string
-  ) {
+  public async updateToken(loginId: string, accessToken: string, refreshToken: string) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
     const user = await this.userRepository.findOne(loginId);
     if (user === undefined) {

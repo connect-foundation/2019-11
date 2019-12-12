@@ -39,7 +39,7 @@ const TradeContents = styled.div`
   border: solid 1px;
   border-radius: 5px;
   &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
+    display: none !important;
   }
   margin-bottom: 0.5rem;
 `;
@@ -73,6 +73,7 @@ function TradeList() {
       .then(result => {
         let resultData = result[0].reduce((acc, ele) => {
           let data = {
+            id: ele.id,
             title: ele.title,
             thumbnail: ele.thumbnailUrl,
             status: ele.seller.id === user.id ? "판매" : "구매",
@@ -80,7 +81,13 @@ function TradeList() {
             solddate: ele.soldDate,
             registdate: ele.registerDate,
             hopeprice: ele.hopePrice,
-            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
+            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2),
+
+            userId: user.id,
+            targetId: ele.seller.id === user.id ? ele.buyerId : ele.seller.id,
+
+            sellerCheck: ele.sellerCheck,
+            buyerCheck: ele.buyerCheck
           };
           acc.push(data);
           return acc;
@@ -111,8 +118,6 @@ function TradeList() {
   useEffect(() => {
     getData(isSale, isBuy, dayago, page);
   }, [dayago, isBuy, isSale, user.id]);
-  // const drawer = item => item.map(value => <TradeListBox {...value} />);
-  //랜더링.
 
   return (
     <Wraper>

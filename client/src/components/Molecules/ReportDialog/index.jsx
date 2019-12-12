@@ -35,9 +35,9 @@ function Components(props) {
       alert("내용을 입력해주세요.");
     } else {
       if (e.target.type.value === "user") {
-        firebase.writeUserReport(props.targetId, e.target.reportText.value); //방번호, 유저번호
+        firebase.writeUserReport(props.userId, e.target.reportText.value); //방번호, 유저번호
       } else {
-        firebase.writeProductReport(props.targetId, e.target.reportText.value); //방번호, 상품번호
+        firebase.writeProductReport(props.productId, e.target.reportText.value); //방번호, 상품번호
       }
       e.target.reportText.value = "";
       alert("의견 감사합니다.");
@@ -48,11 +48,11 @@ function Components(props) {
   let ReportContent = (
     <ReportContainer>
       <div>
-        <select name="type">
-          <option hidden selected disabled value="">
-            유형을 골라주세요.
+        <select name="type" defaultValue={""}>
+          <option value="" disabled hidden>
+            유형을 선택해 주세요
           </option>
-          <option value="user">판매자가 이상해요</option>
+          <option value="user">유저가 이상해요</option>
           <option value="product">물품이 이상해요</option>
         </select>
       </div>

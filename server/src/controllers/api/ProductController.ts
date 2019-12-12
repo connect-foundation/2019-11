@@ -118,4 +118,14 @@ export class ProductController {
 
     return result;
   }
+
+  @Post("/rating")
+  public async rating(
+    @BodyParam("targetUserId") targetUserId: number,
+    @BodyParam("productId") productId: number,
+    @BodyParam("point") point: number,
+    @BodyParam("isSeller") isSeller: boolean
+  ) {
+    return await this.productService.rating(targetUserId, productId, point, isSeller);
+  }
 }
