@@ -54,6 +54,7 @@ const HostRecentMsg = styled.span`
 
 function RoomElement(props) {
   const [name, setName] = useState("nonamed");
+  const [point, setPoint] = useState(0);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
@@ -72,6 +73,7 @@ function RoomElement(props) {
       .then(result => {
         if (result.name !== "NotFoundError") {
           setName(result.name);
+          setPoint(result.mannerPoint);
           setProfile(result.profileUrl);
         }
       });
@@ -82,7 +84,9 @@ function RoomElement(props) {
         <img src={profile === null ? DefaultProfileIcon : profile} />
       </Img>
       <RoomContent>
-        <HostName>{name}</HostName>
+        <HostName>
+          {name} point:{point}
+        </HostName>
         <div>
           <HostRecentMsg>{props.RecentMsg}</HostRecentMsg>
         </div>

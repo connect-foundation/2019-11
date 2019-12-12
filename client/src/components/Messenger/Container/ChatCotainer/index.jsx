@@ -121,6 +121,7 @@ function ChatContainer(props) {
   const [chat, setChat] = useState({});
   const [opponentUserName, setOpponentUserName] = useState("nonamed");
   const [user] = useContext(userContext);
+  const [point, setPoint] = useState(0);
 
   let USERID = user.id;
 
@@ -149,6 +150,7 @@ function ChatContainer(props) {
       .then(result => {
         if (result.name !== "NotFoundError") {
           setOpponentUserName(result.name);
+          setPoint(result.mannerPoint);
         }
       });
     firebase.getRoomChat(props.roomNumber).on("value", listener);
@@ -161,7 +163,9 @@ function ChatContainer(props) {
       <MessengerChatHead>
         <BackButton onClick={props.clickback}>&lt;</BackButton>
         <HostName>
-          <span>{opponentUserName}</span>
+          <span>
+            {opponentUserName} 포인트:{point}
+          </span>
         </HostName>
       </MessengerChatHead>
       <MessengerChatScroll ref={messengerBodyRef}>
