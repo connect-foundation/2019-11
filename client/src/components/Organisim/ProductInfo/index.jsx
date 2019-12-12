@@ -10,7 +10,6 @@ import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import SuccessModal from "../../Molecules/CustomModal/SuccessModal";
 import UserContext from "../../../context/UserContext";
-import ShareBox from "../../Molecules/ShareBox";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
 import { getDiffDateTime } from "../../../utils/dateUtil";
@@ -166,6 +165,11 @@ const Badge = styled.div`
       props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
     cursor: pointer;
   }
+`;
+
+const ShareWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const ProductInfo = () => {
@@ -466,7 +470,9 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection width={10}></ShareCollection>
+        <ShareWrapper>
+          <ShareCollection width={10}></ShareCollection>
+        </ShareWrapper>
       </ProductDescBox>
     </ProductInfoStyle>
   );

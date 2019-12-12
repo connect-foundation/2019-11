@@ -93,11 +93,11 @@ export const NotifyItem = props => {
       )}
       <NotifyContent success>
         <NotifyLeftContent>
-          <NotifyImage src="https://picsum.photos/id/170/400/400"></NotifyImage>
+          <NotifyImage src={product && product.thumbnailUrl}></NotifyImage>
         </NotifyLeftContent>
         <NotifyRightContent>
           <NotifyTitle>{product && product.title}</NotifyTitle>
-          <NotifyDesc>{type && AUCTION_TYPE_MAPPER(type)}</NotifyDesc>
+          <NotifyDesc>{type && AUCTION_TYPE_MAPPER[type]}</NotifyDesc>
         </NotifyRightContent>
       </NotifyContent>
     </NotifyItemStyle>

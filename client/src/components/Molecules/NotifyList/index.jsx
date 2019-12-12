@@ -29,10 +29,13 @@ function Component(props) {
   return (
     <BackColor>
       <InfoDiv>
-        <NotifyItem />
-        <NotifyItem success />
         {notifications.map(noti => {
-          return <NotifyItem {...noti} />;
+          return (
+            <NotifyItem
+              key={`${noti.product.id}${noti.product.title}`}
+              {...noti}
+            />
+          );
         })}
       </InfoDiv>
     </BackColor>
