@@ -124,13 +124,6 @@ export class ProductController {
     @BodyParam("point") point: number,
     @BodyParam("isSeller") isSeller: boolean
   ) {
-    console.log("-----------------");
-    console.log(targetUserId);
-    console.log(productId);
-    console.log(point);
-
-    console.log(isSeller);
-
     return await this.productService.rating(targetUserId, productId, point, isSeller);
   }
 }

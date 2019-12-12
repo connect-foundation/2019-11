@@ -149,9 +149,15 @@ export class ProductsService {
     let productInfo = await this.productRepository.findOne(productId);
     if (productInfo) {
       if (isSeller) {
+        if (productInfo.sellerCheck === true) {
+          return false;
+        }
         productInfo.sellerCheck = true;
         await this.productRepository.update(productInfo);
       } else {
+        if (productInfo.buyerCheck === true) {
+          return false;
+        }
         productInfo.buyerCheck = true;
         await this.productRepository.update(productInfo);
       }

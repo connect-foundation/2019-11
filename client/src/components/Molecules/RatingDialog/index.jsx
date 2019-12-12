@@ -14,8 +14,6 @@ const ReportContainer = styled.div`
 
 function Components(props) {
   function ReportSubmit(e) {
-    console.log("111111---------------");
-    console.log(props.productId);
     e.preventDefault();
     if (e.target.rate.value === "") {
       return alert("점수를 선택해 주세요.");
