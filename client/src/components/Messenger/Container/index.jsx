@@ -62,7 +62,7 @@ function Container(props) {
   const [RoomNumber, setRoomNumber] = useState(0);
   const [RoomUserId, setRoomUserId] = useState(0);
 
-  const [user, setUser] = useContext(userContext);
+  const [user] = useContext(userContext);
 
   let USERID = user.loginId;
 
@@ -88,29 +88,27 @@ function Container(props) {
         setRoomList(roomNumbers);
       }
     });
-    return firebase
-      .getRoomList(String(USERID))
-      .off("value", function listener(result) {
-        if (result.val() !== null) {
-          let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-            if (result.val()[ele]["recent"] !== undefined) {
-              acc.push({
-                RoomNumber: ele,
-                RecentMeg: result.val()[ele]["recent"]["text"],
-                opponentUserId: getOpponentUserId(result.val()[ele])
-              });
-            } else {
-              acc.push({
-                RoomNumber: ele,
-                RecentMeg: "",
-                opponentUserId: getOpponentUserId(result.val()[ele])
-              });
-            }
-            return acc;
-          }, []);
-          setRoomList(roomNumbers);
-        }
-      });
+    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
+      if (result.val() !== null) {
+        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
+          if (result.val()[ele]["recent"] !== undefined) {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: result.val()[ele]["recent"]["text"],
+              opponentUserId: getOpponentUserId(result.val()[ele])
+            });
+          } else {
+            acc.push({
+              RoomNumber: ele,
+              RecentMeg: "",
+              opponentUserId: getOpponentUserId(result.val()[ele])
+            });
+          }
+          return acc;
+        }, []);
+        setRoomList(roomNumbers);
+      }
+    });
   }, [isRoomList]);
 
   function clickRoomList(flag) {
@@ -118,18 +116,12 @@ function Container(props) {
   }
   const writeChat = e => {
     e.preventDefault();
-    firebase.writeChat(
-      e.target.roomNumber.value,
-      USERID,
-      e.target.messengerText.value
-    ); //방번호, 유저번호
+    firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value); //방번호, 유저번호
     e.target.messengerText.value = "";
   };
 
   function getOpponentUserId(object) {
-    return Object.keys(object).filter(
-      word => word !== String(USERID) && word !== "recent"
-    );
+    return Object.keys(object).filter(word => word !== String(USERID) && word !== "recent");
   }
   let initMessenger = () => {
     return isRoomList ? (
@@ -146,7 +138,7 @@ function Container(props) {
               판매자와 소통을 시작해보세요!
               <br />
             </div>
-            <img src={FoundImg}></img>
+            <img src={FoundImg} alt={"Image Found"}></img>
           </MessengerInfo>
         ) : (
           RoomList.map(value => {

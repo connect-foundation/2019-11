@@ -1,6 +1,6 @@
-export const strEmpty = (str) => !str || str.trim().length == 0
+export const strEmpty = (str) => !str || str.trim().length === 0
 
-export const idxNotSelected = (idx) => idx == -1
+export const idxNotSelected = (idx) => idx === -1
 
 export const isArrayEmpty = (list) => !list.length
 

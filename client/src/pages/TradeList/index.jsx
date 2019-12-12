@@ -5,7 +5,6 @@ import ButtonDays from "../../components/Atoms/DayButton";
 import Header from "../../components/Atoms/Header";
 import Footer from "../../components/Atoms/Footer";
 import TradeListBox from "../../components/Organisim/TradeListBox";
-import InfiniteScroll from "../../components/Molecules/InfiniteScroll";
 
 import userContext from "../../context/UserContext";
 
@@ -44,13 +43,13 @@ const TradeContents = styled.div`
   }
   margin-bottom: 0.5rem;
 `;
-function TradeList(props) {
+function TradeList() {
   const [data, setData] = useState([]);
   const [isSale, setIsSale] = useState(true);
   const [isBuy, setIsBuy] = useState(true);
   const [dayago, setDayago] = useState(1);
   const [page, setPage] = useState(1);
-  const [user, setUser] = useContext(userContext);
+  const [user] = useContext(userContext);
 
   function getData(sale, buy, day, page) {
     let url = apiUrl + logfilter;
@@ -112,7 +111,7 @@ function TradeList(props) {
   useEffect(() => {
     getData(isSale, isBuy, dayago, page);
   }, [dayago, isBuy, isSale, user.id]);
-  const drawer = item => item.map(value => <TradeListBox {...value} />);
+  // const drawer = item => item.map(value => <TradeListBox {...value} />);
   //랜더링.
 
   return (

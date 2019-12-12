@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
 import Chat from "./Chat";
 import ChatSend from "./ChatSend";
@@ -54,12 +54,10 @@ const ChatAlertWithBid = styled.div`
 
 const ChatBox = ({ productId, user }) => {
   const chatBodyRef = useRef();
-  const [productPageState, dispatchProductPage] = useContext(
-    ProductPageContext
-  );
+  const [productPageState] = useContext(ProductPageContext);
   const { socketClient, chats } = productPageState;
 
-  const [modal, setModal] = useContext(ModalContext);
+  const [setModal] = useContext(ModalContext);
 
   useEffect(() => {
     chatBodyRef.current.scrollTo(0, chatBodyRef.current.scrollHeight);

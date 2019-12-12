@@ -28,7 +28,7 @@ const SignUpDialog = ({ close, isSignUp }) => {
   const [uid, setUid] = useState(-1);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [retypePwd, setRetypePwd] = useState("");
+  const [setRetypePwd] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [user, setUser] = useContext(UserContext);
@@ -51,8 +51,7 @@ const SignUpDialog = ({ close, isSignUp }) => {
 
   const checkPwdIsValidate = text => {
     const { length, alphabet, number } = validate.password;
-    if (!length.test(text) || !alphabet.test(text) || !number.test(text))
-      setIsValidatePwd(false);
+    if (!length.test(text) || !alphabet.test(text) || !number.test(text)) setIsValidatePwd(false);
     else setIsValidatePwd(true);
   };
 
@@ -90,11 +89,7 @@ const SignUpDialog = ({ close, isSignUp }) => {
 
   const checkIsValidateAll = () => {
     return (
-      isValidateId &&
-      isValidatePwd &&
-      isValidateRetypePwd &&
-      isValidateName &&
-      isValidateEmail
+      isValidateId && isValidatePwd && isValidateRetypePwd && isValidateName && isValidateEmail
     );
   };
 
@@ -103,11 +98,9 @@ const SignUpDialog = ({ close, isSignUp }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (!checkIsValidateAll()) {
-      const alertMsg = `다음 입력이 올바르지 않습니다.\n${
-        !isValidateId ? "- 아이디\n" : ""
-      }${!isValidatePwd ? "- 비밀번호\n" : ""}${
-        !isValidateRetypePwd ? "- 비밀번호 재입력\n" : ""
-      }${!isValidateName ? "- 이름\n" : ""}${
+      const alertMsg = `다음 입력이 올바르지 않습니다.\n${!isValidateId ? "- 아이디\n" : ""}${
+        !isValidatePwd ? "- 비밀번호\n" : ""
+      }${!isValidateRetypePwd ? "- 비밀번호 재입력\n" : ""}${!isValidateName ? "- 이름\n" : ""}${
         !isValidateEmail ? "- 이메일" : ""
       }`;
       alert(alertMsg);
@@ -129,9 +122,7 @@ const SignUpDialog = ({ close, isSignUp }) => {
         isSignUp ? alert("회원가입 완료") : alert("회원정보수정 완료");
         close();
       } else {
-        isSignUp
-          ? alert("이미 존재하는 아이디입니다.")
-          : alert("회원 정보 수정에 실패하였습니다.");
+        isSignUp ? alert("이미 존재하는 아이디입니다.") : alert("회원 정보 수정에 실패하였습니다.");
       }
     }
   };
@@ -166,19 +157,9 @@ const SignUpDialog = ({ close, isSignUp }) => {
             onKeyUp={handleRetypePwdKeyUp}
           />
           <Label>이름</Label>
-          <Input
-            type="text"
-            name="name"
-            placeholder="NAME"
-            onKeyUp={handleNameKeyUp}
-          />
+          <Input type="text" name="name" placeholder="NAME" onKeyUp={handleNameKeyUp} />
           <Label>이메일</Label>
-          <Input
-            type="email"
-            name="email"
-            placeholder="E-MAIL"
-            onKeyUp={handleEmailKeyUp}
-          />
+          <Input type="email" name="email" placeholder="E-MAIL" onKeyUp={handleEmailKeyUp} />
           <ToolTip place="right" effect="solid" />
         </InputContainer>
       </DialogContent>

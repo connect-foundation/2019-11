@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useReducer } from "react";
+import React, { useEffect, useContext, useReducer } from "react";
 import styled from "styled-components";
 import ProductInfo from "../../components/Organisim/ProductInfo";
 import ChatBox from "../../components/Organisim/Chat/ChatBox";
@@ -11,7 +11,6 @@ import apiConfig from "../../config/api";
 import io from "socket.io-client";
 import ProductPageContext from "../../context/ProductPageContext";
 import { convert2Price } from "../../utils/converter";
-import { NotifyItem } from "../../components/Molecules/NotifyList/NotifyItem";
 import NotificationContext from "../../context/NotificationContext";
 
 const { chatUrl } = apiConfig;
@@ -30,10 +29,6 @@ const MainColumn = styled.div`
   overflow-x: hidden;
 `;
 
-const TextStyle = styled.p`
-  font-size: ${props => props.size};
-`;
-
 const Section = styled.section`
   min-height: 400px;
   margin-bottom: var(--margin-xl);
@@ -45,14 +40,14 @@ const ChatColumn = styled.div`
   width: 400px;
 `;
 
-const Loading = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid red;
-`;
+// const Loading = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   border: 1px solid red;
+// `;
 
 const initialProductPageState = {
   error: null,
@@ -89,8 +84,7 @@ const productPageReducer = (state, action) => {
   }
 };
 
-const DEFAULT_PROFILE_URL =
-  "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
+const DEFAULT_PROFILE_URL = "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
 
 const ProductPage = ({ match }) => {
   const [productPageState, dispatchProductPage] = useReducer(
@@ -98,8 +92,8 @@ const ProductPage = ({ match }) => {
     initialProductPageState
   );
 
-  const [user, setUser] = useContext(UserContext);
-  const [notifications, setNotifications] = useContext(NotificationContext);
+  const [user] = useContext(UserContext);
+  const [setNotifications] = useContext(NotificationContext);
 
   const productId = match.params.id;
 
@@ -116,11 +110,7 @@ const ProductPage = ({ match }) => {
     dispatchProductPage({ tpye: "FETCH_ERROR", error });
   };
 
-  useFetch(
-    `${pathConfig.productsWithBids}/${productId}`,
-    handleFetchSuccess,
-    handleFetchError
-  );
+  useFetch(`${pathConfig.productsWithBids}/${productId}`, handleFetchSuccess, handleFetchError);
 
   useEffect(() => {
     if (Object.keys(user).length === 0) return;
@@ -153,9 +143,7 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님께서 ${convert2Price(
-          bid.bidPrice
-        )}원에 입찰 하셨습니다.`,
+        text: `${sender.name}님께서 ${convert2Price(bid.bidPrice)}원에 입찰 하셨습니다.`,
         key: `${createdAt}.${sender.id}`
       };
 
@@ -168,9 +156,7 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님이 ${convert2Price(
-          sold.soldPrice
-        )}원에 즉시 구매하셨습니다.`,
+        text: `${sender.name}님이 ${convert2Price(sold.soldPrice)}원에 즉시 구매하셨습니다.`,
         key: `${createdAt}.${sender.id}`
       };
 
@@ -193,9 +179,7 @@ const ProductPage = ({ match }) => {
   return productPageState.loading ? (
     <Spinner text="상품 준비중" />
   ) : (
-    <ProductPageContext.Provider
-      value={[productPageState, dispatchProductPage]}
-    >
+    <ProductPageContext.Provider value={[productPageState, dispatchProductPage]}>
       <ProductPageStyle>
         <MainColumn>
           <Section>
