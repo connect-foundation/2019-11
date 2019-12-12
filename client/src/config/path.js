@@ -17,6 +17,7 @@ export default {
   items: {
     category: "/api/items/category",
     hot: "/api/items/hot",
-    deadline: "/api/items/deadline"
+    deadline: "/api/items/deadline",
+    related: "/api/items/related"
   }
-}
+};
