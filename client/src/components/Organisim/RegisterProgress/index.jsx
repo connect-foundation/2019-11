@@ -1,7 +1,7 @@
-import React from "react"
-import styled from "styled-components"
+import React from "react";
+import styled from "styled-components";
 
-import ProgressButton from "./Button"
+import ProgressButton from "./Button";
 
 const Container = styled.div`
   width: 100%;
@@ -13,7 +13,7 @@ const Container = styled.div`
   align-items: center;
 
   margin: auto 0;
-`
+`;
 
 const ButtonDiv = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const ButtonDiv = styled.div`
   outline: none;
   justify-content: space-between;
   z-index: 1;
-`
+`;
 
 const CenterLine = styled.div`
   width: 100%;
@@ -32,16 +32,16 @@ const CenterLine = styled.div`
   position: absolute;
   line-height: 50%;
   box-sizing: border-box;
-`
+`;
 
 const renderProgress = (show, component) => {
-  if (!show) return
-  return component
-}
+  if (!show) return;
+  return component;
+};
 
 const Components = props => {
-  const { phase, maxPhase, list, event } = props
-  let show = phase !== list.length - 1
+  const { phase, maxPhase, list, event } = props;
+  let show = phase !== list.length - 1;
 
   return (
     <Container>
@@ -52,22 +52,23 @@ const Components = props => {
             {list.map((value, idx) => {
               return (
                 <ProgressButton
+                  key={idx}
                   disabled={idx > maxPhase}
                   text={value}
                   active={phase === idx}
                   onClick={ev => {
-                    if (idx <= maxPhase) event(idx)
-                    else alert("작성되지 않은 정보가 있습니다.")
+                    if (idx <= maxPhase) event(idx);
+                    else alert("작성되지 않은 정보가 있습니다.");
                   }}
                 />
-              )
+              );
             })}
           </ButtonDiv>
           <CenterLine />
         </>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Components
+export default Components;
