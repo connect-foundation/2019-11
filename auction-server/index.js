@@ -126,7 +126,7 @@ cron.schedule("*/10 * * * * *", () => {
           bids.forEach(bid => {
             // 2-3. 입찰한 유저들에게 경매(상품)이 즉시 구매로 팔렸음을 알린다.(mongo, socket.io)
             socket.emit("auctionResult", {
-              userId: bid.id,
+              userId: bid.user_id,
               type: "AUCTION_END_BY_PURCHASE",
               product: productInfo
             });
@@ -171,7 +171,7 @@ cron.schedule("*/10 * * * * *", () => {
                 bids.forEach((bid, i) => {
                   if (i === 0) return;
                   socket.emit("auctionResult", {
-                    userId: bid.id,
+                    userId: bid.user_id,
                     type: "AUCTION_END_BY_BID",
                     product: productInfo
                   });
