@@ -8,13 +8,15 @@ import { ImageRepository } from "../repositories/ImageRepository";
 import { ProductResponseDTO } from "../dto/ProductResponseDTO";
 import { UserResponseDTO } from "../dto/UserResponseDTO";
 import { ImageResponseDTO } from "../dto/ImageResponseDTO";
+import { UserRepository } from "../repositories/UserRepository";
 
 @Service()
 export class ProductsService {
   constructor(
     @InjectRepository() private readonly productRepository: ProductRepository,
     @InjectRepository() private readonly imageRepository: ImageRepository,
-    @InjectRepository() private readonly bidRepository: BidRepository
+    @InjectRepository() private readonly bidRepository: BidRepository,
+    @InjectRepository() private readonly userRepository: UserRepository
   ) {}
 
   public async find(start?: number, limit?: number) {
@@ -141,5 +143,29 @@ export class ProductsService {
   /** Delete */
   public async remove(pid: number) {
     return this.productRepository.remove(pid);
+  }
+
+  public async rating(targetUserId: number, productId: number, point: number, isSeller: boolean) {
+    let productInfo = await this.productRepository.findOne(productId);
+    if (productInfo) {
+      if (isSeller) {
+        productInfo.sellerCheck = true;
+        await this.productRepository.update(productInfo);
+      } else {
+        productInfo.buyerCheck = true;
+        await this.productRepository.update(productInfo);
+      }
+    } else {
+      return false;
+    }
+
+    //해당 유저의 매너 점수 조작
+    let userInfo = await this.userRepository.findOnebyIdx(targetUserId);
+    if (userInfo) {
+      userInfo.mannerPoint = userInfo.mannerPoint + point;
+      return await this.userRepository.save(userInfo);
+    } else {
+      return false;
+    }
   }
 }

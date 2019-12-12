@@ -146,4 +146,19 @@ export class ProductRepository {
 
     return await this.em.save(product);
   }
+
+  public async sellerChecked(productId: number) {
+    const products = new Products();
+    products.id = productId;
+    products.sellerCheck = true;
+
+    return await this.em.save(products);
+  }
+  public async buyerChecked(productId: number) {
+    const products = new Products();
+    products.id = productId;
+    products.buyerCheck = true;
+
+    return await this.em.save(products);
+  }
 }

@@ -35,4 +35,12 @@ export class UserRepository {
   public save(user: Users) {
     return this.em.save(user);
   }
+
+  public async setMannerPoint(id: number, point: number) {
+    const users = new Users();
+    users.id = id;
+    users.mannerPoint = point;
+
+    return await this.em.save(users);
+  }
 }

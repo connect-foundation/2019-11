@@ -57,9 +57,14 @@ const Component = props => {
         {props.status === "판매" ? (
           <div>
             {props.sellerCheck ? (
-              undefined
+              "평가완료"
             ) : (
-              <RatingButton userId={props.targetId} text="구매자 평가하기" />
+              <RatingButton
+                isSeller={true}
+                targetId={props.targetId}
+                productId={props.id}
+                text="구매자 평가하기"
+              />
             )}
             <MessengerCreateButton
               userId={props.userId}
@@ -71,9 +76,14 @@ const Component = props => {
         ) : (
           <div>
             {props.buyerCheck ? (
-              undefined
+              "평가완료"
             ) : (
-              <RatingButton userId={props.targetId} text="판매자 평가하기" />
+              <RatingButton
+                isSeller={false}
+                targetId={props.targetId}
+                productId={props.productId}
+                text="판매자 평가하기"
+              />
             )}
             <MessengerCreateButton
               userId={props.userId}

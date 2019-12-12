@@ -13,6 +13,7 @@ export default {
   },
   products: "/api/products",
   productsWithBids: "/api/products/withBids",
+  productsRating: "/api/products/rating",
   users: "/api/users",
   userid: "/api/users/idx",
   items: {

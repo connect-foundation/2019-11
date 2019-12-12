@@ -37,7 +37,16 @@ const Component = props => {
   return (
     <ButtonWrap>
       <Button onClick={RatingWrite}>{props.text}</Button>
-      {show ? <RatingDialog onClick={RatingWrite} userId={props.userId} /> : undefined}
+      {show ? (
+        <RatingDialog
+          onClick={RatingWrite}
+          isSeller={props.isSeller}
+          targetId={props.targetId}
+          productId={props.productId}
+        />
+      ) : (
+        undefined
+      )}
     </ButtonWrap>
   );
 };
