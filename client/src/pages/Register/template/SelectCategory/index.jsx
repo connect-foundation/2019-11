@@ -1,19 +1,19 @@
-import React, { useState, useContext } from "react"
-import styled from "styled-components"
+import React, { useState, useContext } from "react";
+import styled from "styled-components";
 
-import PageBase from "../../../../components/PageBase"
-import Button from "../../../../components/Atoms/BoxButton"
-import CategorySelector from "../../../../components/Organisim/ItemCategorySelector"
+import PageBase from "../../../../components/PageBase";
+import Button from "../../../../components/Atoms/BoxButton";
+import CategorySelector from "../../../../components/Organisim/ItemCategorySelector";
 
-import productContext from "../../context"
+import productContext from "../../context";
 
-import { categoryList } from "../../constants.jsx"
-import { idxNotSelected } from "../../../../utils/validator.js"
+import { categoryList } from "../../constants.jsx";
+import { idxNotSelected } from "../../../../utils/validator.js";
 
 const ContentDiv = styled.div`
   width: 60%;
   margin: 0 auto;
-`
+`;
 
 const ButtonContainer = styled.div`
   width: 100%;
@@ -21,29 +21,30 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin: 1rem 0;
-`
+`;
 
 const validation = (result, successCallback, failCallback) => {
-  const isInvalid = result.some(value => value)
-  isInvalid ? failCallback() : successCallback()
-}
+  const isInvalid = result.some(value => value);
+  isInvalid ? failCallback() : successCallback();
+};
 
 const Component = ({ width, next }) => {
-  const obj = useContext(productContext).data
+  const obj = useContext(productContext).data;
 
-  const [leftIdx, setLeftIdx] = useState(-1)
-  const [rightIdx, setRightIdx] = useState(-1)
+  const [leftIdx, setLeftIdx] = useState(-1);
+  const [rightIdx, setRightIdx] = useState(-1);
 
-  const valiResult = [idxNotSelected(leftIdx), idxNotSelected(rightIdx)]
+  const valiResult = [idxNotSelected(leftIdx), idxNotSelected(rightIdx)];
 
   const successCallback = () => {
-    obj.categoryCode = leftIdx * 100 + rightIdx
-    next()
-  }
+    obj.categoryCode = (leftIdx + 1) * 1000 + rightIdx + 1;
+    console.log(obj.categoryCode);
+    next();
+  };
 
   const failCallback = () => {
-    alert("선택되지 않은 값이 있습니다.")
-  }
+    alert("선택되지 않은 값이 있습니다.");
+  };
 
   return (
     <PageBase width={width}>
@@ -61,14 +62,14 @@ const Component = ({ width, next }) => {
         <ButtonContainer>
           <Button
             onClick={ev => {
-              validation(valiResult, successCallback, failCallback)
+              validation(valiResult, successCallback, failCallback);
             }}
             text={"다음"}
           />
         </ButtonContainer>
       </ContentDiv>
     </PageBase>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
