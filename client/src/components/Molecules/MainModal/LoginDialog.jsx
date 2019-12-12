@@ -21,7 +21,7 @@ const { sign } = pathConfig;
 const LoginDialog = ({ signUp, close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [setUser] = useContext(UserContext);
+  const [, setUser] = useContext(UserContext);
   const handleSubmit = async e => {
     e.preventDefault();
     if (id === "" || pwd === "") alert("필수 정보가 입력되지 않았습니다.");
@@ -90,8 +90,18 @@ const LoginDialog = ({ signUp, close }) => {
     <DialogStyle>
       <DialogContent>
         <InputContainer>
-          <Input type="text" name="username" placeholder="ID" onKeyUp={handleKeyUpId} />
-          <Input type="password" name="password" placeholder="PASSWORD" onKeyUp={handleKeyUpPwd} />
+          <Input
+            type="text"
+            name="username"
+            placeholder="ID"
+            onKeyUp={handleKeyUpId}
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="PASSWORD"
+            onKeyUp={handleKeyUpPwd}
+          />
         </InputContainer>
       </DialogContent>
       <DialogActions>
