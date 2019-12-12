@@ -37,7 +37,7 @@ const ListWrapper = styled.div`
   position: absolute;
   width: ${props => (props.open ? (props.idx === "999" ? 20 : 15) : 0)}rem;
   height: 100%;
-  left: ${WIDTH}em;
+  left: 5em;
   z-index: 999;
 
   overflow: hidden;
