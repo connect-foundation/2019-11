@@ -1,27 +1,87 @@
 import React, { useState, useContext } from "react";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import styled, { css } from "styled-components";
+import KakaoLogin from "react-kakao-login";
+import GoogleLogin from "react-google-login";
 import {
-  DialogStyle,
-  InputContainer,
+  ModalBody,
   Input,
   SubmitButton,
-  DivisionLine,
-  Footer,
-  SignUpButton,
-  KakaoButton,
-  GoogleButton
-} from "./LoginDialogStyles";
+  ButtonContainer
+} from "./UserModalCommonStyles";
 import UserContext from "../../../context/UserContext";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
 import { postJsonFetch } from "../../../services/fetchService";
+import ModalContext from "../../../context/ModalContext";
+import SignUpModal from "./SignUpModal";
 const { apiUrl } = apiConfig;
 const { sign } = pathConfig;
-const LoginDialog = ({ signUp, close }) => {
+
+const LoginBody = styled.div`
+  background: white;
+  padding: 1em 1em 0 1em;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 6em;
+`;
+
+const DivisionLine = styled.hr`
+  border: 2px solid;
+  border-radius: 2px;
+  width: 80%;
+`;
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.5em;
+`;
+
+const FooterButtonStyle = css`
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  margin-bottom: 0.5em;
+  font-family: "BMJUA";
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
+  padding: 1em;
+  border-radius: 3px;
+`;
+
+const GoogleButton = styled(GoogleLogin)`
+  ${FooterButtonStyle}
+  background: white;
+  div {
+    display: none;
+  }
+  span {
+    font-family: "BMJUA";
+    color: black;
+  }
+`;
+
+const KakaoButton = styled(KakaoLogin)`
+  ${FooterButtonStyle}
+  background: var(--color-secondary-plus1-lighter);
+`;
+
+const SignUpButton = styled.button`
+  ${FooterButtonStyle}
+  color: white;
+  background: var(--color-quaternary);
+`;
+
+const LoginModal = ({ close }) => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [, setUser] = useContext(UserContext);
+  const [, setModal] = useContext(ModalContext);
   const handleSubmit = async e => {
     e.preventDefault();
     if (id === "" || pwd === "") alert("필수 정보가 입력되지 않았습니다.");
@@ -86,9 +146,19 @@ const LoginDialog = ({ signUp, close }) => {
   const handleKeyUpPwd = e => {
     setPwd(e.target.value);
   };
+
+  const handleSignUpClick = () => {
+    setModal({
+      isOpen: true,
+      component: SignUpModal,
+      message: "",
+      props: { close, isSignUp: true }
+    });
+  };
+
   return (
-    <DialogStyle>
-      <DialogContent>
+    <ModalBody>
+      <LoginBody>
         <InputContainer>
           <Input
             type="text"
@@ -103,12 +173,12 @@ const LoginDialog = ({ signUp, close }) => {
             onKeyUp={handleKeyUpPwd}
           />
         </InputContainer>
-      </DialogContent>
-      <DialogActions>
-        <SubmitButton onClick={handleSubmit} type="submit">
-          로그인
-        </SubmitButton>
-      </DialogActions>
+        <ButtonContainer>
+          <SubmitButton onClick={handleSubmit} type="submit">
+            로그인
+          </SubmitButton>
+        </ButtonContainer>
+      </LoginBody>
       <DivisionLine />
       <Footer>
         <GoogleButton
@@ -127,9 +197,9 @@ const LoginDialog = ({ signUp, close }) => {
           getProfile="true"
           buttonText="카카오"
         />
-        <SignUpButton onClick={signUp}>회원가입</SignUpButton>
+        <SignUpButton onClick={handleSignUpClick}>회원가입</SignUpButton>
       </Footer>
-    </DialogStyle>
+    </ModalBody>
   );
 };
-export default LoginDialog;
+export default LoginModal;

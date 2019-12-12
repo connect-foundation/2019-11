@@ -37,7 +37,7 @@ const CategoryItems = ({ match }) => {
   };
   useEffect(() => {
     fetcher();
-  }, [categoryCode, categoryTitle, fetcher]);
+  }, [categoryCode, categoryTitle]);
 
   return (
     <MainStyle>
