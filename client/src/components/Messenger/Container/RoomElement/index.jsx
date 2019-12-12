@@ -53,7 +53,7 @@ const HostRecentMsg = styled.span`
 `;
 
 function RoomElement(props) {
-  const [name, setName] = useState("nonamed");
+  const [name, setName] = useState("Anonymous");
   const [point, setPoint] = useState(0);
   const [profile, setProfile] = useState(null);
 

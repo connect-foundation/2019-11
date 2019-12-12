@@ -119,7 +119,7 @@ const InputButton = styled.button`
 `;
 function ChatContainer(props) {
   const [chat, setChat] = useState({});
-  const [opponentUserName, setOpponentUserName] = useState("nonamed");
+  const [opponentUserName, setOpponentUserName] = useState("Anonymous");
   const [user] = useContext(userContext);
   const [point, setPoint] = useState(0);
 
