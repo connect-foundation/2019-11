@@ -1,52 +1,39 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import userContext from "../../../context/UserContext";
+import { NotifyItem } from "./NotifyItem";
+import NotificationContext from "../../../context/NotificationContext";
 
 const BackColor = styled.div`
   background-color: var(--color-gray-lighter);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
   height: 100%;
   &::-webkit-scrollbar {
     display: none !important;
   }
 `;
+
 const InfoDiv = styled.div`
   display: flex;
   flex-direction: column;
-  font-family: "BMJUA";
   background-color: var(--color-gray-lighter);
+  align-items: center;
   width: 100%;
 `;
-const Test = styled.div`
-  font-family: "BMJUA";
-  background-color: black;
-  margin: 1rem auto;
-  width: 18rem;
-  height: 3rem;
-`;
+
 function Component(props) {
-  const [user, setUser] = useContext(userContext);
+  const [notifications, setNotifications] = useContext(NotificationContext);
 
   return (
     <BackColor>
       <InfoDiv>
-        <Test />
-        <Test />
-        <Test />
-        <Test /> <Test />
-        <Test />
-        <Test />
-        <Test />
-        <Test /> <Test />
-        <Test />
-        <Test />
-        <Test />
-        <Test /> <Test />
-        <Test />
-        <Test />
-        <Test />
-        <Test /> <Test />
+        <NotifyItem />
+        <NotifyItem success />
+        {notifications.map(noti => {
+          return <NotifyItem {...noti} />;
+        })}
       </InfoDiv>
     </BackColor>
   );

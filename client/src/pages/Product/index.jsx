@@ -11,6 +11,8 @@ import apiConfig from "../../config/api";
 import io from "socket.io-client";
 import ProductPageContext from "../../context/ProductPageContext";
 import { convert2Price } from "../../utils/converter";
+import { NotifyItem } from "../../components/Molecules/NotifyList/NotifyItem";
+import NotificationContext from "../../context/NotificationContext";
 
 const { chatUrl } = apiConfig;
 
@@ -97,6 +99,7 @@ const ProductPage = ({ match }) => {
   );
 
   const [user, setUser] = useContext(UserContext);
+  const [notifications, setNotifications] = useContext(NotificationContext);
 
   const productId = match.params.id;
 
@@ -174,8 +177,8 @@ const ProductPage = ({ match }) => {
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
 
-    socket.on("private", ({ data }) => {
-      console.log("private data:::" + data);
+    socket.on("auctionResult", ({ type, product }) => {
+      setNotifications(notis => [...notis, { type, product }]);
     });
 
     socket.on("joinRoom", message => {
@@ -188,7 +191,7 @@ const ProductPage = ({ match }) => {
   }, [user, chatUrl, dispatchProductPage]);
 
   return productPageState.loading ? (
-    <Spinner />
+    <Spinner text="상품 준비중" />
   ) : (
     <ProductPageContext.Provider
       value={[productPageState, dispatchProductPage]}
