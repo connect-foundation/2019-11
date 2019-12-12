@@ -30,4 +30,13 @@ export class ItemController {
       extensionDate: "ASC"
     });
   }
+
+  @Get("/related/:code/:id")
+  public async findRelated(
+    @Param("code") categoryCode: number,
+    @Param("id") id: number
+  ) {
+    console.log(categoryCode);
+    return await this.itemService.findRelated(Number(id), Number(categoryCode));
+  }
 }
