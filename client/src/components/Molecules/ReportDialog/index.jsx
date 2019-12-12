@@ -48,9 +48,9 @@ function Components(props) {
   let ReportContent = (
     <ReportContainer>
       <div>
-        <select name="type">
-          <option hidden selected disabled value="">
-            유형을 골라주세요.
+        <select name="type" defaultValue={""}>
+          <option value="" disabled hidden>
+            유형을 선택해 주세요
           </option>
           <option value="user">판매자가 이상해요</option>
           <option value="product">물품이 이상해요</option>

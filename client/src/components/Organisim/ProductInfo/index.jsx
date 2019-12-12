@@ -12,6 +12,8 @@ import UserContext from "../../../context/UserContext";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
 import ShareBox from "../../Molecules/ShareBox";
+import ReportButton from "../../Atoms/ReportButton";
+import MessengerCreateButton from "../../Messenger/CreateButton";
 
 const { apiUrl } = apiConfig;
 
@@ -141,30 +143,6 @@ const BidTootip = styled.div`
   }
 `;
 
-const Badge = styled.div`
-  margin: 0 var(--margin-xs);
-  padding: var(--padding-xs);
-  font-size: 0.5rem;
-  font-weight: bold;
-  color: ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
-  border-radius: 16px;
-  display: inline-block;
-  border: 1px solid
-    ${props => (props.secondary ? "var(--color-secondary)" : "var(--color-primary)")};
-
-  &:hover {
-    color: white;
-    background-color: ${props =>
-      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
-    cursor: pointer;
-  }
-`;
-
-// const ShareWrapper = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-// `;
-
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
   const [productPageState] = useContext(ProductPageContext);
@@ -263,10 +241,6 @@ const ProductInfo = () => {
         props: { message: "로그인이 필요합니다." }
       });
     }
-    console.log("---------------------");
-    console.log(user.loginId);
-    console.log(seller.loginId);
-    console.log(user.loginId === seller.loginId);
 
     if (user.loginId === seller.loginId) {
       return setModal({
@@ -340,12 +314,6 @@ const ProductInfo = () => {
       });
     }
 
-    console.log("---------------------");
-    console.log(seller);
-    console.log(user.loginId);
-    console.log(seller.loginId);
-    console.log(user.loginId === seller.loginId);
-
     if (user.loginId === seller.loginId) {
       return setModal({
         isOpen: true,
@@ -402,17 +370,10 @@ const ProductInfo = () => {
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <Badge>판매자 신고</Badge>
-          <Badge secondary>판매자와 대화하기</Badge>
-          {/* <ReportButton isUser={false} targetId={id} /> */}
+          <ReportButton targetId={seller.loginId} />
+          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />{" "}
         </ProductTitle>
-        {/* <RightComponent></RightComponent> */}
         <ProductSeller>
-          {/* <ReportButton isUser={true} targetId={seller.loginId} />
-          <MessengerCreateButton
-            userId={user.loginId}
-            sellerId={seller.loginId}
-          /> */}
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}

@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import report from "../../../assets/report.svg";
 import ReportDialog from "../../Molecules/ReportDialog";
 
 const Button = styled.button`
-  width: 2.5rem;
-  height: 2rem;
+  margin: 0 var(--margin-xs);
+  padding: var(--padding-xs);
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  border-radius: 16px;
+  display: inline-block;
+  border: 1px solid var(--color-primary);
+
   &:hover {
+    color: white;
+    background-color: var(--color-primary);
     cursor: pointer;
-  }
-  img {
-    width: 100%;
-    height: 100%;
   }
 `;
 const ButtonWrap = styled.div`
   display: inline-block;
-  width: 2.5rem;
   height: 2rem;
   margin: 0;
 `;
@@ -33,9 +36,7 @@ const Component = props => {
   }
   return (
     <ButtonWrap>
-      <Button onClick={ReportWrite}>
-        <img src={report} alt={"report"} />
-      </Button>
+      <Button onClick={ReportWrite}>판매자 신고</Button>
       {show ? <ReportDialog onClick={ReportWrite} targetId={props.targetId} /> : undefined}
     </ButtonWrap>
   );
