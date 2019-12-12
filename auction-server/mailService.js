@@ -1,17 +1,17 @@
 const axios = require("axios")
 
-const mailTemplate = (isSeller: boolean, isSold: boolean, content: string) => `
+const mailTemplate = (isSeller, isSold, content) => `
 <div>
     <h3>세상의 모든 중고 경매 팔다 알림메일 입니다.</h3>
     <span>${isSeller ? "등록하신" : "입찰하신"} ${content}이 
     ${
-      isSeller ? (isSold ? "판매되었" : "유찰되었") : isSold ? "낙찰되었" : "유찰되었"
-    }습니다.</span>
+  isSeller ? (isSold ? "판매되었" : "유찰되었") : isSold ? "낙찰되었" : "유찰되었"
+  }습니다.</span>
     <div>팔다에 접속해 확인하시기 바랍니다.</div>
 </div>
 `
 
-const mailTitleTemplate = (isSeller: boolean, isSold: boolean) => {
+const mailTitleTemplate = (isSeller, isSold) => {
   if (isSeller) return `${isSold ? "판매" : "유찰"} 되었습니다.`
   return `${isSold ? "낙찰" : "유찰"} 되었습니다.`
 }
@@ -40,12 +40,7 @@ const user = {
   password: process.env.DAITNU_PASSWORD
 }
 
-export const mailService = (
-  toEmail: string,
-  content: string,
-  isSeller: boolean,
-  isSold: boolean
-) => {
+export const mailService = (toEmail, content, isSeller, isSold) => {
   // text html 택1 (html이 우선순위 높음)
   const mail = {
     to: toEmail,
