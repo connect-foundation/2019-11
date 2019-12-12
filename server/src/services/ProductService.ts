@@ -29,6 +29,7 @@ export class ProductsService {
     const product = await this.productRepository.findOne(productId);
     if (product) {
       const userResponse = new UserResponseDTO();
+      userResponse.loginId = product.seller.loginId;
       userResponse.email = product.seller.email;
       userResponse.mannerPoint = product.seller.mannerPoint;
       userResponse.name = product.seller.name;
@@ -130,7 +131,7 @@ export class ProductsService {
     product.soldDate = soldDate;
     product.buyerId = buyerId;
     const check = await this.productRepository.checkSold(productId);
-    if (check) {
+    if (check && check.seller.id !== buyerId) {
       return await this.productRepository.update(product);
     } else {
       return false;

@@ -43,6 +43,7 @@ export class BidsService {
       productcheck !== undefined &&
       productcheck.soldPrice === null &&
       productcheck.startBidPrice < bidPrice &&
+      productcheck.seller.id !== userId &&
       (bidcheck === undefined || bidcheck.top_bid < bidPrice)
     ) {
       return await this.bidRepository.create(bid);
