@@ -64,6 +64,7 @@ export class ProductRepository {
 
   public checkSold(productId: number) {
     return this.em.findOne(Products, {
+      relations: ["seller"],
       where: {
         id: productId,
         soldPrice: IsNull()
