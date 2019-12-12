@@ -111,7 +111,7 @@ const Components = ({ list, handler, readOnly }) => {
     handler(prev => [...prev, ...imageBuffer]);
     imageBuffer = [];
     onloadCount = renderCount = 0;
-    setIsFull(list.length <= limits);
+    setIsFull(list.length >= limits);
     setIsLoadding(false);
   };
 

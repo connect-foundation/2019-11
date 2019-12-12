@@ -9,7 +9,8 @@ import {
   QueryParam,
   HeaderParam,
   Delete,
-  UseAfter
+  UseAfter,
+  Authorized
 } from "routing-controllers";
 import { ProductsService } from "../../services/ProductService";
 import { SystemLogger } from "../../middlewares/SystemLogger";
@@ -38,6 +39,7 @@ export class ProductController {
     return this.productService.findOneWithBids(Number(productId));
   }
 
+  @Authorized()
   @UseAfter(SystemLogger)
   @Get("/onlySale/:id/:start/:limits")
   public async sale(
