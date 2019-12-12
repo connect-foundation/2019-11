@@ -1,30 +1,79 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import styled from "styled-components";
+
 import Logo from "./Logo";
 import CategoryIcon from "./CategoryIcon";
 import ExpandList from "./ExpandList";
 import LoginButton from "./LoginButton";
 import Profile from "./Profile";
-import MainModal from "../../Molecules/MainModal";
 import Cloth from "../../../assets/cloth.svg";
 import Electronic from "../../../assets/television.svg";
 import LifeStyle from "../../../assets/geek.svg";
 import MessengerIcon from "../../../assets/messenger.svg";
 import detailCategoryList from "../../../data/detail-category-list";
-import { Container, OriginWrapper, ListWrapper, Bar, List, DivisionLine } from "./CategoryBarStyle";
-import userContext from "../../../context/UserContext";
+import UserContext from "../../../context/UserContext";
 import Messenger from "../../Messenger";
 import apiConfig from "../../../config/api";
 import pathConfig from "../../../config/path";
 import { getFetch } from "../../../services/fetchService";
 import Notify from "../../../assets/notify.svg";
+import ModalContext from "../../../context/ModalContext";
+import LoginModal from "../../Molecules/CustomModal/LoginModal";
+
+const Container = styled.div`
+  display: flex;
+  position: relative;
+`;
+
+const OriginWrapper = styled.div`
+  width: 5rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  background: var(--color-tertiary-darker);
+`;
+
+const ListWrapper = styled.div`
+  position: absolute;
+  width: ${props => (props.open ? (props.idx === "999" ? 20 : 15) : 0)}rem;
+  height: 100%;
+  left: 5em;
+  z-index: 999;
+
+  overflow: hidden;
+  transition: width 0.35s ease-in-out;
+`;
+
+const Bar = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.5em 1em;
+`;
+
+const List = styled.ul`
+  flex-grow: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+const DivisionLine = styled.hr`
+  width: 100%;
+  border-top: 1px solid var(--color-quaternary);
+  border-left: none;
+`;
+
 const { apiUrl } = apiConfig;
 const { users } = pathConfig;
 
 const Components = () => {
   const [open, setOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(1);
-  const [user, setUser] = useContext(userContext);
+  const [user, setUser] = useContext(UserContext);
+  const [, setModal] = useContext(ModalContext);
 
   const node = useRef();
 
@@ -58,12 +107,17 @@ const Components = () => {
     setSelectIdx(idx);
   };
 
-  const handleLoginClick = () => {
-    setLoginOpen(!loginOpen);
+  const handleUpdateDone = () => {
+    setModal(state => ({ ...state, isOpen: false }));
   };
 
-  const handleLoginClose = () => {
-    loginOpen === true && setLoginOpen(!loginOpen);
+  const handleLoginClick = () => {
+    setModal({
+      isOpen: true,
+      component: LoginModal,
+      message: "",
+      props: { close: handleUpdateDone }
+    });
   };
 
   const handleOnBlur = e => {
@@ -140,7 +194,6 @@ const Components = () => {
           onClick={close}
         />
       </ListWrapper>
-      <MainModal onClose={handleLoginClose} open={loginOpen} />
     </Container>
   );
 };
