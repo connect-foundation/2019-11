@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
-import ShareCollection from "../../Molecules/ShareBox";
 import { convert2Price } from "../../../utils/converter";
 import axios from "axios";
 import apiConfig from "../../../config/api";
@@ -423,7 +422,7 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareCollection width={10}></ShareCollection>
+        <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
       </ProductDescBox>
     </ProductInfoStyle>
   );
