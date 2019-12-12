@@ -1,15 +1,15 @@
-import styled from "styled-components"
-import React, { useState, useEffect, useRef, useContext } from "react"
-import ChatMessage from "./ChatMessage"
-import firebase from "../../../../shared/firebase"
+import styled from "styled-components";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import ChatMessage from "./ChatMessage";
+import firebase from "../../../../shared/firebase";
 
-import userContext from "../../../../context/UserContext"
+import userContext from "../../../../context/UserContext";
 
-import apiConfig from "../../../../config/api"
-import pathConfig from "../../../../config/path"
+import apiConfig from "../../../../config/api";
+import pathConfig from "../../../../config/path";
 
-const { apiUrl } = apiConfig
-const { users } = pathConfig
+const { apiUrl } = apiConfig;
+const { userid } = pathConfig;
 
 const ChatContainerWrap = styled.div`
   width: 100%;
@@ -18,13 +18,13 @@ const ChatContainerWrap = styled.div`
   overflow: hidden;
   padding: 0;
   margin: 0;
-`
+`;
 const MessengerChatScroll = styled.div`
   width: 100%;
   height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
-`
+`;
 
 const MessengerChatHead = styled.div`
   position: relative;
@@ -36,7 +36,7 @@ const MessengerChatHead = styled.div`
   width: 19.9rem;
 
   height: 2.4rem;
-`
+`;
 
 const HostName = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const HostName = styled.div`
   justify-content: center;
   text-align: center;
   height: 100%;
-`
+`;
 const BackButton = styled.button`
   all: unset;
 
@@ -59,7 +59,7 @@ const BackButton = styled.button`
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 const MessengerChatFoot = styled.div`
   display: flex;
@@ -70,29 +70,29 @@ const MessengerChatFoot = styled.div`
 
   width: 19.9rem;
   height: 10%;
-`
+`;
 const MessengerChatForm = styled.form`
   width: 100%;
   height: 100%;
-`
+`;
 const SendData = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-`
+`;
 const InputWrap = styled.div`
   display: flex;
   flex-grow: 1;
   width: 13rem;
   height: 1.8rem;
   margin: auto 0.2rem auto 0.4rem;
-`
+`;
 const ButtonWrap = styled.div`
   display: flex;
   width: 3rem;
   height: 1.8rem;
   margin: auto 0.4rem auto 0.2rem;
-`
+`;
 const Input = styled.input`
   all: unset;
   text-align: left;
@@ -102,7 +102,7 @@ const Input = styled.input`
   width: 100%;
   padding: 0 0.5rem;
   border-radius: 0.5rem;
-`
+`;
 const InputButton = styled.button`
   all: unset;
   text-align: center;
@@ -116,37 +116,45 @@ const InputButton = styled.button`
   &:hover {
     cursor: pointer;
   }
-`
+`;
 function ChatContainer(props) {
-  const [chat, setChat] = useState({})
-  const [opponentUserName, setOpponentUserName] = useState("nonamed")
-  const [user, setUser] = useContext(userContext)
+  const [chat, setChat] = useState({});
+  const [opponentUserName, setOpponentUserName] = useState("nonamed");
+  const [user] = useContext(userContext);
 
-  let USERID = user.loginId
+  let USERID = user.id;
 
-  const messengerBodyRef = useRef()
+  const messengerBodyRef = useRef();
   useEffect(() => {
-    messengerBodyRef.current.scrollTo(0, messengerBodyRef.current.scrollHeight)
-  })
+    messengerBodyRef.current.scrollTo(0, messengerBodyRef.current.scrollHeight);
+  });
 
   useEffect(() => {
     function listener(snapshot) {
-      setChat(snapshot.val())
+      setChat(snapshot.val());
     }
 
-    fetch(`${apiUrl}${users}/${props.roomUserId}`)
+    fetch(`${apiUrl}${userid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: props.roomUserId
+      })
+    })
       .then(result => {
-        return result.json()
+        return result.json();
       })
       .then(result => {
         if (result.name !== "NotFoundError") {
-          setOpponentUserName(result.name)
+          setOpponentUserName(result.name);
         }
-      })
-    firebase.getRoomChat(props.roomNumber).on("value", listener)
+      });
+    firebase.getRoomChat(props.roomNumber).on("value", listener);
 
-    return () => firebase.getRoomChat(props.roomNumber).off("value", listener)
-  }, [])
+    return () => firebase.getRoomChat(props.roomNumber).off("value", listener);
+  }, []);
 
   return (
     <ChatContainerWrap>
@@ -168,7 +176,7 @@ function ChatContainer(props) {
                 Text={chat[key].text}
                 Time={chat[key].time}
               />
-            )
+            );
           })
         )}
       </MessengerChatScroll>
@@ -187,7 +195,7 @@ function ChatContainer(props) {
         </MessengerChatForm>
       </MessengerChatFoot>
     </ChatContainerWrap>
-  )
+  );
 }
 
-export default ChatContainer
+export default ChatContainer;

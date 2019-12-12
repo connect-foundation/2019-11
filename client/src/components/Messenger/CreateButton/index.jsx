@@ -23,7 +23,7 @@ const CreateButton = props => {
   function makeRoom() {
     firebase.makeRoom(props.userId, props.sellerId);
   }
-  return <Button onClick={makeRoom}>판매자와 대화하기</Button>;
+  return <Button onClick={makeRoom}>{props.text}</Button>;
 };
 
 export default CreateButton;

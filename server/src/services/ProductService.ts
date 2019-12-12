@@ -29,7 +29,7 @@ export class ProductsService {
     const product = await this.productRepository.findOne(productId);
     if (product) {
       const userResponse = new UserResponseDTO();
-      userResponse.loginId = product.seller.loginId;
+      userResponse.id = product.seller.id;
       userResponse.email = product.seller.email;
       userResponse.mannerPoint = product.seller.mannerPoint;
       userResponse.name = product.seller.name;
@@ -124,12 +124,7 @@ export class ProductsService {
   }
 
   /* Patch */
-  public async update(
-    productId: number,
-    soldPrice: number,
-    soldDate: string,
-    buyerId: number
-  ) {
+  public async update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
     const product = new Products();
     product.id = productId;
     product.soldPrice = soldPrice;

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import TradeBox from "../../Molecules/TradeBase";
+import MessengerCreateButton from "../../Messenger/CreateButton";
+import ReportButton from "../../Atoms/ReportButton";
+
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
   flex-direction: row;
@@ -30,6 +33,9 @@ const Deviation = styled.span`
 const OptionPriceCheck = styled.div`
   display: ${props => (props.isCheck === null ? "none" : "block")};
 `;
+
+const RatingButton = styled.button``;
+
 const Component = props => {
   const [isHover, setIsHover] = useState(false);
   let soldDate = new Date(props.solddate);
@@ -49,6 +55,27 @@ const Component = props => {
           <HopePrice>희망 가격:{props.hopeprice}</HopePrice>
           <Deviation setColor={props.deviation}>편차:{props.deviation}%</Deviation>
         </OptionPriceCheck>
+        {props.status === "판매" ? (
+          <div>
+            <RatingButton>구매자 평가하기</RatingButton>
+            <MessengerCreateButton
+              userId={props.userId}
+              sellerId={props.targetId}
+              text={"구매자와 대화하기"}
+            />
+            <ReportButton userId={props.targetId} productId={props.id} text={"구매자 신고"} />
+          </div>
+        ) : (
+          <div>
+            <RatingButton>판매자 평가하기</RatingButton>
+            <MessengerCreateButton
+              userId={props.userId}
+              sellerId={props.targetId}
+              text={"판매자와 대화하기"}
+            />
+            <ReportButton targetId={props.targetId} text={"판매자 신고"} />
+          </div>
+        )}
       </TradeContents>
     </div>
   );

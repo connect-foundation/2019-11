@@ -1,5 +1,5 @@
 export class UserResponseDTO {
-  loginId: string;
+  id: number;
   name: string;
   profileUrl: string;
   mannerPoint: number;

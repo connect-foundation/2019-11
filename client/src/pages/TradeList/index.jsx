@@ -73,6 +73,7 @@ function TradeList() {
       .then(result => {
         let resultData = result[0].reduce((acc, ele) => {
           let data = {
+            id: ele.id,
             title: ele.title,
             thumbnail: ele.thumbnailUrl,
             status: ele.seller.id === user.id ? "판매" : "구매",
@@ -80,7 +81,13 @@ function TradeList() {
             solddate: ele.soldDate,
             registdate: ele.registerDate,
             hopeprice: ele.hopePrice,
-            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
+            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2),
+
+            userId: user.id,
+            targetId: ele.seller.id === user.id ? ele.buyerId : ele.seller.id,
+
+            sellerCheck: ele.sellerCheck,
+            buyerCheck: ele.buyerCheck
           };
           acc.push(data);
           return acc;

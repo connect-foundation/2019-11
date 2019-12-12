@@ -242,7 +242,7 @@ const ProductInfo = () => {
       });
     }
 
-    if (user.loginId === seller.loginId) {
+    if (user.id === seller.id) {
       return setModal({
         isOpen: true,
         component: FailModal,
@@ -314,7 +314,7 @@ const ProductInfo = () => {
       });
     }
 
-    if (user.loginId === seller.loginId) {
+    if (user.id === seller.id) {
       return setModal({
         isOpen: true,
         component: FailModal,
@@ -370,8 +370,8 @@ const ProductInfo = () => {
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <ReportButton targetId={seller.loginId} />
-          <MessengerCreateButton userId={user.loginId} sellerId={seller.loginId} />
+          <ReportButton userId={seller.id} productId={id} text={"판매자 신고"} />
+          <MessengerCreateButton userId={user.id} sellerId={seller.id} text={"판매자와 대화하기"} />
         </ProductTitle>
         <ProductSeller>
           <ProductDescText size="sm">판매자</ProductDescText>

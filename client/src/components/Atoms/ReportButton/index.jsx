@@ -36,8 +36,12 @@ const Component = props => {
   }
   return (
     <ButtonWrap>
-      <Button onClick={ReportWrite}>판매자 신고</Button>
-      {show ? <ReportDialog onClick={ReportWrite} targetId={props.targetId} /> : undefined}
+      <Button onClick={ReportWrite}>{props.text}</Button>
+      {show ? (
+        <ReportDialog onClick={ReportWrite} userId={props.userId} productId={props.productId} />
+      ) : (
+        undefined
+      )}
     </ButtonWrap>
   );
 };

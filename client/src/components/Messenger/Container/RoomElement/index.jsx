@@ -1,12 +1,12 @@
-import styled from "styled-components"
-import React, { useState, useEffect } from "react"
-import DefaultProfileIcon from "../../../../assets/default-profile.svg"
+import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import DefaultProfileIcon from "../../../../assets/default-profile.svg";
 
-import apiConfig from "../../../../config/api"
-import pathConfig from "../../../../config/path"
+import apiConfig from "../../../../config/api";
+import pathConfig from "../../../../config/path";
 
-const { apiUrl } = apiConfig
-const { users } = pathConfig
+const { apiUrl } = apiConfig;
+const { userid } = pathConfig;
 
 const Wrap = styled.div`
   width: 19.5rem;
@@ -16,7 +16,7 @@ const Wrap = styled.div`
   flex-direction: row;
   padding: 0.25rem 0.25rem;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Img = styled.div`
   width: 3rem;
@@ -31,18 +31,18 @@ const Img = styled.div`
     height: 100%;
     object-fit: contain;
   }
-`
+`;
 const RoomContent = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0.5rem 0;
-`
+`;
 const HostName = styled.div`
   color: var(--color-darkgray-lighter);
   font-size: 0.8rem;
   text-align: left;
   margin-bottom: 0.1rem;
-`
+`;
 const HostRecentMsg = styled.span`
   display: inline-block;
   overflow: hidden;
@@ -50,24 +50,32 @@ const HostRecentMsg = styled.span`
   white-space: nowrap;
   width: 15rem;
   text-align: left;
-`
+`;
 
 function RoomElement(props) {
-  const [name, setName] = useState("nonamed")
-  const [profile, setProfile] = useState(null)
-  //userId
+  const [name, setName] = useState("nonamed");
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
-    fetch(`${apiUrl}${users}/${props.userLoginId}`)
+    fetch(`${apiUrl}${userid}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: props.roomUserId
+      })
+    })
       .then(result => {
-        return result.json()
+        return result.json();
       })
       .then(result => {
         if (result.name !== "NotFoundError") {
-          setName(result.name)
-          setProfile(result.profileUrl)
+          setName(result.name);
+          setProfile(result.profileUrl);
         }
-      })
-  }, [])
+      });
+  }, []);
   return (
     <Wrap onClick={() => props.clickroom()}>
       <Img>
@@ -80,7 +88,7 @@ function RoomElement(props) {
         </div>
       </RoomContent>
     </Wrap>
-  )
+  );
 }
 
-export default RoomElement
+export default RoomElement;

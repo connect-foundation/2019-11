@@ -14,9 +14,10 @@ export default {
   products: "/api/products",
   productsWithBids: "/api/products/withBids",
   users: "/api/users",
+  userid: "/api/users/idx",
   items: {
     category: "/api/items/category",
     hot: "/api/items/hot",
     deadline: "/api/items/deadline"
   }
-}
+};
