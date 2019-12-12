@@ -66,9 +66,17 @@ function Container(props) {
 
   let USERID = user.id;
 
+  let count = 0;
+  function OpenMessenger() {
+    if (count) {
+      props.open();
+    }
+  }
   useEffect(() => {
     firebase.getRoomList(String(USERID)).on("value", function listener(result) {
       if (result.val() !== null) {
+        OpenMessenger();
+        count++;
         let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
           if (result.val()[ele]["recent"] !== undefined) {
             acc.push({
