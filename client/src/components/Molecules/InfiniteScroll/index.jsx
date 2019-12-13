@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import useIntersect from "./useIntersect";
-import Loadding from "../../Atoms/LoadingBar";
+import Loading from "../../Atoms/LoadingBar";
 import NotFoundImage from "../../../assets/notFound.png";
 
 const Container = styled.div`
@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const LoaddingContainer = styled.div`
+const LoadingContainer = styled.div`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -49,21 +49,21 @@ const renderNotFound = () => {
 };
 
 const Component = ({ fetcher, drawer, refresh, hasMore }) => {
-  const [loadding, setLoadding] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
 
   const [, setRef] = useIntersect(async (entry, observer) => {
-    setLoadding(true);
+    setLoading(true);
     observer.unobserve(entry.target);
     await update();
     observer.observe(entry.target);
-    setLoadding(false);
+    setLoading(false);
   }, {});
 
   useEffect(() => {
     if (refresh) {
       setList([]);
-      setLoadding(true);
+      setLoading(true);
     }
   }, [refresh]);
 
@@ -78,10 +78,10 @@ const Component = ({ fetcher, drawer, refresh, hasMore }) => {
 
   return (
     <Container className={"hide-scroll"}>
-      {loadding ? (
-        <LoaddingContainer>
-          <Loadding />
-        </LoaddingContainer>
+      {loading ? (
+        <LoadingContainer>
+          <Loading />
+        </LoadingContainer>
       ) : (
         undefined
       )}
