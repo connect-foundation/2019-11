@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect, useContext } from "react";
 import RoomElement from "./RoomElement";
-import ChatCotainer from "./ChatCotainer";
+import ChatContainer from "./ChatContainer";
 import firebase from "../../../shared/firebase";
 
 import userContext from "../../../context/UserContext";
@@ -124,6 +124,7 @@ function Container(props) {
   }
   const writeChat = e => {
     e.preventDefault();
+    if (e.target.messengerText.value === "") return;
     firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value); //방번호, 유저번호
     e.target.messengerText.value = "";
   };
@@ -166,14 +167,14 @@ function Container(props) {
         )}
       </MessengerScroll>
     ) : (
-      <ChatCotainer
+      <ChatContainer
         clickback={() => {
           clickRoomList(true);
         }}
         roomNumber={RoomNumber}
         roomUserId={RoomUserId}
         writeChat={writeChat}
-      ></ChatCotainer>
+      ></ChatContainer>
     );
   };
 
