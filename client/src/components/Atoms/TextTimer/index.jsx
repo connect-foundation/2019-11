@@ -17,7 +17,7 @@ const TextTimer = ({ auctionDeadline }) => {
         setDeadLine(`D-${d} ${h}:${m}:${s}`);
       } else {
         clearInterval(timer);
-        setDeadLine(`경매 마감`);
+        setDeadLine(`종료`);
       }
     }, 1000);
     return () => {

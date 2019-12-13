@@ -149,6 +149,22 @@ const ShareWrapper = styled.div`
   justify-content: flex-end;
 `;
 
+const NoAuctionBox = styled.div`
+  margin: var(--margin-md) 0px;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const NoAuctionText = styled.div`
+  border: 4px solid var(--color-gray);
+  color: var(--color-gray-darker);
+  padding: var(--padding-md);
+  font-size: 0.8rem;
+  min-width: 249px;
+  text-align: left;
+`;
+
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
   const [productPageState] = useContext(ProductPageContext);
@@ -424,7 +440,11 @@ const ProductInfo = () => {
             <BidInput name="bidPrice" placeholder="바로입찰" />
             <BidButton>입찰</BidButton>
           </ProductBid>
-        ) : null}
+        ) : (
+          <NoAuctionBox>
+            <NoAuctionText>본 상품은 일반 상품 입니다.</NoAuctionText>
+          </NoAuctionBox>
+        )}
 
         <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
           <PurchasePrice>
