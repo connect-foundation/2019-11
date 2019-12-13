@@ -31,7 +31,7 @@ export class BidSeed implements Seeder {
         const product = products[productCount];
         const date = moment(product.auctionDeadline)
           .subtract(randomBetween(1, 10), "d")
-          .format("YYYY-MM-DD h:mm:ss");
+          .format("YYYY-MM-DD HH:mm:ss");
 
         const bid = await factory(Bids)({ date }).seed();
         bid.user = user;

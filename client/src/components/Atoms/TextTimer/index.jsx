@@ -6,7 +6,7 @@ const TextTimerStyle = styled.span``;
 
 const TextTimer = ({ auctionDeadline }) => {
   const { d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(`D-${d} ${h}:${m}:${s}`);
+  const [deadLine, setDeadLine] = useState(`시간 계산중`);
 
   useEffect(() => {
     if (!auctionDeadline) return;

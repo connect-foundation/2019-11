@@ -44,7 +44,6 @@ const chatURL =
     ? process.env.CHAT_SERVER
     : process.env.CHAT_DEV_SERVER;
 const socket = require("socket.io-client")(chatURL);
-console.log(chatURL);
 socket.on("connect", () => {
   console.log(` => ${chatURL} connected`);
 });
@@ -57,6 +56,7 @@ let queue = [];
 //[작업 할당 클론]
 cron.schedule("*/10 * * * * *", () => {
   const now = moment().format("YYYY-MM-DD HH:mm:ss");
+  console.log(now);
   pool.query(
     `SELECT * FROM products WHERE extension_date < ? and is_end = 0 ORDER BY extension_date`,
     [now],
@@ -89,6 +89,7 @@ cron.schedule("*/10 * * * * *", () => {
 cron.schedule("*/10 * * * * *", () => {
   if (queue.length === 0) return console.log("QUEUE IS EMPTY");
   console.dir(queue);
+  console.dir(queue.length);
 
   while (queue.length > 0) {
     //1. 큐에 있는 경매(상품)을 꺼낸다.

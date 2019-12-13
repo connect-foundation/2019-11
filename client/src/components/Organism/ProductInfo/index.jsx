@@ -414,7 +414,7 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">남은 시간</ProductDescText>
           <ProductDescText primary bold>
-            {<TextTimer auctionDeadline={auctionDeadline} /> || "비경매 상품"}
+            <TextTimer auctionDeadline={auctionDeadline} />
           </ProductDescText>
         </ProductDueDate>
 
