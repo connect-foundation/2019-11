@@ -28,8 +28,14 @@ export class Users {
   @Column({ default: false })
   isDelete: boolean;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   email: string;
+
+  @Column()
+  accessToken: string;
+
+  @Column()
+  refreshToken: string;
 
   @OneToMany(
     type => Products,

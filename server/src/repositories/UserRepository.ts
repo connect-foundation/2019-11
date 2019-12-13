@@ -20,6 +20,17 @@ export class UserRepository {
       where: { loginId }
     });
   }
+  public findOnebyIdx(id: number) {
+    return this.em.findOne(Users, {
+      where: { id }
+    });
+  }
+
+  public findOneByToken(accessToken: string) {
+    return this.em.findOne(Users, {
+      where: { accessToken }
+    });
+  }
 
   public save(user: Users) {
     return this.em.save(user);

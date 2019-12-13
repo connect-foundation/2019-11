@@ -9,8 +9,8 @@ export class ProductsDTO {
     immediatePrice: number,
     hopePrice: number,
     startBidPrice: number,
-    registerDate: Date,
-    endDate: Date,
+    registerDate: string,
+    endDate: string,
     thumbnail: string,
     categoryCode: number,
     isAution: boolean
@@ -30,6 +30,7 @@ export class ProductsDTO {
     // Nullable Field
     products.hopePrice = hopePrice
     products.startBidPrice = startBidPrice
+    products.extensionDate = endDate
 
     // 외래키
     // 물건을 등록하는 사람은 판매자가 된다.

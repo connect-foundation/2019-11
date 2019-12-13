@@ -1,35 +1,34 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from "react";
+import styled from "styled-components";
+import firebase from "../../../shared/firebase";
+import MessengerContext from "../../../context/MessengerContext";
 
 const Button = styled.button`
-    all:unset;
+  margin: 0 var(--margin-xs);
+  padding: var(--padding-xs);
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: var(--color-secondary);
+  border-radius: 16px;
+  display: inline-block;
+  border: 1px solid var(--color-secondary);
+  background-color: white;
 
-    border-color:var(--color-primary);
-    border:solid 0.1rem;
-    text-align:center;
-    color:var(--color-primary);
-    width:10rem;
-    height:3rem;
-    border-radius:0.5rem;
+  &:hover {
+    color: white;
+    background-color: var(--color-secondary);
+    cursor: pointer;
+  }
+`;
 
-    &:hover{
-        cursor:pointer;
-    }
+const CreateButton = props => {
+  const [, setMessengerOpen] = useContext(MessengerContext);
 
-    &:active{
-        background-color:var(--color-primary);
-        color:white;
-    }
-`
+  function makeRoom() {
+    setMessengerOpen(true);
+    firebase.makeRoom(props.userId, props.sellerId);
+  }
+  return <Button onClick={makeRoom}>{props.text}</Button>;
+};
 
-const CreateButton = (props) => {
-    return (
-        <Button>
-            판매자와 대화나누기
-        </Button>
-    )
-}
-
-export default CreateButton
-
-
+export default CreateButton;

@@ -7,46 +7,36 @@ import {
   OnNull,
   JsonController,
   BodyParam
-} from "routing-controllers"
+} from "routing-controllers";
 
-import AWS from "aws-sdk"
-import { randomFileName } from "../../util/StringUtils"
+import s3 from "../../services/S3Service";
 
-const { END_POINT, REGION, ACCESS_KEY, SECRET_KEY, BUCKET } = process.env
-
-AWS.config.update({
-  accessKeyId: ACCESS_KEY,
-  secretAccessKey: SECRET_KEY
-})
-
-const S3 = new AWS.S3({
-  endpoint: END_POINT,
-  region: REGION
-})
-
-@JsonController("/downloader")
+@JsonController("/storage")
 @ContentType("image/*")
 @OnUndefined(403)
 @OnNull(403)
 export class StoreageController {
-  @Post()
-  public async upload(
+  @Post("/image")
+  public async image(
     @HeaderParam("x-auth") uid: string,
-    @HeaderParam("x-timestamp") timestamp: number,
+    @HeaderParam("x-timestamp") timestamp: string,
     @BodyParam("uri") data: string
   ) {
-    if (uid === undefined || timestamp === undefined) return new ForbiddenError()
+    if (uid === undefined || timestamp === undefined) return new ForbiddenError();
 
-    const rawData = new Buffer(data, "base64")
-    const Key = randomFileName()
+    const result = s3.creatObject("image/", data);
+    return result;
+  }
 
-    const result = await S3.putObject({
-      Bucket: String(BUCKET),
-      Key,
-      ACL: "public-read",
-      Body: rawData
-    }).promise()
+  @Post("/profile")
+  public async profile(
+    @HeaderParam("x-auth") uid: string,
+    @HeaderParam("x-timestamp") timestamp: string,
+    @BodyParam("uri") data: string
+  ) {
+    if (uid === undefined || timestamp === undefined) return new ForbiddenError();
 
-    return `${END_POINT}/${BUCKET}/${Key}`
+    const result = s3.creatObject("profile/", data);
+    return result;
   }
 }

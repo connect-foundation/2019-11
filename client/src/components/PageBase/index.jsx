@@ -1,9 +1,9 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Component = styled.div`
-    width: 100%; 
-    
-    box-sizing:border-box;
-`
+  width: 80%;
 
-export default Component
+  box-sizing: border-box;
+`;
+
+export default Component;

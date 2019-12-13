@@ -1,113 +1,123 @@
-import styled from "styled-components"
-import React, { useState, useEffect } from "react"
-import ButtonSelect from "../../components/TradeList/ButtonSelect"
-import ButtonDays from "../../components/TradeList/ButtonDays"
-import Header from "../../components/Header"
-import Footer from "../../components/Footer"
-import TradeListBox from "../../components/Molecules/TradeListBox"
-import InfiniteScroll from "../../components/InfiniteScroll"
+import styled from "styled-components";
+import React, { useState, useContext, useEffect } from "react";
+import ButtonSelect from "../../components/Atoms/SelectOptionButton";
+import ButtonDays from "../../components/Atoms/DayButton";
+import Header from "../../components/Atoms/Header";
+import Footer from "../../components/Atoms/Footer";
+import TradeListBox from "../../components/Organism/TradeListBox";
+
+import userContext from "../../context/UserContext";
+
+import apiConfig from "../../config/api";
+import pathConfig from "../../config/path";
+
+const { apiUrl } = apiConfig;
+const { logfilter } = pathConfig;
+
 const Wraper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-`
+`;
 const TradeWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   width: 90%;
   height: 100%;
-`
+`;
 
 const RightAlign = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 2rem;
   margin: 0 0 0.5rem;
-`
+`;
 const TradeContents = styled.div`
   height: 100%;
   overflow: auto;
   border: solid 1px;
   border-radius: 5px;
   &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
+    display: none !important;
   }
   margin-bottom: 0.5rem;
-`
-function TradeList(props) {
-  const [isSale, setIsSale] = useState(true)
-  const [isBuy, setIsBuy] = useState(true)
-  const [dayago, setDayago] = useState(1)
-  const [page, setPage] = useState(1)
-  const [reset, setReset] = useState(false)
-  const [userid, setUserid] = useState(2) //임시 userid 고정
+`;
+function TradeList() {
+  const [data, setData] = useState([]);
+  const [isSale, setIsSale] = useState(true);
+  const [isBuy, setIsBuy] = useState(true);
+  const [dayago, setDayago] = useState(1);
+  const [page, setPage] = useState(1);
+  const [user] = useContext(userContext);
 
-  async function getData(sale, buy, day, page) {
-    try {
-      let resultFetch = await fetch(
-        `http://${
-          process.env.NODE_ENV === "development" ? "localhost:3000" : "honeybee.palda.shop"
-        }/api/log/filter`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userid: userid,
-            dayago: day,
-            isSale: sale,
-            isBuy: buy,
-            page: page,
-            limit: 10
-          })
-        }
-      )
-      let resultJson = await resultFetch.json()
-      let resultData = await resultJson[0].reduce((acc, ele) => {
-        let data = {
-          title: ele.title,
-          thumbnail: ele.thumbnailUrl,
-          status: ele.seller.id === userid ? "판매" : "구매",
-          soldprice: ele.soldPrice,
-          solddate: ele.soldDate,
-          registdate: ele.registerDate,
-          hopeprice: ele.hopePrice,
-          deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2)
-        }
-        acc.push(data)
-        return acc
-      }, [])
+  function getData(sale, buy, day, page) {
+    let url = apiUrl + logfilter;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userid: user.id,
+        dayago: day,
+        isSale: sale,
+        isBuy: buy,
+        page: page,
+        limit: 10
+      })
+    })
+      .then(resultJson => {
+        return resultJson.json();
+      })
+      .then(result => {
+        let resultData = result[0].reduce((acc, ele) => {
+          let data = {
+            id: ele.id,
+            title: ele.title,
+            thumbnail: ele.thumbnailUrl,
+            status: ele.seller.id === user.id ? "판매" : "구매",
+            soldprice: ele.soldPrice,
+            solddate: ele.soldDate,
+            registdate: ele.registerDate,
+            hopeprice: ele.hopePrice,
+            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2),
 
-      setPage(page++)
+            userId: user.id,
+            targetId: ele.seller.id === user.id ? ele.buyerId : ele.seller.id,
 
-      return resultData
-    } catch (err) {
-      console.log(err)
-    }
+            sellerCheck: ele.sellerCheck,
+            buyerCheck: ele.buyerCheck
+          };
+          acc.push(data);
+          return acc;
+        }, []);
+        setPageNumber(page++);
+        setData(resultData);
+      });
   }
 
+  function setPageNumber(num) {
+    setPage(num);
+  }
   function setSale() {
-    setPage(1)
-    setIsSale(!isSale)
-    setReset(!reset)
+    setPage(1);
+    setIsSale(!isSale);
   }
 
   function setBuy() {
-    setPage(1)
-    setIsBuy(!isBuy)
-    setReset(!reset)
+    setPage(1);
+    setIsBuy(!isBuy);
   }
 
   function setDay(day) {
-    setPage(1)
-    setDayago(day)
-    setReset(!reset)
+    setPage(1);
+    setDayago(day);
   }
 
-  const drawer = item => item.map(value => <TradeListBox {...value} />)
-  //랜더링.
+  useEffect(() => {
+    getData(isSale, isBuy, dayago, page);
+  }, [dayago, isBuy, isSale, user.id]);
 
   return (
     <Wraper>
@@ -127,16 +137,19 @@ function TradeList(props) {
           />
         </RightAlign>
         <TradeContents>
-          <InfiniteScroll
+          {data.map(value => (
+            <TradeListBox key={value.title + value.solddate} {...value} />
+          ))}
+          {/* <InfiniteScroll
             reset={reset}
             fetcher={() => getData(isSale, isBuy, dayago, page)}
             drawer={drawer}
-          />
+          /> */}
         </TradeContents>
       </TradeWrap>
       <Footer />
     </Wraper>
-  )
+  );
 }
 
-export default TradeList
+export default TradeList;

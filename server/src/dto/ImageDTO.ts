@@ -8,6 +8,7 @@ export class ImageDTO {
     product.id = productId
 
     image.imageUrl = uri
+    image.product = product
 
     return image
   }

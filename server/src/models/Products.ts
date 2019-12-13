@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToOne
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 import { Images } from "./Images";
 import { Users } from "./Users";
 import { Bids } from "./Bids";
@@ -29,20 +23,20 @@ export class Products {
   @Column({ nullable: true })
   startBidPrice: number;
 
-  @Column()
-  registerDate: Date;
+  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
+  registerDate: string;
 
-  @Column({ nullable: true })
-  auctionDeadline: Date;
+  @Column({ type: "datetime", nullable: true })
+  auctionDeadline: string;
 
-  @Column({ nullable: true })
-  extensionDate: Date;
+  @Column({ type: "datetime", nullable: true })
+  extensionDate: string;
 
   @Column({ nullable: true })
   soldPrice: number;
 
-  @Column({ nullable: true })
-  soldDate: Date;
+  @Column({ type: "datetime", nullable: true })
+  soldDate: string;
 
   @Column()
   thumbnailUrl: string;
@@ -52,6 +46,15 @@ export class Products {
 
   @Column()
   isAuction: boolean;
+
+  @Column({ default: false })
+  isEnd: boolean;
+
+  @Column({ default: false })
+  sellerCheck: boolean;
+
+  @Column({ default: false })
+  buyerCheck: boolean;
 
   @OneToMany(
     type => Images,

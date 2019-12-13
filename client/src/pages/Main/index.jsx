@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { CardContainer } from "../../components";
-import { populars, deadlines } from "../../mock";
+import CardContainer from "../../components/Molecules/CardContainer";
+import apiConfig from "../../config/api";
+import pathConfig from "../../config/path";
+const { apiUrl } = apiConfig;
+const { items } = pathConfig;
 
 const MainStyle = styled.div`
   display: flex;
@@ -22,17 +25,17 @@ const Main = () => {
   const [deadline, setDeadline] = useState([]);
 
   const getPopularList = () => {
-    // fetch('/mock/popular-items/popular-items.json')
-    // .then(result => result.json())
-    // .then(result => setPopular(result))
-    setPopular(populars);
+    const url = `${apiUrl}${items.hot}`;
+    fetch(url)
+      .then(result => result.json())
+      .then(result => setPopular(result));
   };
 
   const getDeadLineList = () => {
-    // fetch('/mock/deadline-items/deadline-items.json')
-    // .then(result => result.json())
-    // .then(result => setDeadline(result))
-    setDeadline(deadlines);
+    const url = `${apiUrl}${items.deadline}`;
+    fetch(url)
+      .then(result => result.json())
+      .then(result => setDeadline(result));
   };
 
   useEffect(() => {

@@ -1,37 +1,47 @@
-import React, { useState } from 'react';
-import MainButton from './MainButton';
-import Container from './Container';
-import styled from 'styled-components';
-
-const MessengerBack = styled.div`
-  display:block;
-  position:absolute;
-  width:100%;
-  height:100%;
-`;
+import React, { useState, useRef, useEffect, useContext } from "react";
+import Container from "./Container";
+import CategoryIcon from "../Organism/CategoryBar/CategoryIcon";
+import MessengerContext from "../../context/MessengerContext";
 
 function Messenger(props) {
-    const [show,setShow] = useState(false);
-
-    function ChangeState(){
-      setShow(!show);
+  const [messengerOpen, setMessengerOpen] = useContext(MessengerContext);
+  const [show, setShow] = useState(false);
+  const node = useRef();
+  useEffect(() => {
+    if (messengerOpen) {
+      OpenMessenger();
+      setMessengerOpen(false);
     }
-
-    let MessengerContent = null;
-    if(show){
-      MessengerContent = 
-      <>
-        <MessengerBack onClick={()=>ChangeState()}>
-        </MessengerBack>
-        <Container/>
-      </>
+  }, [messengerOpen]);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOnBlur);
+  });
+  const handleOnBlur = e => {
+    if (node.current !== (undefined || null)) {
+      if (!node.current.contains(e.target)) {
+        setShow(false);
+      }
     }
-    return (
-      <>
-        {MessengerContent}
-        <MainButton select={()=>ChangeState()}/>
-      </>
-    );
+  };
+  function ChangeState() {
+    props.onClick();
+    setShow(!show);
   }
-  
-  export default Messenger;
+
+  function OpenMessenger() {
+    setShow(true);
+  }
+
+  return (
+    <div ref={node}>
+      <Container show={show} open={OpenMessenger} />
+      <CategoryIcon
+        color="var(--color-primary);"
+        img={props.img}
+        text="채팅"
+        onClick={() => ChangeState()}
+      ></CategoryIcon>
+    </div>
+  );
+}
+export default Messenger;

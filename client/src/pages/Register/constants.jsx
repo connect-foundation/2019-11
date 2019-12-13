@@ -27,12 +27,9 @@ export const itemDescription = [
   "낙찰 예상가를 적어주세요. 낙찰가와 차이를 알려드립니다."
 ]
 
-export const notice = {
-  successRegister: "정상적으로 등록되었습니다."
-}
-
-export const shareConfig = {
-  url: `http://palda.shop/products`
+export const dialogOption = {
+  title: "알림",
+  content: "해당 정보로 등록하시겠습니까?"
 }
 
 export const defaultData = {
@@ -47,4 +44,4 @@ export const defaultData = {
   categoryCode: undefined
 }
 
-export default { phaseList, termList, notice }
+export default { phaseList, termList, dialogOption }
