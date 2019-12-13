@@ -57,7 +57,7 @@ const ChatBox = ({ productId, user }) => {
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, chats } = productPageState;
 
-  const [setModal] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext);
 
   useEffect(() => {
     chatBodyRef.current.scrollTo(0, chatBodyRef.current.scrollHeight);

@@ -52,6 +52,7 @@ const CheckButton = styled.button`
   color: var(--color-success);
   font-weight: bold;
   border-radius: 8px;
+  background-color: white;
 
   &:hover {
     background-color: var(--color-success);
