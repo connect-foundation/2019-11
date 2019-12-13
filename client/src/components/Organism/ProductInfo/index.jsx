@@ -14,6 +14,7 @@ import ProductPageContext from "../../../context/ProductPageContext";
 import ShareBox from "../../Molecules/ShareBox";
 import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
+import Carousel from "../../Molecules/Carousel";
 
 const { apiUrl } = apiConfig;
 
@@ -168,7 +169,16 @@ const ProductInfo = () => {
   'modal',
   */
 
-  const { id, title, immediatePrice, thumbnailUrl, isAuction, auctionDeadline, seller } = product;
+  const {
+    id,
+    title,
+    images,
+    immediatePrice,
+    thumbnailUrl,
+    isAuction,
+    auctionDeadline,
+    seller
+  } = product;
 
   const baseURL = apiUrl;
   /**
@@ -369,7 +379,7 @@ const ProductInfo = () => {
   return (
     <ProductInfoStyle>
       <ProductImageBox>
-        <ProductImage src={thumbnailUrl} />
+        <Carousel list={images.map(value => value.imageUrl)} readOnly={true} />
       </ProductImageBox>
 
       <ProductDescBox>
