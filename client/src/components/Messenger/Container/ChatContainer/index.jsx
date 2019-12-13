@@ -123,7 +123,7 @@ function ChatContainer(props) {
   const [user] = useContext(userContext);
   const [point, setPoint] = useState(0);
 
-  let USERID = user.id;
+  const USERID = user.id;
 
   const messengerBodyRef = useRef();
   useEffect(() => {
