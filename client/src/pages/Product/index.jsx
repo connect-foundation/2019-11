@@ -187,6 +187,10 @@ const ProductPage = ({ match }) => {
     socket.on("disconnect", reason => {
       // console.log(reason);
     });
+
+    return () => {
+      socket.close();
+    };
   }, [user, chatUrl, dispatchProductPage]);
 
   useEffect(() => {
