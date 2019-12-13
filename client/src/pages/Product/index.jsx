@@ -42,15 +42,6 @@ const ChatColumn = styled.div`
   width: 400px;
 `;
 
-// const Loading = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   border: 1px solid red;
-// `;
-
 const initialProductPageState = {
   error: null,
   loading: true,
@@ -213,9 +204,11 @@ const ProductPage = ({ match }) => {
           <Section>
             <ProductInfo />
           </Section>
-          <Section center>
-            <AuctionGraph />
-          </Section>
+          {productPageState.product.isAuction ? (
+            <Section center>
+              <AuctionGraph />
+            </Section>
+          ) : null}
           <Section>
             <SmallCardContainer
               items={relatedItemList}
