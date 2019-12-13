@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Container from "./Container";
-import CategoryIcon from "../Organisim/CategoryBar/CategoryIcon";
+import CategoryIcon from "../Organism/CategoryBar/CategoryIcon";
 function Messenger(props) {
   const [show, setShow] = useState(false);
   const node = useRef();

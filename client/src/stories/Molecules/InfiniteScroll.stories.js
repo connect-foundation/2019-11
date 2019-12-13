@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import TradeBox from "../../components/Organisim/TradeBox"
+import TradeBox from "../../components/Organism/TradeBox"
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll"
 
 export default {

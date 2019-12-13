@@ -1,7 +1,7 @@
 import React from 'react'
 
-import ProgressButton from '../components/Organisim/RegisterProgress/Button'
-import RegisterProgress from '../components/Organisim/RegisterProgress'
+import ProgressButton from '../components/Organism/RegisterProgress/Button'
+import RegisterProgress from '../components/Organism/RegisterProgress'
 
 export default {
     title: 'Progress',
