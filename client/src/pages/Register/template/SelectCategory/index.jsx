@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import PageBase from "../../../../components/PageBase";
 import Button from "../../../../components/Atoms/BoxButton";
-import CategorySelector from "../../../../components/Organisim/ItemCategorySelector";
+import CategorySelector from "../../../../components/Organism/ItemCategorySelector";
 
 import productContext from "../../context";
 

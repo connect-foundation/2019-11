@@ -4,7 +4,7 @@ import ButtonSelect from "../../components/Atoms/SelectOptionButton";
 import ButtonDays from "../../components/Atoms/DayButton";
 import Header from "../../components/Atoms/Header";
 import Footer from "../../components/Atoms/Footer";
-import TradeListBox from "../../components/Organisim/TradeListBox";
+import TradeListBox from "../../components/Organism/TradeListBox";
 
 import userContext from "../../context/UserContext";
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import Container from "./Container";
-import CategoryIcon from "../Organisim/CategoryBar/CategoryIcon";
+import CategoryIcon from "../Organism/CategoryBar/CategoryIcon";
 import MessengerContext from "../../context/MessengerContext";
 
 function Messenger(props) {

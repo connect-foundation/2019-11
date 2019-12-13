@@ -1,8 +1,8 @@
 import React from "react";
 
-import CategoryIcon from "../../components/Organisim/CategoryBar/CategoryIcon"
-import TextIcon from "../../components/Organisim/CategoryBar/CategoryIcon/TextIcon";
-import ImageIcon from "../../components/Organisim/CategoryBar/CategoryIcon/ImageIcon";
+import CategoryIcon from "../../components/Organism/CategoryBar/CategoryIcon"
+import TextIcon from "../../components/Organism/CategoryBar/CategoryIcon/TextIcon";
+import ImageIcon from "../../components/Organism/CategoryBar/CategoryIcon/ImageIcon";
 
 export default {
   title: "Atoms|Category"

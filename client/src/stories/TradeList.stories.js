@@ -1,7 +1,7 @@
 import React from "react"
 import ButtonSelect from "../components/Atoms/SelectOptionButton"
 import ButtonDays from "../components/Atoms/DayButton"
-import TradeListBox from "../components/Organisim/TradeListBox"
+import TradeListBox from "../components/Organism/TradeListBox"
 
 import { action } from "@storybook/addon-actions"
 
