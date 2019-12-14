@@ -85,6 +85,14 @@ const BidInput = styled.input`
   }
 `;
 
+const NoBidInput = styled.input`
+  border: 1px solid var(--color-gray);
+  border-right: none;
+  padding: var(--padding-md);
+  font-size: 0.8rem;
+  min-width: 200px;
+`;
+
 const BidButton = styled.button`
   border: 1px solid black;
   padding: var(--padding-md);
@@ -92,6 +100,12 @@ const BidButton = styled.button`
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
+
+  &:disabled {
+    background-color: var(--color-gray);
+    border-color: var(--color-gray);
+    cursor: default;
+  }
 `;
 
 const ProductPurchase = styled(ProductBid)`
@@ -147,22 +161,6 @@ const BidTootip = styled.div`
 const ShareWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-`;
-
-const NoAuctionBox = styled.div`
-  margin: var(--margin-md) 0px;
-  text-align: right;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const NoAuctionText = styled.div`
-  border: 4px solid var(--color-gray);
-  color: var(--color-gray-darker);
-  padding: var(--padding-md);
-  font-size: 0.8rem;
-  min-width: 249px;
-  text-align: left;
 `;
 
 const ProductInfo = () => {
@@ -434,17 +432,23 @@ const ProductInfo = () => {
           </ProductDescText>
         </ProductDueDate>
 
-        {isAuction ? (
-          <ProductBid onSubmit={handleBidSubmit}>
-            <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
-            <BidInput name="bidPrice" placeholder="바로입찰" />
-            <BidButton>입찰</BidButton>
-          </ProductBid>
-        ) : (
-          <NoAuctionBox>
-            <NoAuctionText>본 상품은 일반 상품 입니다.</NoAuctionText>
-          </NoAuctionBox>
-        )}
+        <ProductBid onSubmit={handleBidSubmit}>
+          {isAuction ? (
+            <>
+              <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
+              <BidInput name="bidPrice" placeholder="바로입찰" />
+              <BidButton>입찰</BidButton>
+            </>
+          ) : (
+            <>
+              <NoBidInput
+                disabled
+                placeholder="본 상품은 일반 상품 입니다."
+              ></NoBidInput>
+              <BidButton disabled>입찰</BidButton>
+            </>
+          )}
+        </ProductBid>
 
         <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
           <PurchasePrice>
