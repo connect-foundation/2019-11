@@ -143,7 +143,6 @@ const ProductPage = ({ match }) => {
         text,
         key: `${createdAt}.${sender.id}`
       };
-      console.log(sender);
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
 

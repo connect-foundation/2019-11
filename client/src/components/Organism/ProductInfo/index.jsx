@@ -179,7 +179,7 @@ const ProductInfo = () => {
   'soldPrice' 
   'soldDate' 
   'registerDate' 
-  'extensionDate' 
+  'auctionDeadline' 
   'modal',
   */
 
@@ -190,7 +190,7 @@ const ProductInfo = () => {
     immediatePrice,
     thumbnailUrl,
     isAuction,
-    auctionDeadline,
+    extensionDate,
     seller
   } = product;
 
@@ -420,15 +420,14 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline &&
-              moment(auctionDeadline).format("YYYY년 MM월 DD일")}
+            {extensionDate && moment(extensionDate).format("YYYY년 MM월 DD일")}
           </ProductDescText>
         </ProductDueDate>
 
         <ProductDueDate>
           <ProductDescText size="sm">남은 시간</ProductDescText>
           <ProductDescText primary bold>
-            <TextTimer auctionDeadline={auctionDeadline} />
+            <TextTimer datetime={extensionDate} />
           </ProductDescText>
         </ProductDueDate>
 
