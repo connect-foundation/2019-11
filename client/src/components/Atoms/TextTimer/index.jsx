@@ -11,7 +11,6 @@ const TextTimer = ({ auctionDeadline }) => {
     if (!auctionDeadline) return;
     const timer = setInterval(() => {
       const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
-      console.log(auctionDeadline);
       if (diff > 0) {
         setDeadLine(`D-${d} ${h}:${m}:${s}`);
       } else {

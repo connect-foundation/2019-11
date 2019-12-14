@@ -138,11 +138,12 @@ const ProductPage = ({ match }) => {
       const chat = {
         type,
         sessionId: sender.sessionId,
-        id: sender.loginId,
+        id: sender.isSnsLogin ? sender.name : sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
         text,
         key: `${createdAt}.${sender.id}`
       };
+      console.log(sender);
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
 
