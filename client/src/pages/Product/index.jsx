@@ -1,8 +1,8 @@
-import React, { useEffect, useContext, useReducer } from "react";
+import React, { useEffect, useContext, useReducer, useState } from "react";
 import styled from "styled-components";
-import ProductInfo from "../../components/Organisim/ProductInfo";
-import ChatBox from "../../components/Organisim/Chat/ChatBox";
-import AuctionGraph from "../../components/Organisim/AuctionGraph";
+import ProductInfo from "../../components/Organism/ProductInfo";
+import ChatBox from "../../components/Organism/Chat/ChatBox";
+import AuctionGraph from "../../components/Organism/AuctionGraph";
 import Spinner from "../../components/Atoms/Spinner";
 import { useFetch } from "../../hooks/useFetch";
 import pathConfig from "../../config/path";
@@ -12,8 +12,10 @@ import io from "socket.io-client";
 import ProductPageContext from "../../context/ProductPageContext";
 import { convert2Price } from "../../utils/converter";
 import NotificationContext from "../../context/NotificationContext";
+import { getFetch } from "../../services/fetchService";
+import SmallCardContainer from "../../components/Molecules/SmallCardContainer";
 
-const { chatUrl } = apiConfig;
+const { chatUrl, apiUrl } = apiConfig;
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -94,6 +96,7 @@ const ProductPage = ({ match }) => {
 
   const [user] = useContext(UserContext);
   const [setNotifications] = useContext(NotificationContext);
+  const [relatedItemList, setRelatedItemList] = useState([]);
 
   const productId = match.params.id;
 
@@ -112,12 +115,22 @@ const ProductPage = ({ match }) => {
 
   useFetch(`${pathConfig.productsWithBids}/${productId}`, handleFetchSuccess, handleFetchError);
 
+  const getRelatedItemList = async () => {
+    if (!productPageState.loading) {
+      setRelatedItemList([]);
+      const { categoryCode, id } = productPageState.product;
+      const url = `${apiUrl}${pathConfig.items.related}/${categoryCode}/${id}`;
+      let result = await getFetch(url, {}, {});
+
+      setRelatedItemList(result[0]);
+    }
+  };
+
   useEffect(() => {
     if (Object.keys(user).length === 0) return;
     const socket = io(chatUrl);
     socket.on("connect", () => {
       dispatchProductPage({ type: "SET_SOCKET", socket });
-      console.log(user);
       socket.emit("joinRoom", {
         roomId: productId,
         sessionId: socket.id,
@@ -176,6 +189,10 @@ const ProductPage = ({ match }) => {
     });
   }, [user, chatUrl, dispatchProductPage]);
 
+  useEffect(() => {
+    getRelatedItemList();
+  }, [productPageState.loading]);
+
   return productPageState.loading ? (
     <Spinner text="상품 준비중" />
   ) : (
@@ -187,6 +204,9 @@ const ProductPage = ({ match }) => {
           </Section>
           <Section center>
             <AuctionGraph />
+          </Section>
+          <Section>
+            <SmallCardContainer items={relatedItemList} title={"연관상품"} isWrap={true} />
           </Section>
         </MainColumn>
         <ChatColumn>

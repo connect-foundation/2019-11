@@ -8,13 +8,15 @@ import { ImageRepository } from "../repositories/ImageRepository";
 import { ProductResponseDTO } from "../dto/ProductResponseDTO";
 import { UserResponseDTO } from "../dto/UserResponseDTO";
 import { ImageResponseDTO } from "../dto/ImageResponseDTO";
+import { UserRepository } from "../repositories/UserRepository";
 
 @Service()
 export class ProductsService {
   constructor(
     @InjectRepository() private readonly productRepository: ProductRepository,
     @InjectRepository() private readonly imageRepository: ImageRepository,
-    @InjectRepository() private readonly bidRepository: BidRepository
+    @InjectRepository() private readonly bidRepository: BidRepository,
+    @InjectRepository() private readonly userRepository: UserRepository
   ) {}
 
   public async find(start?: number, limit?: number) {
@@ -29,7 +31,7 @@ export class ProductsService {
     const product = await this.productRepository.findOne(productId);
     if (product) {
       const userResponse = new UserResponseDTO();
-      userResponse.loginId = product.seller.loginId;
+      userResponse.id = product.seller.id;
       userResponse.email = product.seller.email;
       userResponse.mannerPoint = product.seller.mannerPoint;
       userResponse.name = product.seller.name;
@@ -124,12 +126,7 @@ export class ProductsService {
   }
 
   /* Patch */
-  public async update(
-    productId: number,
-    soldPrice: number,
-    soldDate: string,
-    buyerId: number
-  ) {
+  public async update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
     const product = new Products();
     product.id = productId;
     product.soldPrice = soldPrice;
@@ -146,5 +143,35 @@ export class ProductsService {
   /** Delete */
   public async remove(pid: number) {
     return this.productRepository.remove(pid);
+  }
+
+  public async rating(targetUserId: number, productId: number, point: number, isSeller: boolean) {
+    let productInfo = await this.productRepository.findOne(productId);
+    if (productInfo) {
+      if (isSeller) {
+        if (productInfo.sellerCheck === true) {
+          return false;
+        }
+        productInfo.sellerCheck = true;
+        await this.productRepository.update(productInfo);
+      } else {
+        if (productInfo.buyerCheck === true) {
+          return false;
+        }
+        productInfo.buyerCheck = true;
+        await this.productRepository.update(productInfo);
+      }
+    } else {
+      return false;
+    }
+
+    //해당 유저의 매너 점수 조작
+    let userInfo = await this.userRepository.findOnebyIdx(targetUserId);
+    if (userInfo) {
+      userInfo.mannerPoint = userInfo.mannerPoint + point;
+      return await this.userRepository.save(userInfo);
+    } else {
+      return false;
+    }
   }
 }

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect, useContext } from "react";
 import RoomElement from "./RoomElement";
-import ChatCotainer from "./ChatCotainer";
+import ChatContainer from "./ChatContainer";
 import firebase from "../../../shared/firebase";
 
 import userContext from "../../../context/UserContext";
@@ -64,51 +64,29 @@ function Container(props) {
 
   const [user] = useContext(userContext);
 
-  let USERID = user.loginId;
+  const USERID = user.id;
 
+  let count = 0;
+  function OpenMessenger() {
+    if (count) {
+      props.open();
+    }
+  }
+  function listener(result) {
+    if (result.val() === null) return;
+    OpenMessenger();
+    count++;
+    let roomNumbers = Object.entries(result.val()).map(([key, value]) => ({
+      RoomNumber: key,
+      RecentMsg: value.recent ? value.recent.text : "",
+      opponentUserId: getOpponentUserId(value)
+    }));
+    console.log(Object.entries(result.val()));
+    setRoomList(roomNumbers);
+  }
   useEffect(() => {
-    firebase.getRoomList(String(USERID)).on("value", function listener(result) {
-      if (result.val() !== null) {
-        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          if (result.val()[ele]["recent"] !== undefined) {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: result.val()[ele]["recent"]["text"],
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            });
-          } else {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: "",
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            });
-          }
-          return acc;
-        }, []);
-        setRoomList(roomNumbers);
-      }
-    });
-    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {
-      if (result.val() !== null) {
-        let roomNumbers = Object.keys(result.val()).reduce((acc, ele) => {
-          if (result.val()[ele]["recent"] !== undefined) {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: result.val()[ele]["recent"]["text"],
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            });
-          } else {
-            acc.push({
-              RoomNumber: ele,
-              RecentMeg: "",
-              opponentUserId: getOpponentUserId(result.val()[ele])
-            });
-          }
-          return acc;
-        }, []);
-        setRoomList(roomNumbers);
-      }
-    });
+    firebase.getRoomList(String(USERID)).on("value", listener);
+    return firebase.getRoomList(String(USERID)).off("value", function listener(result) {});
   }, [isRoomList]);
 
   function clickRoomList(flag) {
@@ -116,6 +94,7 @@ function Container(props) {
   }
   const writeChat = e => {
     e.preventDefault();
+    if (e.target.messengerText.value === "") return;
     firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value); //방번호, 유저번호
     e.target.messengerText.value = "";
   };
@@ -150,22 +129,22 @@ function Container(props) {
                   setRoomUserId(value.opponentUserId);
                   clickRoomList(false);
                 }}
-                userLoginId={value.opponentUserId}
-                RecentMsg={value.RecentMeg}
+                roomUserId={value.opponentUserId}
+                RecentMsg={value.RecentMsg}
               />
             );
           })
         )}
       </MessengerScroll>
     ) : (
-      <ChatCotainer
+      <ChatContainer
         clickback={() => {
           clickRoomList(true);
         }}
         roomNumber={RoomNumber}
         roomUserId={RoomUserId}
         writeChat={writeChat}
-      ></ChatCotainer>
+      ></ChatContainer>
     );
   };
 

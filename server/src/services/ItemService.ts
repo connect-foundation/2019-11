@@ -44,6 +44,42 @@ export class ItemService {
       productCount
     ];
   }
+  public async findRelated(id: number, categoryCode: number) {
+    let [products, productCount] = await this.productRepository.findCategory(
+      categoryCode
+    );
+    return [
+      await products.reduce(async (acc: any, product) => {
+        if (product.id === id) return acc;
+        const result = await acc.then();
+        if (result.length < 5) {
+          const bid = await this.bidRepository.findProductBidInfo(product.id);
+          const productResponse = new ProductCardResponseDTO();
+          productResponse.auctionDeadline = product.auctionDeadline;
+          productResponse.buyerId = product.buyerId;
+          productResponse.categoryCode = product.categoryCode;
+          productResponse.contents = product.contents;
+          productResponse.extensionDate = product.extensionDate;
+          productResponse.hopePrice = product.hopePrice;
+          productResponse.id = product.id;
+          productResponse.immediatePrice = product.immediatePrice;
+          productResponse.isAuction = product.isAuction;
+          productResponse.registerDate = product.registerDate;
+          productResponse.soldDate = product.soldDate;
+          productResponse.soldPrice = product.soldPrice;
+          productResponse.startBidPrice = product.startBidPrice;
+          productResponse.title = product.title;
+          productResponse.thumbnailUrl = product.thumbnailUrl;
+          productResponse.countBids = bid === undefined ? 0 : bid.count;
+          productResponse.topBid =
+            bid === undefined ? product.startBidPrice : bid.top_bid;
+          result.push(productResponse);
+        }
+        return Promise.resolve(result);
+      }, Promise.resolve([])),
+      productCount
+    ];
+  }
   public async findHot() {
     // return await this.productRepository.findHotAuction()
     const bids = await this.bidRepository.findHotItems();

@@ -12,6 +12,9 @@ import UserContext from "../../../context/UserContext";
 import TextTimer from "../../Atoms/TextTimer";
 import ProductPageContext from "../../../context/ProductPageContext";
 import ShareBox from "../../Molecules/ShareBox";
+import ReportButton from "../../Atoms/ReportButton";
+import MessengerCreateButton from "../../Messenger/CreateButton";
+import Carousel from "../../Molecules/Carousel";
 
 const { apiUrl } = apiConfig;
 
@@ -141,31 +144,10 @@ const BidTootip = styled.div`
   }
 `;
 
-const Badge = styled.div`
-  margin: 0 var(--margin-xs);
-  padding: var(--padding-xs);
-  font-size: 0.5rem;
-  font-weight: bold;
-  color: ${props =>
-    props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
-  border-radius: 16px;
-  display: inline-block;
-  border: 1px solid
-    ${props =>
-      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
-
-  &:hover {
-    color: white;
-    background-color: ${props =>
-      props.secondary ? "var(--color-secondary)" : "var(--color-primary)"};
-    cursor: pointer;
-  }
+const ShareWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
-
-// const ShareWrapper = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-// `;
 
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
@@ -190,6 +172,7 @@ const ProductInfo = () => {
   const {
     id,
     title,
+    images,
     immediatePrice,
     thumbnailUrl,
     isAuction,
@@ -273,16 +256,12 @@ const ProductInfo = () => {
         props: { message: "로그인이 필요합니다." }
       });
     }
-    console.log("---------------------");
-    console.log(user.loginId);
-    console.log(seller.loginId);
-    console.log(user.loginId === seller.loginId);
 
-    if (user.loginId === seller.loginId) {
+    if (user.id === seller.id) {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "자신의 상품은 구매가 불가 합니다."
+        props: { message: "자신의 상품은 구매가 불가 합니다." }
       });
     }
     if (isSold) {
@@ -350,17 +329,11 @@ const ProductInfo = () => {
       });
     }
 
-    console.log("---------------------");
-    console.log(seller);
-    console.log(user.loginId);
-    console.log(seller.loginId);
-    console.log(user.loginId === seller.loginId);
-
-    if (user.loginId === seller.loginId) {
+    if (user.id === seller.id) {
       return setModal({
         isOpen: true,
         component: FailModal,
-        message: "자신의 상품은 구매가 불가 합니다."
+        props: { message: "자신의 상품은 구매가 불가 합니다." }
       });
     }
 
@@ -406,23 +379,16 @@ const ProductInfo = () => {
   return (
     <ProductInfoStyle>
       <ProductImageBox>
-        <ProductImage src={thumbnailUrl} />
+        <Carousel list={images.map(value => value.imageUrl)} readOnly={true} />
       </ProductImageBox>
 
       <ProductDescBox>
         <ProductTitle>
           {title}
-          <Badge>판매자 신고</Badge>
-          <Badge secondary>판매자와 대화하기</Badge>
-          {/* <ReportButton isUser={false} targetId={id} /> */}
+          <ReportButton userId={seller.id} productId={id} text={"판매자 신고"} />
+          <MessengerCreateButton userId={user.id} sellerId={seller.id} text={"판매자와 대화하기"} />
         </ProductTitle>
-        {/* <RightComponent></RightComponent> */}
         <ProductSeller>
-          {/* <ReportButton isUser={true} targetId={seller.loginId} />
-          <MessengerCreateButton
-            userId={user.loginId}
-            sellerId={seller.loginId}
-          /> */}
           <ProductDescText size="sm">판매자</ProductDescText>
           <ProductDescText primary bold>
             {seller.name}
@@ -431,12 +397,9 @@ const ProductInfo = () => {
         <ProductDueDate>
           <ProductDescText size="sm">판매 종료일</ProductDescText>
           <ProductDescText primary bold>
-            {auctionDeadline
-              ? moment(auctionDeadline).format("YYYY년 MM월 DD일")
-              : "비경매 상품"}
+            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
           </ProductDescText>
         </ProductDueDate>
-
         {isAuction ? (
           <ProductDueDate>
             <ProductDescText size="sm">남은 시간</ProductDescText>
@@ -445,13 +408,11 @@ const ProductInfo = () => {
             </ProductDescText>
           </ProductDueDate>
         ) : null}
-
         <ProductBid onSubmit={handleBidSubmit}>
           <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
           <BidInput name="bidPrice" placeholder="바로입찰" />
           <BidButton>입찰</BidButton>
         </ProductBid>
-
         <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
           <PurchasePrice>
             즉시 구매가
@@ -461,11 +422,9 @@ const ProductInfo = () => {
           </PurchasePrice>
           <PurchaseButton>구매</PurchaseButton>
         </ProductPurchase>
-        <ShareBox
-          width={10}
-          url={apiConfig.url + `/products/${id}`}
-          object={product}
-        />
+        <ShareWrapper>
+          <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
+        </ShareWrapper>
       </ProductDescBox>
     </ProductInfoStyle>
   );

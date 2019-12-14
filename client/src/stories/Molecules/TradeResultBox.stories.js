@@ -1,6 +1,6 @@
 import React from "react"
 
-import TradeBox from "../../components/Organisim/TradeBox"
+import TradeBox from "../../components/Organism/TradeBox"
 
 export default {
   title: "Molecules|TradeResultBox"

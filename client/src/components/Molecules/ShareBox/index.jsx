@@ -61,7 +61,7 @@ const handleKakao = (url, object) => {
     content: {
       title: object.title,
       description: object.contents,
-      imageUrl: object.thumbnail,
+      imageUrl: object.thumbnailUrl || object.thumbnail,
       link: {
         webUrl: url
       }

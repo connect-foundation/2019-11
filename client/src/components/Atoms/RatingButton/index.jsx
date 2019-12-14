@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ReportDialog from "../../Molecules/ReportDialog";
+import RatingDialog from "../../Molecules/RatingDialog";
 
 const Button = styled.button`
   margin: 0 var(--margin-xs);
@@ -25,21 +25,26 @@ const ButtonWrap = styled.div`
   margin: 0;
 `;
 /**
- * 유저여부와, 해당 id를 입력하여 신고하기 버튼 제작
+ * 해당 유저에대해 평가 진행
  *
- * isUser : boolean
+ * userid : number
  * targetId : id
  */
 const Component = props => {
   const [show, setShow] = useState(false);
-  function ReportWrite() {
+  function RatingWrite() {
     setShow(!show);
   }
   return (
     <ButtonWrap>
-      <Button onClick={ReportWrite}>{props.text}</Button>
+      <Button onClick={RatingWrite}>{props.text}</Button>
       {show ? (
-        <ReportDialog onClick={ReportWrite} userId={props.userId} productId={props.productId} />
+        <RatingDialog
+          onClick={RatingWrite}
+          isSeller={props.isSeller}
+          targetId={props.targetId}
+          productId={props.productId}
+        />
       ) : (
         undefined
       )}

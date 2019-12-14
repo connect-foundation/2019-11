@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import styled from "styled-components";
 
 import Header from "../../components/Atoms/Header";
-import TradeBox from "../../components/Organisim/TradeBox";
+import TradeBox from "../../components/Organism/TradeBox";
 import InfiniteScroll from "../../components/Molecules/InfiniteScroll";
 import Footer from "../../components/Atoms/Footer";
 import AlertDialog from "../../components/Molecules/AlertDialog";
