@@ -1,6 +1,9 @@
 import moment from "moment";
+import "moment-timezone";
 
-export const getDiffDateTime = (end, start) => {
+moment.tz.setDefault("Asia/Seoul");
+
+export const getDiffDateTime = (end, start = "") => {
   const t1 = moment(start);
   const t2 = moment(end);
   const diff = t2.diff(t1);

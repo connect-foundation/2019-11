@@ -5,14 +5,13 @@ import { getDiffDateTime } from "../../../utils/dateUtil";
 const TextTimerStyle = styled.span``;
 
 const TextTimer = ({ auctionDeadline }) => {
-  const { d, h, m, s } = getDiffDateTime(auctionDeadline);
   const [deadLine, setDeadLine] = useState(`시간 계산중`);
 
   useEffect(() => {
     if (!auctionDeadline) return;
-
     const timer = setInterval(() => {
       const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+      console.log(auctionDeadline);
       if (diff > 0) {
         setDeadLine(`D-${d} ${h}:${m}:${s}`);
       } else {
