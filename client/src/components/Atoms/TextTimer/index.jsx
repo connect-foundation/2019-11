@@ -4,7 +4,7 @@ import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const TextTimerStyle = styled.span``;
 
-const TextTimer = ({ datetime }) => {
+const TextTimer = ({ datetime, onEnd }) => {
   const [deadLine, setDeadLine] = useState(`시간 계산중`);
 
   useEffect(() => {

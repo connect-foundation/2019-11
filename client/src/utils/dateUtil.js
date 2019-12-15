@@ -10,10 +10,6 @@ export const getDiffDateTime = (end, start) => {
     .format("YYYY-MM-DD HH:mm:ss");
   const diff = moment(t2).diff(t1);
 
-  console.log(t1.format("YYYY-MM-DD HH:mm:ss"));
-  console.log(t2);
-  console.log(diff);
-
   const d = moment.duration(diff).days();
   const h = moment.duration(diff).hours();
   const m = moment.duration(diff).minutes();

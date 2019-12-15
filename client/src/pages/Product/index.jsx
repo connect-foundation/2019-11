@@ -72,6 +72,8 @@ const productPageReducer = (state, action) => {
       };
     case "SET_SOCKET":
       return { ...state, socketClient: action.socket };
+    case "UPDATE_PRODUCT":
+      return { ...state, product: { ...state.product, ...action.product } };
     default:
       throw new Error("NO ACTION TYPE");
   }
