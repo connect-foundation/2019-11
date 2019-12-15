@@ -342,7 +342,7 @@ const ProductInfo = () => {
         .then(response => {
           if (response.status < 300) {
             socketClient.emit("bid", {
-              type: "alert",
+              type: "bid",
               roomId: id,
               sender: { ...user, sessionId: user.sessionId },
               bid: response.data,

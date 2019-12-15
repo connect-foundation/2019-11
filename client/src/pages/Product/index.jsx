@@ -150,7 +150,7 @@ const ProductPage = ({ match }) => {
 
     socket.on("bid", ({ roomId, sender, bid, createdAt }) => {
       const chat = {
-        type: "alert",
+        type: "bid",
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
@@ -165,7 +165,7 @@ const ProductPage = ({ match }) => {
 
     socket.on("purchase", ({ roomId, sender, sold, createdAt }) => {
       const chat = {
-        type: "alert",
+        type: "purchase",
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
