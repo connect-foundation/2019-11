@@ -80,7 +80,8 @@ const Components = ({ list, handler, readOnly }) => {
     if (!onImageLoad) changeIdx(showIdx > 0 ? showIdx - 1 : 0);
   };
   const handleRight = event => {
-    if (!onImageLoad) changeIdx(showIdx < list.length ? showIdx + 1 : list.length);
+    if (!onImageLoad)
+      changeIdx(showIdx < list.length ? showIdx + 1 : list.length);
   };
   const handleDragOn = e => {
     setDragOn(true);
@@ -146,14 +147,16 @@ const Components = ({ list, handler, readOnly }) => {
         <BeforeButton visible={showIdx !== 0} onClick={handleLeft} />
       </LeftDiv>
       <RightDiv>
-        <NextButton visible={showIdx < list.length - !!readOnly} onClick={handleRight} />
+        <NextButton
+          visible={showIdx < list.length - !!readOnly}
+          onClick={handleRight}
+        />
       </RightDiv>
       <Window>
         <Panel idx={showIdx}>
           {list.map((value, idx) => (
-            <CarouselItem>
+            <CarouselItem key={value}>
               <CarouselImage
-                key={value}
                 src={value}
                 readOnly={!!readOnly}
                 onRemove={() => {

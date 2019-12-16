@@ -120,7 +120,7 @@ const LoginModal = ({ close }) => {
     const res = await postJsonFetch(`${apiUrl}${sign.kakao}`, headers, body);
     const { msg, user } = res;
     if (msg) {
-      setUser(user);
+      setUser({ ...user, isSnsLogin: true });
       localStorage.setItem("access-token", user.accessToken);
       localStorage.setItem("refresh-token", user.refreshToken);
       close();
@@ -134,7 +134,7 @@ const LoginModal = ({ close }) => {
     );
     const { msg, user } = response;
     if (msg) {
-      setUser(user);
+      setUser({ ...user, isSnsLogin: true });
       localStorage.setItem("access-token", user.accessToken);
       localStorage.setItem("refresh-token", user.refreshToken);
       close();

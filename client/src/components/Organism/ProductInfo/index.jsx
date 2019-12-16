@@ -40,9 +40,16 @@ const ProductImage = styled.img`
 `;
 
 const ProductDescBox = styled.div`
+  position: relative;
   width: 480px;
-  padding-top: var(--padding-lg);
-  padding-right: var(--padding-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProductDesc = styled.div`
+  width: 100%;
+  height: 352px;
 `;
 
 const ProductDescText = styled.span`
@@ -53,7 +60,8 @@ const ProductDescText = styled.span`
 `;
 
 const ProductTitle = styled.div`
-  margin-bottom: var(--margin-xl);
+  margin-top: var(--margin-sm);
+  margin-bottom: var(--margin-md);
   font-size: 1.4rem;
   font-weight: bold;
   padding-left: var(--padding-lg);
@@ -70,7 +78,8 @@ const ProductDueDate = styled.div`
 `;
 
 const ProductBid = styled.form`
-  margin: var(--margin-md) 0px;
+  margin: var(--margin-sm) 0px;
+  margin-bottom: 0px;
   text-align: right;
 `;
 
@@ -85,6 +94,14 @@ const BidInput = styled.input`
   }
 `;
 
+const NoBidInput = styled.input`
+  border: 1px solid var(--color-gray);
+  border-right: none;
+  padding: var(--padding-md);
+  font-size: 0.8rem;
+  min-width: 200px;
+`;
+
 const BidButton = styled.button`
   border: 1px solid black;
   padding: var(--padding-md);
@@ -92,10 +109,19 @@ const BidButton = styled.button`
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
+
+  &:disabled {
+    background-color: var(--color-gray);
+    border-color: var(--color-gray);
+    cursor: default;
+  }
 `;
 
 const ProductPurchase = styled(ProductBid)`
-  margin-bottom: var(--margin-xl);
+  margin-top: var(--margin-md);
+  margin-bottom: var(--margin-sm);
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const PurchasePrice = styled.span`
@@ -112,9 +138,26 @@ const PurchasePrice = styled.span`
   }
 `;
 
+const PurchaseComplete = styled.div`
+  border: 1px solid var(--color-primary);
+  border-right: none;
+  padding: var(--padding-md);
+  font-size: 0.8rem;
+  min-width: 200px;
+  text-align: left;
+  color: var(--color-primary);
+  font-weight: bold;
+`;
+
 const PurchaseButton = styled(BidButton)`
   background-color: var(--color-primary);
   border-color: var(--color-primary);
+
+  &:disabled {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    text-decoration: line-through;
+  }
 `;
 
 const BidTootip = styled.div`
@@ -151,9 +194,13 @@ const ShareWrapper = styled.div`
 
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
-  const [productPageState] = useContext(ProductPageContext);
+
+  const [productPageState, dispatchProductPage] = useContext(
+    ProductPageContext
+  );
   const { socketClient, product, chats } = productPageState;
-  const [, setModal] = useContext(ModalContext);
+
+  const [modal, setModal] = useContext(ModalContext);
   /*   
   'dispatchProductPage' 
   'buyerId' 
@@ -165,7 +212,7 @@ const ProductInfo = () => {
   'soldPrice' 
   'soldDate' 
   'registerDate' 
-  'extensionDate' 
+  'auctionDeadline' 
   'modal',
   */
 
@@ -176,8 +223,9 @@ const ProductInfo = () => {
     immediatePrice,
     thumbnailUrl,
     isAuction,
-    auctionDeadline,
-    seller
+    extensionDate,
+    seller,
+    soldPrice
   } = product;
 
   const baseURL = apiUrl;
@@ -294,7 +342,7 @@ const ProductInfo = () => {
         .then(response => {
           if (response.status < 300) {
             socketClient.emit("bid", {
-              type: "alert",
+              type: "bid",
               roomId: id,
               sender: { ...user, sessionId: user.sessionId },
               bid: response.data,
@@ -361,6 +409,11 @@ const ProductInfo = () => {
           createdAt: Date.now()
         });
 
+        dispatchProductPage({
+          type: "UPDATE_PRODUCT",
+          product: response.data
+        });
+
         setModal({
           isOpen: true,
           component: SuccessModal,
@@ -383,48 +436,90 @@ const ProductInfo = () => {
       </ProductImageBox>
 
       <ProductDescBox>
-        <ProductTitle>
-          {title}
-          <ReportButton userId={seller.id} productId={id} text={"판매자 신고"} />
-          <MessengerCreateButton userId={user.id} sellerId={seller.id} text={"판매자와 대화하기"} />
-        </ProductTitle>
-        <ProductSeller>
-          <ProductDescText size="sm">판매자</ProductDescText>
-          <ProductDescText primary bold>
-            {seller.name}
-          </ProductDescText>
-        </ProductSeller>
-        <ProductDueDate>
-          <ProductDescText size="sm">판매 종료일</ProductDescText>
-          <ProductDescText primary bold>
-            {auctionDeadline ? moment(auctionDeadline).format("YYYY년 MM월 DD일") : "비경매 상품"}
-          </ProductDescText>
-        </ProductDueDate>
-        {isAuction ? (
+        <ProductDesc>
+          <ProductTitle>
+            {title}
+            <ReportButton
+              userId={seller.id}
+              productId={id}
+              text={"판매자 신고"}
+            />
+            <MessengerCreateButton
+              userId={user.id}
+              sellerId={seller.id}
+              text={"판매자와 대화하기"}
+            />
+          </ProductTitle>
+
+          <ProductSeller>
+            <ProductDescText size="sm">판매자</ProductDescText>
+            <ProductDescText primary bold>
+              {seller.name}
+            </ProductDescText>
+          </ProductSeller>
+
+          <ProductDueDate>
+            <ProductDescText size="sm">판매 종료일</ProductDescText>
+            <ProductDescText primary bold>
+              {extensionDate &&
+                moment(extensionDate).format("YYYY년 MM월 DD일")}
+            </ProductDescText>
+          </ProductDueDate>
+
           <ProductDueDate>
             <ProductDescText size="sm">남은 시간</ProductDescText>
             <ProductDescText primary bold>
-              {<TextTimer auctionDeadline={auctionDeadline} /> || "비경매 상품"}
+              <TextTimer datetime={extensionDate} onEnd={() => {}} />
             </ProductDescText>
           </ProductDueDate>
-        ) : null}
-        <ProductBid onSubmit={handleBidSubmit}>
-          <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
-          <BidInput name="bidPrice" placeholder="바로입찰" />
-          <BidButton>입찰</BidButton>
-        </ProductBid>
-        <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
-          <PurchasePrice>
-            즉시 구매가
-            <ProductDescText primary bold size="sm">
-              {`${convert2Price(settedimmediatePrice)} 원`}
-            </ProductDescText>
-          </PurchasePrice>
-          <PurchaseButton>구매</PurchaseButton>
-        </ProductPurchase>
-        <ShareWrapper>
-          <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
-        </ShareWrapper>
+
+          <ProductBid onSubmit={handleBidSubmit}>
+            {isAuction ? (
+              <>
+                <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
+                <BidInput name="bidPrice" placeholder="바로입찰" />
+                <BidButton>입찰</BidButton>
+              </>
+            ) : (
+              <>
+                <NoBidInput
+                  disabled
+                  placeholder="본 상품은 일반 상품 입니다."
+                ></NoBidInput>
+                <BidButton disabled>입찰</BidButton>
+              </>
+            )}
+          </ProductBid>
+
+          <ProductPurchase
+            onSubmit={handleImmediateSubmit(settedimmediatePrice)}
+          >
+            {soldPrice ? (
+              <>
+                <PurchaseComplete>판매 완료(SOLD OUT)</PurchaseComplete>
+                <PurchaseButton disabled>구매</PurchaseButton>
+              </>
+            ) : (
+              <>
+                <PurchasePrice>
+                  즉시 구매가
+                  <ProductDescText primary bold size="sm">
+                    {`${convert2Price(settedimmediatePrice)} 원`}
+                  </ProductDescText>
+                </PurchasePrice>
+                <PurchaseButton>구매</PurchaseButton>
+              </>
+            )}
+          </ProductPurchase>
+
+          <ShareWrapper>
+            <ShareBox
+              width={10}
+              url={apiConfig.url + `/products/${id}`}
+              object={product}
+            />
+          </ShareWrapper>
+        </ProductDesc>
       </ProductDescBox>
     </ProductInfoStyle>
   );

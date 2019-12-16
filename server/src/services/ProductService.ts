@@ -126,11 +126,17 @@ export class ProductsService {
   }
 
   /* Patch */
-  public async update(productId: number, soldPrice: number, soldDate: string, buyerId: number) {
+  public async update(
+    productId: number,
+    soldPrice: number,
+    soldDate: string,
+    buyerId: number
+  ) {
     const product = new Products();
     product.id = productId;
     product.soldPrice = soldPrice;
     product.soldDate = soldDate;
+    product.extensionDate = soldDate;
     product.buyerId = buyerId;
     const check = await this.productRepository.checkSold(productId);
     if (check && check.seller.id !== buyerId) {
@@ -145,7 +151,12 @@ export class ProductsService {
     return this.productRepository.remove(pid);
   }
 
-  public async rating(targetUserId: number, productId: number, point: number, isSeller: boolean) {
+  public async rating(
+    targetUserId: number,
+    productId: number,
+    point: number,
+    isSeller: boolean
+  ) {
     let productInfo = await this.productRepository.findOne(productId);
     if (productInfo) {
       if (isSeller) {
