@@ -81,7 +81,6 @@ function Container(props) {
       RecentMsg: value.recent ? value.recent.text : "",
       opponentUserId: getOpponentUserId(value)
     }));
-    console.log(Object.entries(result.val()));
     setRoomList(roomNumbers);
   }
   useEffect(() => {
