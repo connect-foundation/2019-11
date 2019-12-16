@@ -38,8 +38,12 @@ const OptionPriceCheck = styled.div`
 
 const Component = props => {
   const [isHover, setIsHover] = useState(false);
+  const [rateCheck, setRateCheck] = useState(false);
   let soldDate = new Date(props.solddate);
   let soldseconds = soldDate.getTime();
+  function doCheck() {
+    setRateCheck(true);
+  }
   return (
     <div onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)}>
       <TradeBox
@@ -57,13 +61,14 @@ const Component = props => {
         </OptionPriceCheck>
         {props.status === "판매" ? (
           <div>
-            {props.sellerCheck ? (
+            {rateCheck || props.sellerCheck ? (
               "평가완료"
             ) : (
               <RatingButton
                 isSeller={true}
                 targetId={props.targetId}
                 productId={props.id}
+                doCheck={doCheck}
                 text="구매자 평가하기"
               />
             )}
@@ -76,13 +81,14 @@ const Component = props => {
           </div>
         ) : (
           <div>
-            {props.buyerCheck ? (
+            {rateCheck || props.buyerCheck ? (
               "평가완료"
             ) : (
               <RatingButton
                 isSeller={false}
                 targetId={props.targetId}
                 productId={props.id}
+                doCheck={doCheck}
                 text="판매자 평가하기"
               />
             )}
