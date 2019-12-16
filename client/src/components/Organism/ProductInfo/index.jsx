@@ -15,6 +15,7 @@ import ShareBox from "../../Molecules/ShareBox";
 import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import Carousel from "../../Molecules/Carousel";
+import { getNowDateTime } from "../../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
 
@@ -342,7 +343,7 @@ const ProductInfo = () => {
               roomId: id,
               sender: { ...user, sessionId: user.sessionId },
               bid: response.data,
-              createdAt: Date.now()
+              createdAt: getNowDateTime()
             });
 
             setModal({
@@ -391,7 +392,7 @@ const ProductInfo = () => {
 
     const params = {
       soldPrice: price,
-      soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
+      soldDate: getNowDateTime(),
       buyerId: user.id
     };
 
@@ -402,7 +403,7 @@ const ProductInfo = () => {
           roomId: id,
           sender: { ...user, sessionId: socketClient.id },
           sold: response.data,
-          createdAt: Date.now()
+          createdAt: getNowDateTime()
         });
 
         dispatchProductPage({

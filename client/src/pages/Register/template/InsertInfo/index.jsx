@@ -14,6 +14,8 @@ import productContext from "../../context";
 
 import { termList, itemDescription } from "../../constants";
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js";
+import { getNowDateTime } from "../../../../utils/dateUtil";
+import moment from "moment";
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -147,8 +149,9 @@ const Component = ({ width, next, registItem }) => {
 
   const successCallback = () => {
     const { data } = obj;
-    const deadLine = new Date();
-    deadLine.setDate(deadLine.getDate() + termList[dayIdx].term);
+    const deadLine = moment()
+      .add(termList[dayIdx].term, "days")
+      .format("YYYY-MM-DD HH:mm:ss");
 
     // 임시 사용자 번호 필히 변경 할것
     data.userId = user.id;
@@ -157,7 +160,7 @@ const Component = ({ width, next, registItem }) => {
     data.nowPrice = parseInt(buyNow);
     data.minPrice = isAuction ? parseInt(minPrice) : undefined;
     data.hopePrice = isAuction ? parseInt(predictPrice) : undefined;
-    data.endDate = deadLine.toString();
+    data.endDate = deadLine;
     data.isAuction = isAuction;
 
     for (let i = 0; i < imgList.length; i++) data.images.push(imgList[i].split(",")[1]);

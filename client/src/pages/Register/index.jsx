@@ -18,6 +18,7 @@ import pathConfig from "../../config/path";
 
 import productContext from "./context";
 import UserContext from "../../context/UserContext";
+import { getNowDateTime } from "../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
 const { storage, products } = pathConfig;
@@ -52,7 +53,7 @@ const Window = styled.div`
 `;
 
 const registerProduct = async ({ data, callback }) => {
-  const timestamp = new Date().toUTCString();
+  const timestamp = getNowDateTime();
   const productsHeader = { "x-timestamp": timestamp };
   const imageHeader = Object.assign(productsHeader, { "x-auth": "user" });
   const imageUrl = `${apiUrl}${storage.image}`;
