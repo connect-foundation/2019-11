@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import ItemList from "./List";
 
-const Conatiner = styled.div`
+const Container = styled.div`
   position: relative;
   width: 100%;
   max-width: 10rem;
@@ -46,7 +46,7 @@ const Component = ({ list, selected, show, handler }) => {
   };
 
   return (
-    <Conatiner>
+    <Container>
       <BoxHeader onClick={handleListOpen}>{header}</BoxHeader>
       <ItemListDiv>
         <ItemList
@@ -57,7 +57,7 @@ const Component = ({ list, selected, show, handler }) => {
           handler={listEvent}
         ></ItemList>
       </ItemListDiv>
-    </Conatiner>
+    </Container>
   );
 };
 
