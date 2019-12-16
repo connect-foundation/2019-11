@@ -8,4 +8,5 @@ export class UserDTO {
   accessToken: string;
   refreshToken: string;
   isLogin: Boolean;
+  isSnsLogin: Boolean;
 }
