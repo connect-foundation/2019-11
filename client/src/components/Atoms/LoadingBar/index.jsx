@@ -23,7 +23,7 @@ const Component = () => {
   return (
     <Container>
       <Content>
-        <span>Loadding...</span>
+        <span>Loading...</span>
       </Content>
     </Container>
   );
