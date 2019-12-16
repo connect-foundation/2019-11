@@ -18,6 +18,7 @@ export const dateDiff2Str = date => {
 
   const s = Math.floor(diff / 1000);
 
+  if (y < 0) return `방금 전`;
   if (y) return `${y} 년 전`;
   if (M) return `${M} 개월 전`;
   if (d) return `${d} 일 전`;

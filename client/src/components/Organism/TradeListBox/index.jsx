@@ -4,6 +4,7 @@ import TradeBox from "../../Molecules/TradeBase";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import ReportButton from "../../Atoms/ReportButton";
 import RatingButton from "../../Atoms/RatingButton";
+import { strEmpty } from "../../../utils/validator";
 
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
