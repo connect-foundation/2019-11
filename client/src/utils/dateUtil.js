@@ -17,3 +17,10 @@ export const getDiffDateTime = (end, start) => {
 
   return { diff, d, h, m, s };
 };
+
+export const getNowDateTime = () => moment().format("YYYY-MM-DD HH:mm:ss");
+
+export const toFormatDateTime = datestring =>
+  moment(datestring)
+    .utc()
+    .format("YYYY-MM-DD HH:mm:ss");

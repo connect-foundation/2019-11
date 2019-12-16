@@ -15,6 +15,7 @@ import ShareBox from "../../Molecules/ShareBox";
 import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import Carousel from "../../Molecules/Carousel";
+import { getNowDateTime } from "../../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
 
@@ -195,9 +196,7 @@ const ShareWrapper = styled.div`
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
 
-  const [productPageState, dispatchProductPage] = useContext(
-    ProductPageContext
-  );
+  const [productPageState, dispatchProductPage] = useContext(ProductPageContext);
   const { socketClient, product, chats } = productPageState;
 
   const [modal, setModal] = useContext(ModalContext);
@@ -253,9 +252,7 @@ const ProductInfo = () => {
    * @param {Array} chatlist
    */
   function findsoldmessage(chatlist) {
-    let alertchat = chatlist.filter(
-      chat => chat.type === "alert" && chat.text.split("즉시 구매").length > 1
-    );
+    let alertchat = chatlist.filter(chat => chat.type === "purchase");
     return alertchat.length > 0;
   }
   /**
@@ -264,7 +261,7 @@ const ProductInfo = () => {
    * @param {Array} chatlist
    */
   function findlastalert(chatlist) {
-    let alertchat = chatlist.filter(chat => chat.type === "alert");
+    let alertchat = chatlist.filter(chat => chat.type === "bid");
     if (alertchat.length) {
       return alertchat[alertchat.length - 1].text;
     } else {
@@ -346,7 +343,7 @@ const ProductInfo = () => {
               roomId: id,
               sender: { ...user, sessionId: user.sessionId },
               bid: response.data,
-              createdAt: Date.now()
+              createdAt: getNowDateTime()
             });
 
             setModal({
@@ -395,7 +392,7 @@ const ProductInfo = () => {
 
     const params = {
       soldPrice: price,
-      soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
+      soldDate: getNowDateTime(),
       buyerId: user.id
     };
 
@@ -406,7 +403,7 @@ const ProductInfo = () => {
           roomId: id,
           sender: { ...user, sessionId: socketClient.id },
           sold: response.data,
-          createdAt: Date.now()
+          createdAt: getNowDateTime()
         });
 
         dispatchProductPage({
@@ -439,11 +436,7 @@ const ProductInfo = () => {
         <ProductDesc>
           <ProductTitle>
             {title}
-            <ReportButton
-              userId={seller.id}
-              productId={id}
-              text={"판매자 신고"}
-            />
+            <ReportButton userId={seller.id} productId={id} text={"판매자 신고"} />
             <MessengerCreateButton
               userId={user.id}
               sellerId={seller.id}
@@ -461,8 +454,7 @@ const ProductInfo = () => {
           <ProductDueDate>
             <ProductDescText size="sm">판매 종료일</ProductDescText>
             <ProductDescText primary bold>
-              {extensionDate &&
-                moment(extensionDate).format("YYYY년 MM월 DD일")}
+              {extensionDate && moment(extensionDate).format("YYYY년 MM월 DD일")}
             </ProductDescText>
           </ProductDueDate>
 
@@ -482,18 +474,13 @@ const ProductInfo = () => {
               </>
             ) : (
               <>
-                <NoBidInput
-                  disabled
-                  placeholder="본 상품은 일반 상품 입니다."
-                ></NoBidInput>
+                <NoBidInput disabled placeholder="본 상품은 일반 상품 입니다."></NoBidInput>
                 <BidButton disabled>입찰</BidButton>
               </>
             )}
           </ProductBid>
 
-          <ProductPurchase
-            onSubmit={handleImmediateSubmit(settedimmediatePrice)}
-          >
+          <ProductPurchase onSubmit={handleImmediateSubmit(settedimmediatePrice)}>
             {soldPrice ? (
               <>
                 <PurchaseComplete>판매 완료(SOLD OUT)</PurchaseComplete>
@@ -513,11 +500,7 @@ const ProductInfo = () => {
           </ProductPurchase>
 
           <ShareWrapper>
-            <ShareBox
-              width={10}
-              url={apiConfig.url + `/products/${id}`}
-              object={product}
-            />
+            <ShareBox width={10} url={apiConfig.url + `/products/${id}`} object={product} />
           </ShareWrapper>
         </ProductDesc>
       </ProductDescBox>

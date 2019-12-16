@@ -7,6 +7,8 @@ import firebase from "../../../shared/firebase";
 import userContext from "../../../context/UserContext";
 import FoundImg from "../../../assets/found.png";
 
+import { strEmpty } from "../../../utils/validator";
+
 const MessengerDiv = styled.div`
   position: absolute;
   font-family: "BMJUA";
@@ -81,7 +83,6 @@ function Container(props) {
       RecentMsg: value.recent ? value.recent.text : "",
       opponentUserId: getOpponentUserId(value)
     }));
-    console.log(Object.entries(result.val()));
     setRoomList(roomNumbers);
   }
   useEffect(() => {
@@ -94,7 +95,9 @@ function Container(props) {
   }
   const writeChat = e => {
     e.preventDefault();
-    if (e.target.messengerText.value === "") return;
+    if (strEmpty(e.target.messengerText.value)) {
+      return (e.target.messengerText.value = "");
+    }
     firebase.writeChat(e.target.roomNumber.value, USERID, e.target.messengerText.value); //방번호, 유저번호
     e.target.messengerText.value = "";
   };

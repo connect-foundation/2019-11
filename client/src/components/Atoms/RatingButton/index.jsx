@@ -44,6 +44,7 @@ const Component = props => {
           isSeller={props.isSeller}
           targetId={props.targetId}
           productId={props.productId}
+          doCheck={props.doCheck}
         />
       ) : (
         undefined
