@@ -1,10 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import userContext from "../../../context/UserContext";
+import UserContext from "../../../context/UserContext";
 import DefaultProfileIcon from "../../../assets/default-profile.svg";
 import ModalContext from "../../../context/ModalContext";
 import SignUpModal from "../CustomModal/SignUpModal";
+import ReactTooltip from "react-tooltip";
+import { postJsonFetch } from "../../../services/fetchService";
+import apiConfig from "../../../config/api";
+import pathConfig from "../../../config/path";
+
+const { apiUrl } = apiConfig;
+const { storage } = pathConfig;
 
 const InfoDiv = styled.div`
   display: flex;
@@ -19,6 +26,7 @@ const ProfileWrap = styled.div`
   display: flex;
   margin: 1rem 0;
   justify-content: center;
+  padding: 0;
 `;
 
 const ProfileBig = styled.div`
@@ -35,6 +43,7 @@ const ProfileBig = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
+    margin: 0;
   }
 `;
 const UserWrap = styled.div`
@@ -83,8 +92,36 @@ const LogoutButtons = styled.button`
   }
 `;
 
+const ChangeImgButtonLabel = styled.label`
+  display: inline-block;
+  position: absolute;
+  right: 1em;
+  width: 1em;
+  right: 1em;
+  img {
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+  }
+`;
+
+const ChangeImgButton = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+`;
+
+const ToolTip = styled(ReactTooltip)`
+  font-family: "BMJUA";
+`;
+
 function Component(props) {
-  const [user, setUser] = useContext(userContext);
+  const [user, setUser] = useContext(UserContext);
   const [, setModal] = useContext(ModalContext);
   const [token, setToken] = useState("");
   useEffect(() => {
@@ -109,6 +146,27 @@ function Component(props) {
       props: { close: handleUpdateDone, isSignUp: false }
     });
   };
+
+  const handleGetImage = e => {
+    const { files } = e.target;
+    const url = `${apiUrl}${storage.profile}`;
+    const timestamp = new Date().toUTCString();
+    const header = { "x-timestamp": timestamp };
+    const imageHeader = Object.assign(header, { "x-auth": "user" });
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(files[0]);
+    fileReader.onload = async e => {
+      const img = e.target.result.split(",")[1];
+      const result = await postJsonFetch(url, imageHeader, {
+        id: user.id,
+        uri: img
+      });
+      console.log(result);
+      setUser(result);
+    };
+    e.preventDefault();
+  };
+
   return (
     <InfoDiv>
       <ProfileWrap>
@@ -122,6 +180,26 @@ function Component(props) {
             alt={"Profile Image"}
           />
         </ProfileBig>
+
+        {token.includes("kakao_") || token.includes("google_") ? (
+          undefined
+        ) : (
+          <>
+            <ChangeImgButtonLabel
+              htmlFor="change-img"
+              data-tip="프로필 이미지 변경"
+            >
+              <img src="https://image.flaticon.com/icons/png/512/17/17789.png" />
+            </ChangeImgButtonLabel>
+            <ChangeImgButton
+              id="change-img"
+              type={"file"}
+              accept=".jpg, .png"
+              onChange={handleGetImage}
+            />
+            <ToolTip place="right" effect="solid" />
+          </>
+        )}
       </ProfileWrap>
       <UserWrap>
         <div>{user.name}님</div>

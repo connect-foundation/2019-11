@@ -7,7 +7,9 @@ import { UserDTO } from "../dto/UserDTO";
 
 @Service()
 export class UserService {
-  constructor(@InjectRepository() private readonly userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository() private readonly userRepository: UserRepository
+  ) {}
 
   /** GET */
   public find() {
@@ -27,6 +29,11 @@ export class UserService {
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
       userResponse.isLogin = true;
+      userResponse.isSnsLogin =
+        result.refreshToken.includes("kakao_") ||
+        result.refreshToken.includes("google_")
+          ? true
+          : false;
       return userResponse;
     }
     return result;
@@ -44,6 +51,11 @@ export class UserService {
       userResponse.profileUrl = result.profileUrl;
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
+      userResponse.isSnsLogin =
+        result.refreshToken.includes("kakao_") ||
+        result.refreshToken.includes("google_")
+          ? true
+          : false;
       userResponse.isLogin = true;
       return userResponse;
     }
@@ -63,6 +75,11 @@ export class UserService {
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
       userResponse.isLogin = true;
+      userResponse.isSnsLogin =
+        result.refreshToken.includes("kakao_") ||
+        result.refreshToken.includes("google_")
+          ? true
+          : false;
       return userResponse;
     }
     return result;
@@ -98,11 +115,18 @@ export class UserService {
     userResponse.accessToken = res.accessToken;
     userResponse.refreshToken = res.refreshToken;
     userResponse.isLogin = true;
+    userResponse.isSnsLogin = false;
 
     return userResponse;
   }
 
-  public async update(id: number, loginId: string, password: string, name: string, email: string) {
+  public async update(
+    id: number,
+    loginId: string,
+    password: string,
+    name: string,
+    email: string
+  ) {
     const user = new Users();
     const { salt, result } = encryptPassword(password);
     user.id = id;
@@ -123,6 +147,7 @@ export class UserService {
     userResponse.accessToken = res.accessToken;
     userResponse.refreshToken = res.refreshToken;
     userResponse.isLogin = true;
+    userResponse.isSnsLogin = false;
 
     return userResponse;
   }
@@ -158,6 +183,7 @@ export class UserService {
     userResponse.accessToken = res.accessToken;
     userResponse.refreshToken = res.refreshToken;
     userResponse.isLogin = true;
+    userResponse.isSnsLogin = true;
 
     return userResponse;
   }
@@ -171,28 +197,54 @@ export class UserService {
   }
 
   /** PUT, PATCH */
-  public async updateToken(loginId: string, accessToken: string, refreshToken: string) {
+  public async updateToken(
+    loginId: string,
+    accessToken: string,
+    refreshToken: string
+  ) {
     /**TODO: 해당 id값으로 Entitiy를 조회해서, 새로운 user 엔티티로 변경 */
     const user = await this.userRepository.findOne(loginId);
     if (user === undefined) {
       return false;
-    } else {
-      user.accessToken = accessToken;
-      user.refreshToken = refreshToken;
-      const result = await this.userRepository.save(user);
-      const userResponse = new UserDTO();
-      userResponse.id = result.id;
-      userResponse.loginId = result.loginId;
-      userResponse.name = result.name;
-      userResponse.email = result.email;
-      userResponse.mannerPoint = result.mannerPoint;
-      userResponse.profileUrl = result.profileUrl;
-      userResponse.accessToken = result.accessToken;
-      userResponse.refreshToken = result.refreshToken;
-      userResponse.isLogin = true;
-
-      return userResponse;
     }
+    user.accessToken = accessToken;
+    user.refreshToken = refreshToken;
+    const result = await this.userRepository.save(user);
+    const userResponse = new UserDTO();
+    userResponse.id = result.id;
+    userResponse.loginId = result.loginId;
+    userResponse.name = result.name;
+    userResponse.email = result.email;
+    userResponse.mannerPoint = result.mannerPoint;
+    userResponse.profileUrl = result.profileUrl;
+    userResponse.accessToken = result.accessToken;
+    userResponse.refreshToken = result.refreshToken;
+    userResponse.isLogin = true;
+    userResponse.isSnsLogin = false;
+
+    return userResponse;
+  }
+
+  public async updateUserProfile(id: number, profile: string) {
+    const user = await this.userRepository.findOnebyIdx(id);
+    if (user === undefined) {
+      return false;
+    }
+    user.profileUrl = profile;
+    const result = await this.userRepository.save(user);
+    const userResponse = new UserDTO();
+    userResponse.id = result.id;
+    userResponse.loginId = result.loginId;
+    userResponse.name = result.name;
+    userResponse.email = result.email;
+    userResponse.mannerPoint = result.mannerPoint;
+    userResponse.profileUrl = result.profileUrl;
+    userResponse.accessToken = result.accessToken;
+    userResponse.refreshToken = result.refreshToken;
+    userResponse.isLogin = true;
+    userResponse.isSnsLogin = false;
+
+    return userResponse;
   }
 
   public async updateAuth(
@@ -223,6 +275,7 @@ export class UserService {
       userResponse.accessToken = result.accessToken;
       userResponse.refreshToken = result.refreshToken;
       userResponse.isLogin = true;
+      userResponse.isSnsLogin = true;
 
       return userResponse;
     }
