@@ -4,7 +4,7 @@ import TradeBox from "../../Molecules/TradeBase";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import ReportButton from "../../Atoms/ReportButton";
 import RatingButton from "../../Atoms/RatingButton";
-import { strEmpty } from "../../../utils/validator";
+import { convert2Price } from "../../../utils/converter";
 
 const TradeContents = styled.div`
   display: ${props => (props.isHover ? "flex" : "none")};
@@ -46,13 +46,13 @@ const Component = props => {
         title={props.title}
         thumbnail={props.thumbnail}
         status={props.status}
-        price={props.soldprice}
+        price={convert2Price(props.soldprice)}
         time={soldseconds}
       />
       <TradeContents isHover={isHover}>
         <RegistDate>등록 날짜:{props.registdate}</RegistDate>
         <OptionPriceCheck isCheck={props.hopeprice}>
-          <HopePrice>희망 가격:{props.hopeprice}</HopePrice>
+          <HopePrice>희망 가격:{convert2Price(props.hopeprice)}</HopePrice>
           <Deviation setColor={props.deviation}>편차:{props.deviation}%</Deviation>
         </OptionPriceCheck>
         {props.status === "판매" ? (
