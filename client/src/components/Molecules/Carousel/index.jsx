@@ -5,7 +5,7 @@ import BeforeButton from "./BeforeButton";
 import CarouselImage from "./CarouselImage";
 import AddButton from "./AddButton";
 
-import LoddingImage from "../../../assets/loadding.gif";
+import LoddingImage from "../../../assets/loading.gif";
 
 import { limits, size } from "./constant";
 
@@ -73,7 +73,7 @@ const Components = ({ list, handler, readOnly }) => {
   let renderCount = 0;
   const [showIdx, changeIdx] = useState(0);
   const [dragOn, setDragOn] = useState(false);
-  const [isLoadding, setIsLoadding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFull, setIsFull] = useState(list.length >= limits);
 
   const handleLeft = event => {
@@ -113,12 +113,12 @@ const Components = ({ list, handler, readOnly }) => {
     imageBuffer = [];
     onloadCount = renderCount = 0;
     setIsFull(list.length >= limits);
-    setIsLoadding(false);
+    setIsLoading(false);
   };
 
   const imageOnLoad = files => {
     const supportedFilesTypes = ["image/jpeg", "image/png", "image/gif"];
-    setIsLoadding(true);
+    setIsLoading(true);
     for (let idx = 0; idx < files.length; ++idx) {
       const { type } = files[idx];
       if (supportedFilesTypes.indexOf(type) > -1) {
@@ -132,7 +132,7 @@ const Components = ({ list, handler, readOnly }) => {
         render.readAsDataURL(files[idx]);
       }
     }
-    if (!renderCount) setIsLoadding(false);
+    if (!renderCount) setIsLoading(false);
   };
 
   return (
@@ -169,7 +169,7 @@ const Components = ({ list, handler, readOnly }) => {
           {readOnly | isFull ? undefined : <AddButton trigger={imageOnLoad} />}
         </Panel>
       </Window>
-      {isLoadding ? <Lodding /> : undefined}
+      {isLoading ? <Lodding /> : undefined}
     </Container>
   );
 };
