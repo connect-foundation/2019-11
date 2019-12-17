@@ -4,7 +4,8 @@ import CardContainer from "../../components/Molecules/CardContainer";
 
 import apiConfig from "../../config/api";
 import pathConfig from "../../config/path";
-
+import detailCategoryList from "../../data/detail-category-list";
+import ErrorPage from "../ErrorPage";
 const { apiUrl } = apiConfig;
 const { items } = pathConfig;
 
@@ -24,8 +25,13 @@ const MainStyle = styled.div`
 
 const CategoryItems = ({ match }) => {
   const categoryCode = match.params.code;
-  const categoryTitle = match.params.title;
   const [itemlist, setItemslist] = useState([]);
+
+  let categoryTitle = detailCategoryList.reduce((acc, ele) => {
+    let array = ele.details.filter(details => details.code === Number(categoryCode));
+    if (array.length) acc.push(...array);
+    return acc;
+  }, []);
 
   const fetcher = async () => {
     setItemslist([]);
@@ -37,12 +43,18 @@ const CategoryItems = ({ match }) => {
   };
   useEffect(() => {
     fetcher();
-  }, [categoryCode, categoryTitle]);
+  }, [categoryCode]);
 
   return (
-    <MainStyle>
-      <CardContainer items={itemlist} title={categoryTitle} isWrap={true} />
-    </MainStyle>
+    <>
+      {categoryTitle.length ? (
+        <MainStyle>
+          <CardContainer items={itemlist} title={categoryTitle[0].title} isWrap={true} />
+        </MainStyle>
+      ) : (
+        <ErrorPage />
+      )}
+    </>
   );
 };
 
