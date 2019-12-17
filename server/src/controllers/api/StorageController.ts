@@ -6,7 +6,8 @@ import {
   OnUndefined,
   OnNull,
   JsonController,
-  BodyParam
+  BodyParam,
+  Delete
 } from "routing-controllers";
 
 import s3 from "../../services/S3Service";
@@ -24,8 +25,7 @@ export class StoreageController {
     @HeaderParam("x-timestamp") timestamp: string,
     @BodyParam("uri") data: string
   ) {
-    if (uid === undefined || timestamp === undefined)
-      return new ForbiddenError();
+    if (uid === undefined || timestamp === undefined) return new ForbiddenError();
 
     const result = s3.creatObject("image/", data);
     return result;
@@ -38,11 +38,16 @@ export class StoreageController {
     @BodyParam("uri") data: string,
     @BodyParam("id") id: number
   ) {
-    if (uid === undefined || timestamp === undefined)
-      return new ForbiddenError();
+    if (uid === undefined || timestamp === undefined) return new ForbiddenError();
 
     const result = await s3.creatObject("profile/", data);
     const user = this.userService.updateUserProfile(id, result);
     return user;
+  }
+
+  @Delete("/image")
+  public async remove(@BodyParam("url") url: string) {
+    const result = await s3.deleteObject(url);
+    return result;
   }
 }
