@@ -63,7 +63,7 @@ const DivisionLine = styled.hr`
 `;
 
 const { apiUrl } = apiConfig;
-const { users, category } = pathConfig;
+const { users, statics } = pathConfig;
 
 const Components = () => {
   const [open, setOpen] = useState(false);
@@ -75,7 +75,7 @@ const Components = () => {
   const node = useRef();
 
   const getCategoryList = async () => {
-    const result = await getFetch(`${apiUrl}${category}`, {}, {});
+    const result = await getFetch(`${apiUrl}${statics.categories}`, {}, {});
     setCategoryList(result);
   };
 
