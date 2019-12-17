@@ -127,12 +127,12 @@ export class UserService {
     name: string,
     email: string
   ) {
-    const user = new Users();
+    const user = await this.userRepository.findOnebyIdx(id);
+    if (user === undefined) return false;
     const { salt, result } = encryptPassword(password);
-    user.id = id;
     user.loginId = loginId;
-    user.salt = salt;
     user.password = result;
+    user.salt = salt;
     user.name = name;
     user.email = email;
 

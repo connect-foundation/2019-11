@@ -341,7 +341,7 @@ const ProductInfo = () => {
 
     const params = {
       soldPrice: price,
-      soldDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+      soldDate: getNowDateTime(),
       buyerId: user.id
     };
 

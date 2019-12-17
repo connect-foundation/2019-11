@@ -93,7 +93,11 @@ const Components = () => {
             setUser(result);
             localStorage.setItem("access-token", result.accessToken);
             localStorage.setItem("refresh-token", result.refreshToken);
-          } else alert("세션이 만료되어 로그아웃됩니다.");
+          } else {
+            alert("세션이 만료되어 로그아웃됩니다.");
+            localStorage.removeItem("access-token");
+            localStorage.removeItem("refresh-token");
+          }
         })();
       }
     }
