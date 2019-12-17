@@ -6,11 +6,7 @@ import CategoryIcon from "./CategoryIcon";
 import ExpandList from "./ExpandList";
 import LoginButton from "./LoginButton";
 import Profile from "./Profile";
-import Cloth from "../../../assets/cloth.svg";
-import Electronic from "../../../assets/television.svg";
-import LifeStyle from "../../../assets/geek.svg";
 import MessengerIcon from "../../../assets/messenger.svg";
-import detailCategoryList from "../../../data/detail-category-list";
 import UserContext from "../../../context/UserContext";
 import Messenger from "../../Messenger";
 import apiConfig from "../../../config/api";
@@ -67,18 +63,25 @@ const DivisionLine = styled.hr`
 `;
 
 const { apiUrl } = apiConfig;
-const { users } = pathConfig;
+const { users, statics } = pathConfig;
 
 const Components = () => {
   const [open, setOpen] = useState(false);
   const [selectIdx, setSelectIdx] = useState(1);
   const [user, setUser] = useContext(UserContext);
   const [, setModal] = useContext(ModalContext);
+  const [categoryList, setCategoryList] = useState([]);
 
   const node = useRef();
 
+  const getCategoryList = async () => {
+    const result = await getFetch(`${apiUrl}${statics.categories}`, {}, {});
+    setCategoryList(result);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleOnBlur);
+    getCategoryList();
     if (user.id === undefined) {
       const refreshToken = localStorage.getItem("refresh-token");
       const accessToken = localStorage.getItem("access-token");
@@ -105,10 +108,11 @@ const Components = () => {
 
   const handleClick = e => {
     const { idx } = e.target.dataset;
-    if (selectIdx === idx || open === false) {
+    if (selectIdx === Number(idx) || open === false) {
       setOpen(!open);
     }
-    setSelectIdx(idx);
+    setSelectIdx(Number(idx));
+    e.preventDefault();
   };
 
   const handleUpdateDone = () => {
@@ -148,30 +152,17 @@ const Components = () => {
           )}
           <DivisionLine />
           <List>
-            <CategoryIcon
-              color="#FFE1A2"
-              img={Cloth}
-              text="의류"
-              active={open}
-              onClick={handleClick}
-              idx={1}
-            />
-            <CategoryIcon
-              color="#BEDDBF"
-              img={Electronic}
-              text="가전"
-              active={open}
-              onClick={handleClick}
-              idx={2}
-            />
-            <CategoryIcon
-              color="#5C5749"
-              img={LifeStyle}
-              text="생활"
-              active={open}
-              onClick={handleClick}
-              idx={3}
-            />
+            {categoryList.length > 0 &&
+              categoryList.map((item, index) => (
+                <CategoryIcon
+                  color={item.color}
+                  img={item.imageUrl}
+                  text={item.name}
+                  active={open}
+                  onClick={handleClick}
+                  idx={index + 1}
+                />
+              ))}
           </List>
           {user.isLogin === true ? (
             <>
@@ -191,12 +182,18 @@ const Components = () => {
         </Bar>
       </OriginWrapper>
       <ListWrapper open={open} idx={selectIdx}>
-        <ExpandList
-          open={open}
-          idx={selectIdx}
-          details={detailCategoryList[selectIdx - 1]}
-          onClick={close}
-        />
+        {categoryList.length > 0 && (
+          <ExpandList
+            open={open}
+            idx={selectIdx}
+            details={
+              selectIdx === 0 || selectIdx === 999
+                ? []
+                : categoryList[selectIdx - 1].sub
+            }
+            onClick={close}
+          />
+        )}
       </ListWrapper>
     </Container>
   );

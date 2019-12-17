@@ -10,7 +10,7 @@ import AlertDialog from "../../components/Molecules/AlertDialog";
 import Spinner from "../../components/Atoms/Spinner";
 
 import { base642Blob } from "../../utils/converter";
-import { postJsonFetch } from "../../services/fetchService";
+import { postJsonFetch, getFetch } from "../../services/fetchService";
 import { createThumbnail } from "../../services/imageService";
 import { phaseList, defaultData, dialogOption } from "./constants";
 import apiConfig from "../../config/api";
@@ -21,7 +21,7 @@ import UserContext from "../../context/UserContext";
 import { getNowDateTime } from "../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
-const { storage, products } = pathConfig;
+const { storage, products, statics } = pathConfig;
 
 const WIDTH = 80;
 
@@ -80,14 +80,23 @@ const Page = () => {
   const [phase, setPhase] = useState(0);
   const [maxPhase, setMaxPhase] = useState(0);
   const [open, setOpen] = useState(false);
+  const [mainCategory, setMainCateogries] = useState([]);
+  const [subCategory, setSubCategories] = useState([]);
 
   const [onlazy, setOnlazy] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       setOnlazy(false);
+      const url = `${apiUrl}${statics.categories}`;
+      const result = await getFetch(url);
+      const main = result.map(value => value.name);
+      const sub = result.map(value => value.sub);
+
+      setMainCateogries(main);
+      setSubCategories(sub);
     }, 1000);
-  });
+  }, []);
 
   useEffect(() => {
     if (!user.id) window.location.href = "/";
@@ -102,6 +111,8 @@ const Page = () => {
         <Content>
           <Window phase={phase}>
             <SelectCategory
+              leftList={mainCategory}
+              rightList={subCategory}
               next={() => {
                 setPhase(1);
                 setMaxPhase(1);

@@ -161,7 +161,6 @@ function Component(props) {
         id: user.id,
         uri: img
       });
-      console.log(result);
       setUser(result);
     };
     e.preventDefault();

@@ -5,7 +5,6 @@ import "../../style/index.css";
 
 import AuctionGraph from "../../components/Organism/AuctionGraph";
 import ProductInfo from "../../components/Organism/ProductInfo";
-import ShareCollection from "../../components/Product/ShareCollection";
 
 export default {
   title: "Organisms|Products"
@@ -27,8 +26,4 @@ const product = {
 
 export const ProductInfoBox = () => {
   return <ProductInfo product={product} />;
-};
-
-export const ShareCollectionBox = () => {
-  return <ShareCollection />;
 };
