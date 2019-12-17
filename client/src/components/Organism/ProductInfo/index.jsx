@@ -15,6 +15,7 @@ import ShareBox from "../../Molecules/ShareBox";
 import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import Carousel from "../../Molecules/Carousel";
+import { getNowDateTime } from "../../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
 
@@ -198,7 +199,7 @@ const ProductInfo = () => {
   const [productPageState, dispatchProductPage] = useContext(
     ProductPageContext
   );
-  const { socketClient, product, chats } = productPageState;
+  const { socketClient, product, chats, bids } = productPageState;
 
   const [modal, setModal] = useContext(ModalContext);
   /*   
@@ -225,75 +226,21 @@ const ProductInfo = () => {
     isAuction,
     extensionDate,
     seller,
-    soldPrice
+    soldPrice,
+    startBidPrice
   } = product;
 
+  const minBidPrice =
+    bids.length > 0
+      ? Math.floor(bids[bids.length - 1].bidPrice * 1.2)
+      : startBidPrice;
+
+  const purchasePrice =
+    minBidPrice < immediatePrice
+      ? immediatePrice
+      : Math.floor(minBidPrice * 1.2);
   const baseURL = apiUrl;
-  /**
-   * "~~님이 ~~원에 입찰" 에서 가격만 추출
-   * @param {string} text
-   */
-  function parsing(text) {
-    let word = text.split(" ")[1];
-    let num = word.split("원")[0];
-    return Number(num.split(",").join(""));
-  }
 
-  /**
-   * 현재 최고 입찰가 다음 입찰할 가격을 계산
-   * @param {number} topbid
-   */
-  function Setbidprice(topbid) {
-    return Math.floor(topbid + topbid * 0.2);
-  }
-
-  /**
-   * 현재 입력된 채팅에서 즉시 구매가 된 메시지를 찾아낸다.
-   *
-   * @param {Array} chatlist
-   */
-  function findsoldmessage(chatlist) {
-    let alertchat = chatlist.filter(
-      chat => chat.type === "alert" && chat.text.split("즉시 구매").length > 1
-    );
-    return alertchat.length > 0;
-  }
-  /**
-   * 현재 입력된 채팅중 알림의 마지막을 뽑는다.
-   *
-   * @param {Array} chatlist
-   */
-  function findlastalert(chatlist) {
-    let alertchat = chatlist.filter(chat => chat.type === "alert");
-    if (alertchat.length) {
-      return alertchat[alertchat.length - 1].text;
-    } else {
-      return false;
-    }
-  }
-
-  let isSold = false;
-  if (product.soldPrice) {
-    isSold = true;
-  }
-  let settedimmediatePrice = immediatePrice;
-  let minimumbid = Setbidprice(product.startBidPrice);
-  if (product.bids.length) {
-    minimumbid = Setbidprice(product.bids[product.bids.length - 1].bidPrice);
-  }
-  if (chats.length) {
-    if (findsoldmessage(chats)) {
-      isSold = true;
-    } else {
-      let lastalert = findlastalert(chats);
-      if (lastalert) {
-        minimumbid = Setbidprice(parsing(lastalert));
-      }
-    }
-  }
-  if (immediatePrice < minimumbid) {
-    settedimmediatePrice = Math.floor(minimumbid + minimumbid * 0.4);
-  }
   const handleBidSubmit = e => {
     e.preventDefault();
 
@@ -312,58 +259,57 @@ const ProductInfo = () => {
         props: { message: "자신의 상품은 구매가 불가 합니다." }
       });
     }
-    if (isSold) {
+
+    if (soldPrice) {
       return setModal({
         isOpen: true,
         component: FailModal,
         props: { message: "구매가 완료된 상품입니다." }
       });
     }
+
+    const bidPrice = e.target.bidPrice.value;
+
     const params = {
-      bidPrice: e.target.bidPrice.value,
-      bidDate: moment().format("YYYY-MM-DD h:mm:ss"),
+      bidPrice: bidPrice === "" ? minBidPrice : bidPrice,
+      bidDate: getNowDateTime(),
       userId: user.id,
       productId: id
     };
 
-    if (params.bidPrice === "") {
-      params.bidPrice = minimumbid;
-    }
-
-    if (minimumbid > params.bidPrice) {
-      setModal({
+    if (params.bidPrice < minBidPrice) {
+      return setModal({
         isOpen: true,
         component: FailModal,
         props: { message: "최소 경매가격을 확인해주세요." }
       });
-    } else {
-      axios
-        .post(`${baseURL}${pathConfig.bids}`, params)
-        .then(response => {
-          if (response.status < 300) {
-            socketClient.emit("bid", {
-              type: "bid",
-              roomId: id,
-              sender: { ...user, sessionId: user.sessionId },
-              bid: response.data,
-              createdAt: Date.now()
-            });
-
-            setModal({
-              isOpen: true,
-              component: SuccessModal,
-              props: { message: "입찰 성공" }
-            });
-          }
-        })
-        .catch(e => {
-          setModal({
-            isOpen: true,
-            component: FailModal,
-            props: { message: "입찰 실패" }
-          });
-        });
     }
+
+    axios
+      .post(`${baseURL}${pathConfig.bids}`, params)
+      .then(response => {
+        socketClient.emit("bid", {
+          type: "bid",
+          roomId: id,
+          sender: { ...user, sessionId: user.sessionId },
+          bid: response.data,
+          createdAt: getNowDateTime()
+        });
+
+        setModal({
+          isOpen: true,
+          component: SuccessModal,
+          props: { message: "입찰 성공" }
+        });
+      })
+      .catch(e => {
+        const errorMessage = e.response.data.message || "입찰 실패";
+        setModal({
+          isOpen: true,
+          component: FailModal,
+          props: { message: errorMessage }
+        });
+      });
   };
 
   const handleImmediateSubmit = price => e => {
@@ -385,7 +331,7 @@ const ProductInfo = () => {
       });
     }
 
-    if (isSold) {
+    if (soldPrice) {
       return setModal({
         isOpen: true,
         component: FailModal,
@@ -395,7 +341,7 @@ const ProductInfo = () => {
 
     const params = {
       soldPrice: price,
-      soldDate: moment().format("YYYY-MM-DD h:mm:ss"),
+      soldDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       buyerId: user.id
     };
 
@@ -406,7 +352,7 @@ const ProductInfo = () => {
           roomId: id,
           sender: { ...user, sessionId: socketClient.id },
           sold: response.data,
-          createdAt: Date.now()
+          createdAt: getNowDateTime()
         });
 
         dispatchProductPage({
@@ -476,7 +422,9 @@ const ProductInfo = () => {
           <ProductBid onSubmit={handleBidSubmit}>
             {isAuction ? (
               <>
-                <BidTootip>{`최소: ${convert2Price(minimumbid)} 원`}</BidTootip>
+                <BidTootip>{`최소: ${convert2Price(
+                  minBidPrice
+                )} 원`}</BidTootip>
                 <BidInput name="bidPrice" placeholder="바로입찰" />
                 <BidButton>입찰</BidButton>
               </>
@@ -491,9 +439,7 @@ const ProductInfo = () => {
             )}
           </ProductBid>
 
-          <ProductPurchase
-            onSubmit={handleImmediateSubmit(settedimmediatePrice)}
-          >
+          <ProductPurchase onSubmit={handleImmediateSubmit(purchasePrice)}>
             {soldPrice ? (
               <>
                 <PurchaseComplete>판매 완료(SOLD OUT)</PurchaseComplete>
@@ -504,7 +450,7 @@ const ProductInfo = () => {
                 <PurchasePrice>
                   즉시 구매가
                   <ProductDescText primary bold size="sm">
-                    {`${convert2Price(settedimmediatePrice)} 원`}
+                    {`${convert2Price(purchasePrice)} 원`}
                   </ProductDescText>
                 </PurchasePrice>
                 <PurchaseButton>구매</PurchaseButton>
