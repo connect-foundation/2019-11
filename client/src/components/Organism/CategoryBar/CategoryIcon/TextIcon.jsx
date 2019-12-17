@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const TextIcon = styled.span`
   font-family: "BMJUA";
-  font-size: 1.5em;
+  font-size: 1em;
   position: absolute;
   display: grid;
   color: var(--color-secondary-lighter);

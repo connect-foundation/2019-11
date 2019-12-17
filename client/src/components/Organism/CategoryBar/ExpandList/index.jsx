@@ -37,11 +37,6 @@ const StyledLink = styled(Link)`
 `;
 
 const Components = ({ idx, open, details, onClick }) => {
-  let detailCategoryList = null;
-  if (details !== undefined) {
-    detailCategoryList = details.details;
-  }
-
   return (
     <Container idx={idx} open={open}>
       {Number(idx) === 0 ? (
@@ -49,14 +44,14 @@ const Components = ({ idx, open, details, onClick }) => {
       ) : Number(idx) === 999 ? (
         <NotifyList />
       ) : (
-        detailCategoryList.map(category => (
+        details.map((category, index) => (
           <StyledLink
-            to={`/category/${category.title}/${category.code}`}
+            to={`/category/${category}/${idx * 1000 + index + 1}`}
             onClick={onClick}
-            key={category.title}
+            key={category}
           >
             <DetailCategory>
-              <label>{category.title}</label>
+              <label>{category}</label>
             </DetailCategory>
           </StyledLink>
         ))
