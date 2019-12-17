@@ -90,8 +90,8 @@ const Page = () => {
       setOnlazy(false);
       const url = `${apiUrl}${statics.categories}`;
       const result = await getFetch(url);
-      const main = result.map(value => Object.keys(value)[0]);
-      const sub = result.map(value => Object.values(value)[0].sub);
+      const main = result.map(value => value.name);
+      const sub = result.map(value => value.sub);
 
       setMainCateogries(main);
       setSubCategories(sub);
