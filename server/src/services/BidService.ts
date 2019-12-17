@@ -36,9 +36,13 @@ export class BidsService {
     bid.bidDate = bidDate;
     bid.bidPrice = bidPrice;
 
-    const product = await this.productRepository.findOne(productId);
+    let product = await this.productRepository.findOne(productId);
     const lastBids = await this.bidRepository.findLastBidBy(productId);
     const lastBid = lastBids[0];
+
+    if (!userId) {
+      throw new NotAcceptableError("로그인이 필요합니다.");
+    }
 
     if (bidPrice > MAX_BID_PRICE) {
       throw new NotAcceptableError("15억 이하로만 입찰이 가능합니다.");
@@ -70,6 +74,16 @@ export class BidsService {
       throw new NotAcceptableError(
         `현재 최소 입찰가보다 높은 가격에 입찰해야 합니다.`
       );
+    }
+
+    const minBidPrice = Math.floor(bidPrice * 1.2);
+    if (product.immediatePrice < minBidPrice) {
+      product.immediatePrice = Math.floor(minBidPrice * 1.2);
+      product = await this.productRepository.update(product);
+    }
+
+    if (!product) {
+      throw new NotAcceptableError(`즉시 구매 가격 업데이트 실패`);
     }
 
     const user = new Users();
