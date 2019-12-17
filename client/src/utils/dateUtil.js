@@ -17,3 +17,5 @@ export const getDiffDateTime = (end, start) => {
 
   return { diff, d, h, m, s };
 };
+
+export const getNowDateTime = () => moment().format("YYYY-MM-DD HH:mm:ss");
