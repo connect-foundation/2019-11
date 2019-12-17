@@ -46,7 +46,7 @@ const Components = ({ idx, open, details, onClick }) => {
       ) : (
         details.map((category, index) => (
           <StyledLink
-            to={`/category/${category}/${idx * 1000 + index + 1}`}
+            to={`/category/${idx * 1000 + index + 1}`}
             onClick={onClick}
             key={category}
           >

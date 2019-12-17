@@ -4,10 +4,10 @@ import CardContainer from "../../components/Molecules/CardContainer";
 
 import apiConfig from "../../config/api";
 import pathConfig from "../../config/path";
-import detailCategoryList from "../../data/detail-category-list";
 import ErrorPage from "../ErrorPage";
+import { getFetch } from "../../services/fetchService";
 const { apiUrl } = apiConfig;
-const { items } = pathConfig;
+const { items, statics } = pathConfig;
 
 const MainStyle = styled.div`
   display: flex;
@@ -24,14 +24,18 @@ const MainStyle = styled.div`
 `;
 
 const CategoryItems = ({ match }) => {
-  const categoryCode = match.params.code;
+  const categoryCode = Number(match.params.code);
   const [itemlist, setItemslist] = useState([]);
+  const [title, setTitle] = useState("");
 
-  let categoryTitle = detailCategoryList.reduce((acc, ele) => {
-    let array = ele.details.filter(details => details.code === Number(categoryCode));
-    if (array.length) acc.push(...array);
-    return acc;
-  }, []);
+  const getCategoryList = async () => {
+    const result = await getFetch(
+      `${apiUrl}${statics.categories}/${categoryCode}`,
+      {},
+      { code: categoryCode }
+    );
+    setTitle(result.title);
+  };
 
   const fetcher = async () => {
     setItemslist([]);
@@ -42,14 +46,15 @@ const CategoryItems = ({ match }) => {
     setItemslist(list[0]);
   };
   useEffect(() => {
+    getCategoryList();
     fetcher();
   }, [categoryCode]);
 
   return (
     <>
-      {categoryTitle.length ? (
+      {title.length ? (
         <MainStyle>
-          <CardContainer items={itemlist} title={categoryTitle[0].title} isWrap={true} />
+          <CardContainer items={itemlist} title={title} isWrap={true} />
         </MainStyle>
       ) : (
         <ErrorPage />
