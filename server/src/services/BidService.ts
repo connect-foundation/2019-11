@@ -7,6 +7,7 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { NotAcceptableError } from "routing-controllers";
 
+const MAX_BID_PRICE: number = 1500000000;
 @Service()
 export class BidsService {
   constructor(
@@ -45,6 +46,10 @@ export class BidsService {
 
     const productcheck = await this.productRepository.findOne(productId);
     const bidcheck = await this.bidRepository.findProductBidInfo(productId);
+
+    if (bidPrice > MAX_BID_PRICE) {
+      throw new NotAcceptableError("15억 이하로만 입찰이 가능합니다.");
+    }
 
     if (productcheck === undefined) {
       throw new NotAcceptableError("해당하는 상품이 존재하지 않습니다.");

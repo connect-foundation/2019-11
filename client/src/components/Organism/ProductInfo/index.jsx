@@ -425,7 +425,11 @@ const ProductInfo = () => {
                 <BidTootip>{`최소: ${convert2Price(
                   minBidPrice
                 )} 원`}</BidTootip>
-                <BidInput name="bidPrice" placeholder="바로입찰" />
+                <BidInput
+                  name="bidPrice"
+                  type="number"
+                  placeholder="바로입찰"
+                />
                 <BidButton>입찰</BidButton>
               </>
             ) : (
