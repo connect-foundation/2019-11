@@ -25,5 +25,4 @@ export default {
   statics: {
     categories: "/api/statics/categories"
   }
-
 };

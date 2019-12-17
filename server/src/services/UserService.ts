@@ -2,7 +2,11 @@ import { Service } from "typedi";
 import { UserRepository } from "../repositories/UserRepository";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Users } from "../models/Users";
-import { encryptPassword, checkPassword } from "../util/passwordUtils";
+import {
+  encryptPassword,
+  checkPassword,
+  checkIsSnsLogin
+} from "../util/authUtils";
 import { UserDTO } from "../dto/UserDTO";
 
 @Service()
@@ -19,21 +23,11 @@ export class UserService {
   public async findOne(loginId: string) {
     const result = await this.userRepository.findOne(loginId);
     if (result !== undefined) {
-      const userResponse = new UserDTO();
-      userResponse.id = result.id;
-      userResponse.loginId = result.loginId;
-      userResponse.name = result.name;
-      userResponse.email = result.email;
-      userResponse.mannerPoint = result.mannerPoint;
-      userResponse.profileUrl = result.profileUrl;
-      userResponse.accessToken = result.accessToken;
-      userResponse.refreshToken = result.refreshToken;
-      userResponse.isLogin = true;
-      userResponse.isSnsLogin =
-        result.refreshToken.includes("kakao_") ||
-        result.refreshToken.includes("google_")
-          ? true
-          : false;
+      const userResponse = new UserDTO(
+        result,
+        true,
+        checkIsSnsLogin(result.refreshToken)
+      );
       return userResponse;
     }
     return result;
@@ -42,21 +36,11 @@ export class UserService {
   public async findOnebyIdx(id: number) {
     const result = await this.userRepository.findOnebyIdx(id);
     if (result !== undefined) {
-      const userResponse = new UserDTO();
-      userResponse.id = result.id;
-      userResponse.loginId = result.loginId;
-      userResponse.name = result.name;
-      userResponse.email = result.email;
-      userResponse.mannerPoint = result.mannerPoint;
-      userResponse.profileUrl = result.profileUrl;
-      userResponse.accessToken = result.accessToken;
-      userResponse.refreshToken = result.refreshToken;
-      userResponse.isSnsLogin =
-        result.refreshToken.includes("kakao_") ||
-        result.refreshToken.includes("google_")
-          ? true
-          : false;
-      userResponse.isLogin = true;
+      const userResponse = new UserDTO(
+        result,
+        true,
+        checkIsSnsLogin(result.refreshToken)
+      );
       return userResponse;
     }
     return result;
@@ -65,21 +49,11 @@ export class UserService {
   public async findOneByToken(accessToken: string) {
     const result = await this.userRepository.findOneByToken(accessToken);
     if (result !== undefined) {
-      const userResponse = new UserDTO();
-      userResponse.id = result.id;
-      userResponse.loginId = result.loginId;
-      userResponse.name = result.name;
-      userResponse.email = result.email;
-      userResponse.mannerPoint = result.mannerPoint;
-      userResponse.profileUrl = result.profileUrl;
-      userResponse.accessToken = result.accessToken;
-      userResponse.refreshToken = result.refreshToken;
-      userResponse.isLogin = true;
-      userResponse.isSnsLogin =
-        result.refreshToken.includes("kakao_") ||
-        result.refreshToken.includes("google_")
-          ? true
-          : false;
+      const userResponse = new UserDTO(
+        result,
+        true,
+        checkIsSnsLogin(result.refreshToken)
+      );
       return userResponse;
     }
     return result;
@@ -94,8 +68,8 @@ export class UserService {
     accessToken: string,
     refreshToken: string
   ) {
-    const user = new Users();
     const { salt, result } = encryptPassword(password);
+    const user = new Users();
     user.loginId = loginId;
     user.salt = salt;
     user.password = result;
@@ -105,17 +79,7 @@ export class UserService {
     user.refreshToken = refreshToken;
 
     const res = await this.userRepository.save(user);
-    const userResponse = new UserDTO();
-    userResponse.id = res.id;
-    userResponse.loginId = res.loginId;
-    userResponse.name = res.name;
-    userResponse.email = res.email;
-    userResponse.mannerPoint = res.mannerPoint;
-    userResponse.profileUrl = res.profileUrl;
-    userResponse.accessToken = res.accessToken;
-    userResponse.refreshToken = res.refreshToken;
-    userResponse.isLogin = true;
-    userResponse.isSnsLogin = false;
+    const userResponse = new UserDTO(res, true, false);
 
     return userResponse;
   }
@@ -137,17 +101,7 @@ export class UserService {
     user.email = email;
 
     const res = await this.userRepository.save(user);
-    const userResponse = new UserDTO();
-    userResponse.id = res.id;
-    userResponse.loginId = res.loginId;
-    userResponse.name = res.name;
-    userResponse.email = res.email;
-    userResponse.mannerPoint = res.mannerPoint;
-    userResponse.profileUrl = res.profileUrl;
-    userResponse.accessToken = res.accessToken;
-    userResponse.refreshToken = res.refreshToken;
-    userResponse.isLogin = true;
-    userResponse.isSnsLogin = false;
+    const userResponse = new UserDTO(res, true, false);
 
     return userResponse;
   }
@@ -173,17 +127,7 @@ export class UserService {
     user.refreshToken = refreshToken;
 
     const res = await this.userRepository.save(user);
-    const userResponse = new UserDTO();
-    userResponse.id = res.id;
-    userResponse.loginId = res.loginId;
-    userResponse.name = res.name;
-    userResponse.email = res.email;
-    userResponse.mannerPoint = res.mannerPoint;
-    userResponse.profileUrl = res.profileUrl;
-    userResponse.accessToken = res.accessToken;
-    userResponse.refreshToken = res.refreshToken;
-    userResponse.isLogin = true;
-    userResponse.isSnsLogin = true;
+    const userResponse = new UserDTO(res, true, true);
 
     return userResponse;
   }
@@ -210,17 +154,7 @@ export class UserService {
     user.accessToken = accessToken;
     user.refreshToken = refreshToken;
     const result = await this.userRepository.save(user);
-    const userResponse = new UserDTO();
-    userResponse.id = result.id;
-    userResponse.loginId = result.loginId;
-    userResponse.name = result.name;
-    userResponse.email = result.email;
-    userResponse.mannerPoint = result.mannerPoint;
-    userResponse.profileUrl = result.profileUrl;
-    userResponse.accessToken = result.accessToken;
-    userResponse.refreshToken = result.refreshToken;
-    userResponse.isLogin = true;
-    userResponse.isSnsLogin = false;
+    const userResponse = new UserDTO(result, true, false);
 
     return userResponse;
   }
@@ -232,17 +166,7 @@ export class UserService {
     }
     user.profileUrl = profile;
     const result = await this.userRepository.save(user);
-    const userResponse = new UserDTO();
-    userResponse.id = result.id;
-    userResponse.loginId = result.loginId;
-    userResponse.name = result.name;
-    userResponse.email = result.email;
-    userResponse.mannerPoint = result.mannerPoint;
-    userResponse.profileUrl = result.profileUrl;
-    userResponse.accessToken = result.accessToken;
-    userResponse.refreshToken = result.refreshToken;
-    userResponse.isLogin = true;
-    userResponse.isSnsLogin = false;
+    const userResponse = new UserDTO(result, true, false);
 
     return userResponse;
   }
@@ -265,17 +189,7 @@ export class UserService {
       user.email = email;
       user.profileUrl = profileUrl;
       const result = await this.userRepository.save(user);
-      const userResponse = new UserDTO();
-      userResponse.id = result.id;
-      userResponse.loginId = result.loginId;
-      userResponse.name = result.name;
-      userResponse.email = result.email;
-      userResponse.mannerPoint = result.mannerPoint;
-      userResponse.profileUrl = result.profileUrl;
-      userResponse.accessToken = result.accessToken;
-      userResponse.refreshToken = result.refreshToken;
-      userResponse.isLogin = true;
-      userResponse.isSnsLogin = true;
+      const userResponse = new UserDTO(result, true, true);
 
       return userResponse;
     }
