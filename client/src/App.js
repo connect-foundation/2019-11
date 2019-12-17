@@ -23,7 +23,9 @@ function App() {
       <MessengerContext.Provider value={[messengerOpen, setMessengerOpen]}>
         <ModalContext.Provider value={[modal, setModal]}>
           <UserContext.Provider value={[user, setUser]}>
-            <NotificationContext.Provider value={[notifications, setNotifications]}>
+            <NotificationContext.Provider
+              value={[notifications, setNotifications]}
+            >
               {modal.isOpen ? <Modal /> : null}
               <div className="App">
                 <Router />

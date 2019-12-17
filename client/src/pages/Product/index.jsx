@@ -153,7 +153,7 @@ const ProductPage = ({ match }) => {
         id: sender.isSnsLogin ? sender.name : sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
         text,
-        key: `${createdAt}.${sender.id}`
+        key: `M.${createdAt}.${sender.id}`
       };
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
@@ -167,7 +167,7 @@ const ProductPage = ({ match }) => {
         text: `${sender.name}님께서 ${convert2Price(
           bid.bidPrice
         )}원에 입찰 하셨습니다.`,
-        key: `${createdAt}.${sender.id}`
+        key: `B.${createdAt}.${sender.id}`
       };
 
       return dispatchProductPage({ type: "ADD_BID", chat, bid });
@@ -182,7 +182,7 @@ const ProductPage = ({ match }) => {
         text: `${sender.name}님이 ${convert2Price(
           sold.soldPrice
         )}원에 즉시 구매하셨습니다.`,
-        key: `${createdAt}.${sender.id}`
+        key: `P.${createdAt}.${sender.id}`
       };
 
       const product = { soldPrice: sold.soldPrice, soldDate: sold.soldDate };

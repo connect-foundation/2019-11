@@ -102,9 +102,6 @@ cron.schedule("*/10 * * * * *", () => {
       [product.id],
       (err, rows, filed) => {
         const bids = rows;
-        console.log("PRODCUT ID:::" + product.id);
-        console.log("#####BIDS");
-        console.dir(bids);
         const productInfo = {
           id: product.id,
           title: product.title,
@@ -115,7 +112,9 @@ cron.schedule("*/10 * * * * *", () => {
 
         //2. 즉시구매된 상품인 경우
         if (product.sold_price) {
-          console.log("[즉시구매]");
+          console.log(
+            `[즉시구매] ${product.id}상품 ${product.buyer_id}가 즉시구매 `
+          );
           // 2-1. 구매자에게 즉시 구매가 성공됨을 알린다.(mongo, socket.io)
           socket.emit("auctionResult", {
             userId: product.buyer_id,
@@ -131,6 +130,8 @@ cron.schedule("*/10 * * * * *", () => {
 
           bids.forEach(bid => {
             // 2-3. 입찰한 유저들에게 경매(상품)이 즉시 구매로 팔렸음을 알린다.(mongo, socket.io)
+            if (bid.user_id === product.buyer_id) return;
+
             socket.emit("auctionResult", {
               userId: bid.user_id,
               type: "AUCTION_END_BY_PURCHASE",
@@ -141,7 +142,9 @@ cron.schedule("*/10 * * * * *", () => {
           //3. 즉시 구매가 아닌 상품인 경우, 낙찰/유찰 여부를 확인한다.(쿼리)
           //3-1. 유찰인 경우
           if (bids.length === 0) {
-            console.log("[유찰]");
+            console.log(
+              `[유찰] ${product.seller_id} 판매자의 상품 ${productInfo.id} 유찰됨`
+            );
             //3-1-1. 판매자에게 유찰을 알림(mongo, socket.io)
             socket.emit("auctionResult", {
               userId: product.seller_id,
@@ -159,7 +162,9 @@ cron.schedule("*/10 * * * * *", () => {
               `Update products SET buyer_id=? WHERE id=?`,
               [product.id, buyerId],
               (err, rows, filed) => {
-                console.log(`[낙찰] ${rows.changedRows}개 ROW UPDATED`);
+                console.log(
+                  `[낙찰] ${product.id}상품 ${buyerId}가 구매 / ${rows.changedRows}개 ROW UPDATED`
+                );
                 //3-2-1. 판매자에게 낙찰되었음을 알린다.(mongo, socket.io)
                 socket.emit("auctionResult", {
                   userId: product.seller_id,

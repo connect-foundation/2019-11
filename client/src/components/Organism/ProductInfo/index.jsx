@@ -441,7 +441,7 @@ const ProductInfo = () => {
             {isAuction ? (
               <>
                 <BidTootip>{`최소: ${convert2Price(
-                  minBidPrice
+                  minBidPrice || 0
                 )} 원`}</BidTootip>
                 <BidInput
                   name="bidPrice"

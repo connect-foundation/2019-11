@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 import { NotifyItem } from "./NotifyItem";
 import NotificationContext from "../../../context/NotificationContext";
@@ -29,7 +29,12 @@ function Component() {
     <BackColor>
       <InfoDiv>
         {notifications.map(noti => {
-          return <NotifyItem key={`${noti.product.id}${noti.product.title}`} {...noti} />;
+          return (
+            <NotifyItem
+              key={`${noti.product.id}${noti.product.title}`}
+              {...noti}
+            />
+          );
         })}
       </InfoDiv>
     </BackColor>
