@@ -33,6 +33,12 @@ const RightAlign = styled.div`
   height: 2rem;
   margin: 0 0 0.5rem;
 `;
+const LeftRightAlign = styled.div`
+  display: flex;
+  justify-content: space-between;
+  height: 2rem;
+  margin: 0 0 0.5rem;
+`;
 const TradeContents = styled.div`
   height: 100%;
   overflow: auto;
@@ -43,6 +49,17 @@ const TradeContents = styled.div`
   }
   margin-bottom: 0.5rem;
 `;
+
+const PageWrap = styled.div`
+  display: flex;
+  justify-content: column;
+`;
+
+const PageButton = styled.button`
+  background-color: white;
+  color: ${props => (props.currentPage === props.buttonNumber ? "var(--color-primary)" : "black")};
+  font-size: ${props => (props.currentPage === props.buttonNumber ? "var(--font-size-lg)" : "")};
+`;
 function TradeList() {
   const [data, setData] = useState([]);
   const [isSale, setIsSale] = useState(true);
@@ -50,7 +67,10 @@ function TradeList() {
   const [dayago, setDayago] = useState(1);
   const [page, setPage] = useState(1);
   const [user] = useContext(userContext);
+  const [allpage, setAllpage] = useState(1);
+  const [pagelist, setPagelist] = useState([]);
 
+  const LIMIT = 6;
   function getData(sale, buy, day, page) {
     let url = apiUrl + logfilter;
     fetch(url, {
@@ -64,15 +84,15 @@ function TradeList() {
         isSale: sale,
         isBuy: buy,
         page: page,
-        limit: 10
+        limit: LIMIT
       })
     })
       .then(resultJson => {
         return resultJson.json();
       })
       .then(result => {
-        let resultData = result[0].reduce((acc, ele) => {
-          let data = {
+        let resultData = result[0].map(ele => {
+          return {
             id: ele.id,
             title: ele.title,
             thumbnail: ele.thumbnailUrl,
@@ -89,11 +109,10 @@ function TradeList() {
             sellerCheck: ele.sellerCheck,
             buyerCheck: ele.buyerCheck
           };
-          acc.push(data);
-          return acc;
-        }, []);
+        });
         setPageNumber(page++);
         setData(resultData);
+        setAllpage(result[1] % LIMIT ? Math.floor(result[1] / LIMIT) + 1 : result[1] / LIMIT);
       });
   }
 
@@ -115,10 +134,22 @@ function TradeList() {
     setDayago(day);
   }
 
+  function changePage(pagenumber) {
+    setPage(pagenumber);
+  }
   useEffect(() => {
-    getData(isSale, isBuy, dayago, page);
-  }, [dayago, isBuy, isSale, user.id]);
+    if (user.id) getData(isSale, isBuy, dayago, page);
+  }, [dayago, isBuy, isSale, user.id, page]);
 
+  useEffect(() => {
+    let slicepage = page > 5 ? page - 5 : 0; //5이상부터 페이지 자르기
+    let pageLength = allpage - slicepage > 10 ? 10 : allpage - slicepage;
+    setPagelist(
+      Array.from({ length: pageLength }, (v, k) => {
+        if (k < 10) return k + 1 + slicepage;
+      })
+    );
+  }, [allpage, page]);
   return (
     <Wraper>
       <TradeWrap>
@@ -128,14 +159,28 @@ function TradeList() {
           <ButtonSelect name="판매" select={() => setSale()} />
           <ButtonSelect name="구매" select={() => setBuy()} />
         </RightAlign>
-        <RightAlign>
+        <LeftRightAlign>
+          <PageWrap>
+            {page > 1 && <button onClick={() => changePage(1)}>&lt;&lt;</button>}
+            {pagelist.map(ele => (
+              <PageButton
+                buttonNumber={ele}
+                currentPage={page}
+                key={ele}
+                onClick={() => changePage(ele)}
+              >
+                {ele}
+              </PageButton>
+            ))}
+            {page < allpage && <button onClick={() => changePage(allpage)}>&gt;&gt;</button>}
+          </PageWrap>
           <ButtonDays
             select_1d={() => setDay(1)}
             select_1w={() => setDay(7)}
             select_1y={() => setDay(365)}
             select_3y={() => setDay(365 * 3)}
           />
-        </RightAlign>
+        </LeftRightAlign>
         <TradeContents>
           {data.map(value => (
             <TradeListBox key={value.title + value.solddate} {...value} />
