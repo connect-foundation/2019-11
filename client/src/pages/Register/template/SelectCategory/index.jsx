@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
-import PageBase from "../../../../components/PageBase";
 import Button from "../../../../components/Atoms/BoxButton";
 import CategorySelector from "../../../../components/Organism/ItemCategorySelector";
 
@@ -9,6 +8,12 @@ import productContext from "../../context";
 
 import { categoryList } from "../../constants.jsx";
 import { idxNotSelected } from "../../../../utils/validator.js";
+
+const PageBase = styled.div`
+  width: 80%;
+
+  box-sizing: border-box;
+`;
 
 const ContentDiv = styled.div`
   width: 60%;
@@ -28,7 +33,7 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback();
 };
 
-const Component = ({ width, next }) => {
+const Component = ({ next }) => {
   const obj = useContext(productContext).data;
 
   const [leftIdx, setLeftIdx] = useState(-1);
@@ -38,7 +43,6 @@ const Component = ({ width, next }) => {
 
   const successCallback = () => {
     obj.categoryCode = (leftIdx + 1) * 1000 + rightIdx + 1;
-    console.log(obj.categoryCode);
     next();
   };
 
@@ -47,7 +51,7 @@ const Component = ({ width, next }) => {
   };
 
   return (
-    <PageBase width={width}>
+    <PageBase>
       <ContentDiv>
         <CategorySelector
           lTitle={categoryList.leftTitle}
