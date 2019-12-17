@@ -93,10 +93,8 @@ export class ProductController {
     @BodyParam("subCategory") subCategory: string,
     @BodyParam("isAuction") isAuction: boolean
   ) {
-    const mainIdx = categoryJson.map(value => Object.keys(value)[0]).indexOf(mainCategory);
-    const subIdx = categoryJson
-      .map(value => Object.values(value)[0].sub)
-      [mainIdx].indexOf(subCategory);
+    const mainIdx = categoryJson.map(value => value.name).indexOf(mainCategory);
+    const subIdx = categoryJson.map(value => value.sub)[mainIdx].indexOf(subCategory);
     const categoryCode = Number(mainIdx * 1000) + Number(subIdx);
 
     if (mainIdx === -1 || subIdx === -1) return NotFoundError;
