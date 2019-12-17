@@ -1,0 +1,73 @@
+[
+  {
+    "패션": {
+      "sub": ["여성패션", "남성패션", "유아패션", "이벤트 의류", "공용 의류", "악세서리", "신발"],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/fashion.png"
+    }
+  },
+  {
+    "디지털": {
+      "sub": [
+        "컴퓨터 & 악세서리",
+        "노트북 & 악세서리",
+        "전자 & 가전",
+        "카메라",
+        "TV",
+        "휴대폰",
+        "헤드폰",
+        "비디오 게임",
+        "게임 타이틀"
+      ],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/digital.png"
+    }
+  },
+  {
+    "수집": {
+      "sub": ["예술품", "수집품", "인형", "동전 & 지폐", "기념품", "우표", "공예품"],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/collection.png"
+    }
+  },
+  {
+    "생활": {
+      "sub": [
+        "홈 데코 & DIY",
+        "공구",
+        "침구 & 커튼",
+        "청소용품",
+        " 조명",
+        "식기 & 주방용품",
+        "반려동물용품"
+      ],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/life.png"
+    }
+  },
+  {
+    "스포츠": {
+      "sub": [
+        "골프",
+        "낚시",
+        "캠핑 & 하이킹",
+        "사이클링",
+        "골프 의류 & 악세서리",
+        "낚시 릴",
+        "피트니스"
+      ],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/sports.png"
+    }
+  },
+  {
+    "취미": {
+      "sub": [
+        "도서",
+        "장난감",
+        "인형",
+        "프라모델",
+        "피규어",
+        "악기 & 음향장비",
+        "조명 효과",
+        "보드게임"
+      ],
+      "imageUrl": "https://kr.object.ncloudstorage.com/paldastorage/logo/hobby.png"
+    }
+  }
+]
