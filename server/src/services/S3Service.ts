@@ -30,9 +30,9 @@ const creatObject = async (path: string, data: string) => {
 };
 
 const deleteObject = async (url: string) => {
-  const getFile = url.replace(String(END_POINT), "");
+  const getFile = url.replace(String(END_POINT) + "/", "");
 
-  S3.deleteObject({
+  return await S3.deleteObject({
     Bucket: String(Bucket),
     Key: getFile
   }).promise();

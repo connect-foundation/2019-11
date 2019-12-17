@@ -14,6 +14,9 @@ import productContext from "../../context";
 import { termList, itemDescription } from "../../constants";
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js";
 import moment from "moment";
+import apiConfig from "../../../../config/api";
+import pathConfig from "../../../../config/path";
+import { deleteJsonFetch } from "../../../../services/fetchService";
 
 const PageBase = styled.div`
   width: 80%;
@@ -170,8 +173,16 @@ const Component = ({ next, registItem }) => {
     for (let i = 0; i < imgList.length; i++) data.images.push(imgList[i].split(",")[1]);
 
     obj.callback = result => {
-      if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.");
-      else {
+      if (isNaN(result)) {
+        alert("문제가 발생해 상품이 등록되지 않았습니다.");
+        obj.data.images.forEach(value => {
+          deleteJsonFetch(
+            `${apiConfig.apiUrl}${pathConfig.storage.image}`,
+            {},
+            { data: { url: value } }
+          );
+        });
+      } else {
         data.productId = result;
         next();
       }

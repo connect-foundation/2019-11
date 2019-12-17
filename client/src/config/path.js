@@ -22,5 +22,7 @@ export default {
     deadline: "/api/items/deadline",
     related: "/api/items/related"
   },
-  category: "/api/statics/categories"
+  statics: {
+    categories: "/api/statics/categories"
+  }
 };

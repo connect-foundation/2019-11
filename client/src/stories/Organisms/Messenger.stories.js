@@ -1,8 +1,8 @@
 import React from "react"
 import CreateButton from "../../components/Messenger/CreateButton"
 import RoomElement from "../../components/Messenger/Container/RoomElement"
-import ChatMessage from "../../components/Messenger/Container/ChatCotainer/ChatMessage"
-import MessengerDemo from "../../components/Messenger/Container/ChatCotainer"
+import ChatMessage from "../../components/Messenger/Container/ChatContainer/ChatMessage"
+import MessengerDemo from "../../components/Messenger/Container/ChatContainer"
 
 export default {
   title: "Organisms|Messenger"
