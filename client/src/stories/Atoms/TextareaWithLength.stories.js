@@ -8,6 +8,6 @@ export default ({
 
 export const itemDescription = () => {
     return (
-        <Textarea title={'상품 설명'} maxLen={100} />
+        <Textarea title={'상품 설명'} limit={100} />
     )
 }

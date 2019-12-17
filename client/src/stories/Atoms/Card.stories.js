@@ -7,8 +7,10 @@ export default {
   title: 'Atoms|Card',
 };
 
-export const card = () => {
-  return (
-    <Card item={data[0]} />
-  )
-}
+// export const card = () => {
+//   return (
+//     <>
+//       <Card item={data[0]} />
+//     </>
+//   )
+// }

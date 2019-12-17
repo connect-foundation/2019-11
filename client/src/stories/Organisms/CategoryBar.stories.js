@@ -5,7 +5,7 @@ import TextIcon from "../../components/Organism/CategoryBar/CategoryIcon/TextIco
 import ImageIcon from "../../components/Organism/CategoryBar/CategoryIcon/ImageIcon";
 
 export default {
-  title: "Atoms|Category"
+  title: "Organisms|Category"
 };
 
 export const texticon = () => {
