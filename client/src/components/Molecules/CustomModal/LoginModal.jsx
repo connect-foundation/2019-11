@@ -14,7 +14,7 @@ import pathConfig from "../../../config/path";
 import { postJsonFetch } from "../../../services/fetchService";
 import ModalContext from "../../../context/ModalContext";
 import SignUpModal from "./SignUpModal";
-const { apiUrl } = apiConfig;
+const { apiUrl, kakaoOAuthKey, googleOAuthKey } = apiConfig;
 const { sign } = pathConfig;
 
 const LoginBody = styled.div`
@@ -182,7 +182,7 @@ const LoginModal = ({ close }) => {
       <DivisionLine />
       <Footer>
         <GoogleButton
-          clientId={process.env.REACT_APP_GOOGLE_KEY}
+          clientId={googleOAuthKey}
           buttonText={"구글"}
           onSuccess={onSuccessGoogleLogin}
           onFailure={result => console.log(result)}
@@ -191,7 +191,7 @@ const LoginModal = ({ close }) => {
           prompt={"consent"}
         />
         <KakaoButton
-          jsKey={process.env.REACT_APP_KAKAO_KEY}
+          jsKey={kakaoOAuthKey}
           onSuccess={onSuccessKakaoLogin}
           onFailure={result => console.log(result)}
           getProfile="true"
