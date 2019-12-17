@@ -36,45 +36,46 @@ export class BidsService {
     bid.bidDate = bidDate;
     bid.bidPrice = bidPrice;
 
-    const product = new Products();
-    product.id = productId;
-    bid.product = product;
-
-    const user = new Users();
-    user.id = userId;
-    bid.user = user;
-
-    const productcheck = await this.productRepository.findOne(productId);
-    const bidcheck = await this.bidRepository.findProductBidInfo(productId);
+    const product = await this.productRepository.findOne(productId);
+    const lastBids = await this.bidRepository.findLastBidBy(productId);
+    const lastBid = lastBids[0];
 
     if (bidPrice > MAX_BID_PRICE) {
       throw new NotAcceptableError("15억 이하로만 입찰이 가능합니다.");
     }
 
-    if (productcheck === undefined) {
+    if (product === undefined) {
       throw new NotAcceptableError("해당하는 상품이 존재하지 않습니다.");
     }
 
-    if (productcheck.soldPrice !== null) {
+    if (product.soldPrice !== null) {
       throw new NotAcceptableError("이미 구매 완료된 상품입니다.");
     }
 
-    if (bidPrice < productcheck.startBidPrice) {
+    if (bidPrice < product.startBidPrice) {
       throw new NotAcceptableError(
-        `입찰 금액이 입찰 시작 금액(${productcheck.startBidPrice})보다 높아야 합니다.`
+        `${product.startBidPrice}원 보다 높아야 합니다.`
       );
     }
 
-    if (productcheck.seller.id === userId) {
+    if (product.seller.id === userId) {
       throw new NotAcceptableError(`자신의 상품은 입찰/구매가 불가능합니다.`);
     }
 
-    if (bidcheck && bidPrice < bidcheck.top_bid) {
+    if (lastBid && lastBid.user_id === userId) {
+      throw new NotAcceptableError(`연속 입찰은 불가능합니다.`);
+    }
+
+    if (lastBid && bidPrice < lastBid.bid_price) {
       throw new NotAcceptableError(
         `현재 최소 입찰가보다 높은 가격에 입찰해야 합니다.`
       );
     }
 
+    const user = new Users();
+    user.id = userId;
+    bid.product = product;
+    bid.user = user;
     return this.bidRepository.create(bid);
   }
 }
