@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
-import PageBase from "../../../../components/PageBase";
 import Button from "../../../../components/Atoms/BoxButton";
 import Carousel from "../../../../components/Molecules/Carousel";
 import TitleBox from "../../../../components/Atoms/InputWithLimit";
@@ -14,8 +13,13 @@ import productContext from "../../context";
 
 import { termList, itemDescription } from "../../constants";
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js";
-import { getNowDateTime } from "../../../../utils/dateUtil";
 import moment from "moment";
+
+const PageBase = styled.div`
+  width: 80%;
+
+  box-sizing: border-box;
+`;
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -111,7 +115,7 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback();
 };
 
-const Component = ({ width, next, registItem }) => {
+const Component = ({ next, registItem }) => {
   const [user] = useContext(userContext);
   const obj = useContext(productContext);
   const dayList = generateDayList();
@@ -181,7 +185,7 @@ const Component = ({ width, next, registItem }) => {
   };
 
   return (
-    <PageBase width={width}>
+    <PageBase>
       <ContentDiv>
         <TopContentDiv>
           <CarouselDiv>

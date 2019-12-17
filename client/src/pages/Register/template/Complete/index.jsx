@@ -1,17 +1,22 @@
-import React, { useContext } from "react"
-import styled from "styled-components"
+import React, { useContext } from "react";
+import styled from "styled-components";
 
-import PageBase from "../../../../components/PageBase"
-import ShareBox from "../../../../components/Molecules/ShareBox"
-import { notice } from "../../../../constants/strings"
-import apiConfig from "../../../../config/api"
+import ShareBox from "../../../../components/Molecules/ShareBox";
+import { notice } from "../../../../constants/strings";
+import apiConfig from "../../../../config/api";
 
-import productContext from "../../context"
+import productContext from "../../context";
+
+const PageBase = styled.div`
+  width: 80%;
+
+  box-sizing: border-box;
+`;
 
 const ContentDiv = styled.div`
   width: 80%;
   margin: 0 auto;
-`
+`;
 
 const ButtonDiv = styled.div`
   width: 15rem;
@@ -21,7 +26,7 @@ const ButtonDiv = styled.div`
   justify-content: space-between;
   margin: 0 auto;
   text-align: center;
-`
+`;
 
 const LinkBox = styled.a`
   width: 100%;
@@ -40,13 +45,13 @@ const LinkBox = styled.a`
     background: var(--color-secondary-plus1-lighter);
     font-weight: 700;
   }
-`
+`;
 
 const ShareDiv = styled.div`
   width: fit-content;
   height: fit-content;
   margin: 20px auto 30px auto;
-`
+`;
 
 const NoticeDiv = styled.div`
   width: 400px;
@@ -59,18 +64,18 @@ const NoticeDiv = styled.div`
   text-align: center;
   border: var(--color-secondary-plus1) dashed 1px;
   margin: 20px auto 50px auto;
-`
+`;
 
 const NoticeText = styled.div`
   width: 200px;
   word-break: keep-all;
-`
+`;
 
-const Component = ({ width }) => {
-  const obj = useContext(productContext).data
+const Component = () => {
+  const obj = useContext(productContext).data;
 
   return (
-    <PageBase width={width}>
+    <PageBase>
       <ContentDiv>
         <NoticeDiv>
           <NoticeText>{notice.successRegister}</NoticeText>
@@ -86,7 +91,7 @@ const Component = ({ width }) => {
         </ButtonDiv>
       </ContentDiv>
     </PageBase>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

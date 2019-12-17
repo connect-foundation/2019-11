@@ -102,21 +102,19 @@ const Page = () => {
         <Content>
           <Window phase={phase}>
             <SelectCategory
-              width={80}
               next={() => {
                 setPhase(1);
                 setMaxPhase(1);
               }}
             />
             <InsertInfo
-              width={80}
               next={() => {
                 setPhase(2);
                 setMaxPhase(2);
               }}
               registItem={() => setOpen(true)}
             />
-            <Complete width={80} next={() => setPhase(3)} />
+            <Complete next={() => setPhase(3)} />
           </Window>
         </Content>
       </TemplateContainer>
