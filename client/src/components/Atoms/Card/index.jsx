@@ -2,9 +2,10 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { dateDiff2Dday } from "../../../utils/converter";
+import { convert2Price } from "../../../utils/converter";
 
 import personIcon from "../../../assets/person.svg";
+import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const CardStyle = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ const BuyNowPriceStyle = styled.div`
 const TopBidStyle = styled.div`
   display: flex;
   height: 1rem;
-  font-size: middle;
+  font-size: small;
   color: var(--color-secondary);
   label {
     color: black;
@@ -175,13 +176,13 @@ const Bids = ({ bids }) => {
 };
 
 const TagContainer = ({ isAuction, date }) => {
-  const day = dateDiff2Dday(date);
+  const { d } = getDiffDateTime(date);
 
   return (
     <TagContainerStyle>
       {isAuction && <IsAuctionTag>경매중</IsAuctionTag>}
       {!isAuction && <IsSaleTag>판매중</IsSaleTag>}
-      <DDayTag>D - {day}</DDayTag>
+      <DDayTag>D - {d === 0 ? "day" : d}</DDayTag>
     </TagContainerStyle>
   );
 };
@@ -206,7 +207,7 @@ const BuyNowPrice = ({ buyNowPrice }) => {
   return (
     <BuyNowPriceStyle>
       <label>즉시 구매가</label>
-      {buyNowPrice}
+      {convert2Price(buyNowPrice)}
     </BuyNowPriceStyle>
   );
 };
@@ -215,7 +216,7 @@ const TopBid = ({ topBid }) => {
   return (
     <TopBidStyle>
       <label>현재 입찰가</label>
-      {topBid}
+      {convert2Price(topBid)}
     </TopBidStyle>
   );
 };

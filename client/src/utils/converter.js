@@ -60,12 +60,6 @@ export const term2ReaminString = (start, end) => {
   return `종료된 상품 입니다.`;
 };
 
-export const dateDiff2Dday = date => {
-  const gap = new Date().getTime() - new Date(date).getTime();
-
-  return Math.floor(gap / (1000 * 60 * 60 * 24)) * -1;
-};
-
 export const base642Blob = base64 => {
   const byteString = window.atob(base64);
 
@@ -96,7 +90,6 @@ export const sec2date = secs => new Date(secs);
 
 export default {
   dateDiff2Str,
-  dateDiff2Dday,
   base642Blob,
   convert2Price,
   sec2date,
