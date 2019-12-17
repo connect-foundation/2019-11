@@ -18,25 +18,14 @@ export class ItemService {
     return [
       await products.reduce(async (acc: any, product) => {
         const bid = await this.bidRepository.findProductBidInfo(product.id);
-        const productResponse = new ProductCardResponseDTO();
-        productResponse.auctionDeadline = product.auctionDeadline;
-        productResponse.buyerId = product.buyerId;
-        productResponse.categoryCode = product.categoryCode;
-        productResponse.contents = product.contents;
-        productResponse.extensionDate = product.extensionDate;
-        productResponse.hopePrice = product.hopePrice;
-        productResponse.id = product.id;
-        productResponse.immediatePrice = product.immediatePrice;
-        productResponse.isAuction = product.isAuction;
-        productResponse.registerDate = product.registerDate;
-        productResponse.soldDate = product.soldDate;
-        productResponse.soldPrice = product.soldPrice;
-        productResponse.startBidPrice = product.startBidPrice;
-        productResponse.title = product.title;
-        productResponse.thumbnailUrl = product.thumbnailUrl;
-        productResponse.countBids = bid === undefined ? 0 : bid.count;
-        productResponse.topBid =
-          bid === undefined ? product.startBidPrice : bid.top_bid;
+        const countBids = bid === undefined ? 0 : bid.count;
+        const topBid = bid === undefined ? product.startBidPrice : bid.top_bid;
+        const productResponse = new ProductCardResponseDTO(
+          product,
+          countBids,
+          topBid
+        );
+
         const result = await acc.then();
         result.push(productResponse);
         return Promise.resolve(result);
@@ -54,25 +43,14 @@ export class ItemService {
         const result = await acc.then();
         if (result.length < 5) {
           const bid = await this.bidRepository.findProductBidInfo(product.id);
-          const productResponse = new ProductCardResponseDTO();
-          productResponse.auctionDeadline = product.auctionDeadline;
-          productResponse.buyerId = product.buyerId;
-          productResponse.categoryCode = product.categoryCode;
-          productResponse.contents = product.contents;
-          productResponse.extensionDate = product.extensionDate;
-          productResponse.hopePrice = product.hopePrice;
-          productResponse.id = product.id;
-          productResponse.immediatePrice = product.immediatePrice;
-          productResponse.isAuction = product.isAuction;
-          productResponse.registerDate = product.registerDate;
-          productResponse.soldDate = product.soldDate;
-          productResponse.soldPrice = product.soldPrice;
-          productResponse.startBidPrice = product.startBidPrice;
-          productResponse.title = product.title;
-          productResponse.thumbnailUrl = product.thumbnailUrl;
-          productResponse.countBids = bid === undefined ? 0 : bid.count;
-          productResponse.topBid =
+          const countBids = bid === undefined ? 0 : bid.count;
+          const topBid =
             bid === undefined ? product.startBidPrice : bid.top_bid;
+          const productResponse = new ProductCardResponseDTO(
+            product,
+            countBids,
+            topBid
+          );
           result.push(productResponse);
         }
         return Promise.resolve(result);
@@ -81,7 +59,6 @@ export class ItemService {
     ];
   }
   public async findHot() {
-    // return await this.productRepository.findHotAuction()
     const bids = await this.bidRepository.findHotItems();
     let hotProducts = await bids.reduce(async (acc: any, bid) => {
       const result = await acc.then();
@@ -90,24 +67,11 @@ export class ItemService {
           bid.product_id
         );
         if (product !== undefined) {
-          const productResponse = new ProductCardResponseDTO();
-          productResponse.auctionDeadline = product.auctionDeadline;
-          productResponse.buyerId = product.buyerId;
-          productResponse.categoryCode = product.categoryCode;
-          productResponse.contents = product.contents;
-          productResponse.extensionDate = product.extensionDate;
-          productResponse.hopePrice = product.hopePrice;
-          productResponse.id = product.id;
-          productResponse.immediatePrice = product.immediatePrice;
-          productResponse.isAuction = product.isAuction;
-          productResponse.registerDate = product.registerDate;
-          productResponse.soldDate = product.soldDate;
-          productResponse.soldPrice = product.soldPrice;
-          productResponse.startBidPrice = product.startBidPrice;
-          productResponse.title = product.title;
-          productResponse.thumbnailUrl = product.thumbnailUrl;
-          productResponse.countBids = bid.count;
-          productResponse.topBid = bid.top_bid;
+          const productResponse = new ProductCardResponseDTO(
+            product,
+            bid.count,
+            bid.top_bid
+          );
           result.push(productResponse);
         }
       }
@@ -138,25 +102,13 @@ export class ItemService {
     );
     return products.reduce(async (acc: any, product) => {
       const bid = await this.bidRepository.findProductBidInfo(product.id);
-      const productResponse = new ProductCardResponseDTO();
-      productResponse.auctionDeadline = product.auctionDeadline;
-      productResponse.buyerId = product.buyerId;
-      productResponse.categoryCode = product.categoryCode;
-      productResponse.contents = product.contents;
-      productResponse.extensionDate = product.extensionDate;
-      productResponse.hopePrice = product.hopePrice;
-      productResponse.id = product.id;
-      productResponse.immediatePrice = product.immediatePrice;
-      productResponse.isAuction = product.isAuction;
-      productResponse.registerDate = product.registerDate;
-      productResponse.soldDate = product.soldDate;
-      productResponse.soldPrice = product.soldPrice;
-      productResponse.startBidPrice = product.startBidPrice;
-      productResponse.title = product.title;
-      productResponse.thumbnailUrl = product.thumbnailUrl;
-      productResponse.countBids = bid === undefined ? 0 : bid.count;
-      productResponse.topBid =
-        bid === undefined ? product.startBidPrice : bid.top_bid;
+      const countBids = bid === undefined ? 0 : bid.count;
+      const topBid = bid === undefined ? product.startBidPrice : bid.top_bid;
+      const productResponse = new ProductCardResponseDTO(
+        product,
+        countBids,
+        topBid
+      );
       const result = await acc.then();
       result.push(productResponse);
       return Promise.resolve(result);
