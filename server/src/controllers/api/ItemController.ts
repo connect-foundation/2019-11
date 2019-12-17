@@ -32,11 +32,7 @@ export class ItemController {
   }
 
   @Get("/related/:code/:id")
-  public async findRelated(
-    @Param("code") categoryCode: number,
-    @Param("id") id: number
-  ) {
-    console.log(categoryCode);
+  public async findRelated(@Param("code") categoryCode: number, @Param("id") id: number) {
     return await this.itemService.findRelated(Number(id), Number(categoryCode));
   }
 }
