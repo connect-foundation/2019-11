@@ -33,7 +33,7 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback();
 };
 
-const Component = ({ next }) => {
+const Component = ({ next, leftList, rightList }) => {
   const obj = useContext(productContext).data;
 
   const [leftIdx, setLeftIdx] = useState(-1);
@@ -42,7 +42,8 @@ const Component = ({ next }) => {
   const valiResult = [idxNotSelected(leftIdx), idxNotSelected(rightIdx)];
 
   const successCallback = () => {
-    obj.categoryCode = (leftIdx + 1) * 1000 + rightIdx + 1;
+    obj.mainCategory = leftList[leftIdx];
+    obj.subCategory = rightList[leftIdx][rightIdx];
     next();
   };
 
@@ -56,8 +57,8 @@ const Component = ({ next }) => {
         <CategorySelector
           lTitle={categoryList.leftTitle}
           rTitle={categoryList.rightTitle}
-          lList={categoryList.leftList}
-          rList={categoryList.rightList}
+          lList={leftList}
+          rList={rightList}
           lIdx={leftIdx}
           rIdx={rightIdx}
           lHandler={setLeftIdx}
