@@ -8,7 +8,8 @@ import {
   BodyParam,
   Req,
   Put,
-  Body
+  Body,
+  OnUndefined
 } from "routing-controllers";
 
 @JsonController("/bids")
@@ -31,12 +32,8 @@ export class BidController {
     @BodyParam("bidDate") bidDate: string,
     @BodyParam("bidPrice") bidPrice: string,
     @BodyParam("productId") productId: string,
-    @BodyParam("userId") userId: string,
-    @BodyParam("test") test: string
+    @BodyParam("userId") userId: string
   ) {
-    console.log(`test::::::: ${test}`);
-    console.dir(body);
-    console.log("#######", bidDate, bidPrice, productId, userId);
     return this.bidService.create(
       bidDate,
       parseInt(bidPrice),

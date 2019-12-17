@@ -62,8 +62,12 @@ const productPageReducer = (state, action) => {
       };
     case "FETCH_ERROR":
       return { ...state, error: action.error };
-    case "ADD_CHAT":
-      return { ...state, chats: [...state.chats, action.chat] };
+    case "ADD_PURCHASE":
+      return {
+        ...state,
+        product: { ...state.product, ...action.product },
+        chats: [...state.chats, action.chat]
+      };
     case "ADD_BID":
       return {
         ...state,
@@ -175,7 +179,9 @@ const ProductPage = ({ match }) => {
         key: `${createdAt}.${sender.id}`
       };
 
-      return dispatchProductPage({ type: "ADD_CHAT", chat });
+      const product = { soldPrice: sold.soldPrice, soldDate: sold.soldDate };
+
+      return dispatchProductPage({ type: "ADD_PURCHASE", chat, product });
     });
 
     socket.on("auctionResult", ({ type, product }) => {
