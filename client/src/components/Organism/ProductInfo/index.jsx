@@ -15,7 +15,7 @@ import ShareBox from "../../Molecules/ShareBox";
 import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import Carousel from "../../Molecules/Carousel";
-import { getNowDateTime } from "../../../utils/dateUtil";
+import { getNowDateTime, isTerminated } from "../../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
 
@@ -239,10 +239,20 @@ const ProductInfo = () => {
     minBidPrice < immediatePrice
       ? immediatePrice
       : Math.floor(minBidPrice * 1.2);
+
+  const isTerminatedProduct = isTerminated(extensionDate);
   const baseURL = apiUrl;
 
   const handleBidSubmit = e => {
     e.preventDefault();
+
+    if (isTerminatedProduct) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        props: { message: "판매가 종료된 상품입니다." }
+      });
+    }
 
     if (Object.keys(user).length === 0) {
       return setModal({
@@ -314,6 +324,14 @@ const ProductInfo = () => {
 
   const handleImmediateSubmit = price => e => {
     e.preventDefault();
+
+    if (isTerminatedProduct) {
+      return setModal({
+        isOpen: true,
+        component: FailModal,
+        props: { message: "판매가 종료된 상품입니다." }
+      });
+    }
 
     if (Object.keys(user).length === 0) {
       return setModal({
@@ -415,7 +433,7 @@ const ProductInfo = () => {
           <ProductDueDate>
             <ProductDescText size="sm">남은 시간</ProductDescText>
             <ProductDescText primary bold>
-              <TextTimer datetime={extensionDate} onEnd={() => {}} />
+              <TextTimer datetime={extensionDate} />
             </ProductDescText>
           </ProductDueDate>
 

@@ -24,3 +24,7 @@ export const toFormatDateTime = datestring =>
   moment(datestring)
     .utc()
     .format("YYYY-MM-DD HH:mm:ss");
+
+export const isTerminated = dateTime => {
+  return moment().isAfter(toFormatDateTime(dateTime));
+};
