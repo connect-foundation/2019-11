@@ -10,10 +10,12 @@ import {
   HeaderParam,
   Delete,
   UseAfter,
-  Authorized
+  Authorized,
+  NotFoundError
 } from "routing-controllers";
 import { ProductsService } from "../../services/ProductService";
 import { SystemLogger } from "../../middlewares/SystemLogger";
+import categoryJson from "../../constants/category.json";
 const startDefault = 0;
 const limitDefault = 50;
 
@@ -87,9 +89,18 @@ export class ProductController {
     @BodyParam("hopePrice") hopePrice: number,
     @BodyParam("minPrice") minPrice: number,
     @BodyParam("endDate") endDate: string,
-    @BodyParam("categoryCode") categoryCode: number,
+    @BodyParam("mainCategory") mainCategory: String,
+    @BodyParam("subCategory") subCategory: string,
     @BodyParam("isAuction") isAuction: boolean
   ) {
+    const mainIdx = categoryJson.map(value => Object.keys(value)[0]).indexOf(mainCategory);
+    const subIdx = categoryJson
+      .map(value => Object.values(value)[0].sub)
+      [mainIdx].indexOf(subCategory);
+    const categoryCode = Number(mainIdx * 1000) + Number(subIdx);
+
+    if (mainIdx === -1 || subIdx === -1) return NotFoundError;
+
     const result = await this.productService.create(
       userId,
       title,
