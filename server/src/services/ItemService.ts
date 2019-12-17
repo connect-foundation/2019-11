@@ -3,6 +3,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { ProductRepository } from "../repositories/ProductRepository";
 import { BidRepository } from "../repositories/BidRepository";
 import { ProductCardResponseDTO } from "../dto/ProductCardResponseDTO";
+import { Products } from "../models/Products";
 
 @Service()
 export class ItemService {
@@ -15,74 +16,67 @@ export class ItemService {
     let [products, productCount] = await this.productRepository.findCategory(
       categoryCode
     );
+    const bids = await Promise.all(
+      products.map(p => this.bidRepository.findProductBidInfo(p.id))
+    );
     return [
-      await products.reduce(async (acc: any, product) => {
-        const bid = await this.bidRepository.findProductBidInfo(product.id);
-        const countBids = bid === undefined ? 0 : bid.count;
-        const topBid = bid === undefined ? product.startBidPrice : bid.top_bid;
-        const productResponse = new ProductCardResponseDTO(
-          product,
-          countBids,
-          topBid
-        );
-
-        const result = await acc.then();
-        result.push(productResponse);
-        return Promise.resolve(result);
-      }, Promise.resolve([])),
+      products
+        .map((p, i) => {
+          const countBids = bids[i] === undefined ? 0 : bids[i].count;
+          const topBid =
+            bids[i] === undefined ? p.startBidPrice : bids[i].top_bid;
+          return new ProductCardResponseDTO(p, countBids, topBid);
+        })
+        .filter(data => data),
       productCount
     ];
   }
+
   public async findRelated(id: number, categoryCode: number) {
     let [products, productCount] = await this.productRepository.findCategory(
       categoryCode
     );
+    const bids = await Promise.all(
+      products.map(p => this.bidRepository.findProductBidInfo(p.id))
+    );
     return [
-      await products.reduce(async (acc: any, product) => {
-        if (product.id === id) return acc;
-        const result = await acc.then();
-        if (result.length < 5) {
-          const bid = await this.bidRepository.findProductBidInfo(product.id);
-          const countBids = bid === undefined ? 0 : bid.count;
-          const topBid =
-            bid === undefined ? product.startBidPrice : bid.top_bid;
-          const productResponse = new ProductCardResponseDTO(
-            product,
-            countBids,
-            topBid
-          );
-          result.push(productResponse);
-        }
-        return Promise.resolve(result);
-      }, Promise.resolve([])),
+      products
+        .map((p, i) => {
+          if (p.id !== id) {
+            const countBids = bids[i] === undefined ? 0 : bids[i].count;
+            const topBid =
+              bids[i] === undefined ? p.startBidPrice : bids[i].top_bid;
+            return new ProductCardResponseDTO(p, countBids, topBid);
+          }
+        })
+        .filter(data => data)
+        .slice(0, 5),
       productCount
     ];
   }
+
   public async findHot() {
     const bids = await this.bidRepository.findHotItems();
-    let hotProducts = await bids.reduce(async (acc: any, bid) => {
-      const result = await acc.then();
-      if (result.length < 5) {
-        const product = await this.productRepository.findOneAuction(
-          bid.product_id
-        );
-        if (product !== undefined) {
-          const productResponse = new ProductCardResponseDTO(
-            product,
-            bid.count,
-            bid.top_bid
-          );
-          result.push(productResponse);
-        }
-      }
-      return Promise.resolve(result);
-    }, Promise.resolve([]));
-    if (hotProducts.length < 5) {
+    const hotProducts = await Promise.all(
+      bids.map(b => this.productRepository.findOneAuction(b.product_id))
+    );
+    let result = hotProducts
+      .map(
+        (p, i) =>
+          new ProductCardResponseDTO(
+            <Products>p,
+            bids[i].count,
+            bids[i].top_bid
+          )
+      )
+      .filter(data => data);
+    if (result.length < 5) {
       const recentProducts = await this.findAndOrder(5, {
         registerDate: "ASC"
       });
-      hotProducts.push(...recentProducts);
-      hotProducts = hotProducts.reduce((acc: any, item: any) => {
+      result.push(...recentProducts);
+      // 중복 제거
+      result = result.reduce((acc: any, item: any) => {
         if (acc.length < 5) {
           const index = acc
             .map((product: any) => product["id"])
@@ -92,7 +86,7 @@ export class ItemService {
         return acc;
       }, []);
     }
-    return hotProducts;
+    return result;
   }
 
   public async findAndOrder(take: number, orderOption: any) {
@@ -100,18 +94,16 @@ export class ItemService {
       take,
       orderOption
     );
-    return products.reduce(async (acc: any, product) => {
-      const bid = await this.bidRepository.findProductBidInfo(product.id);
-      const countBids = bid === undefined ? 0 : bid.count;
-      const topBid = bid === undefined ? product.startBidPrice : bid.top_bid;
-      const productResponse = new ProductCardResponseDTO(
-        product,
-        countBids,
-        topBid
-      );
-      const result = await acc.then();
-      result.push(productResponse);
-      return Promise.resolve(result);
-    }, Promise.resolve([]));
+    const bids = await Promise.all(
+      products.map(p => this.bidRepository.findProductBidInfo(p.id))
+    );
+    return products
+      .map((p, i) => {
+        const countBids = bids[i] === undefined ? 0 : bids[i].count;
+        const topBid =
+          bids[i] === undefined ? p.startBidPrice : bids[i].top_bid;
+        return new ProductCardResponseDTO(p, countBids, topBid);
+      })
+      .filter(data => data);
   }
 }
