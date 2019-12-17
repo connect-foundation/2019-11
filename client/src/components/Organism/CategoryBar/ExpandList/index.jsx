@@ -50,11 +50,7 @@ const Components = ({ idx, open, details, onClick }) => {
         <NotifyList />
       ) : (
         detailCategoryList.map(category => (
-          <StyledLink
-            to={`/category/${category.title}/${category.code}`}
-            onClick={onClick}
-            key={category.title}
-          >
+          <StyledLink to={`/category/${category.code}`} onClick={onClick} key={category.title}>
             <DetailCategory>
               <label>{category.title}</label>
             </DetailCategory>
