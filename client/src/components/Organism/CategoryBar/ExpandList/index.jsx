@@ -7,7 +7,7 @@ import NotifyList from "../../../Molecules/NotifyList";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${props => (props.idx === "999" ? 20 : 15)}rem;
+  width: ${props => (props.idx === 999 ? "21" : "15")}rem;
   height: 100%;
   overflow-y: auto;
   background-color: var(--color-secondary-minus1);
@@ -45,11 +45,7 @@ const Components = ({ idx, open, details, onClick }) => {
         <NotifyList />
       ) : (
         details.map((category, index) => (
-          <StyledLink
-            to={`/category/${idx * 1000 + index + 1}`}
-            onClick={onClick}
-            key={category}
-          >
+          <StyledLink to={`/category/${idx * 1000 + index + 1}`} onClick={onClick} key={category}>
             <DetailCategory>
               <label>{category}</label>
             </DetailCategory>
