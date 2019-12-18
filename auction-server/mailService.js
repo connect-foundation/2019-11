@@ -36,8 +36,8 @@ const mailFooter = `
     </a>`
 
 const user = {
-  id: process.env.DAITNU_ID,
-  password: process.env.DAITNU_PASSWORD
+  id: process.env.MAIL_ID,
+  password: process.env.MAIL_PASSWORD
 }
 
 const mailService = (toEmail, content, isSeller, isSold) => {
