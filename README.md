@@ -42,6 +42,31 @@
  ### 3️⃣ 젊습니다
   일단 개발자들이 젊습니다. 네 젊습니다.
 
+## 어떤 기술이 사용되었나요?
+ ### 1️⃣ Docker
+ 
+   Docker로 관리되는 api, chat, auction-server
+   개발하는 과정에서 만큼은 전부 같은 스펙으로 개발됩니다.
+ 
+ ### 2️⃣ Typescript
+ 
+   Server에서 만큼은 안정성이 더 중요합니다! 그래서 Typescript를 사용합니다.
+   타입을 지정해 줌으로써 발생 할 수 있는 컴파일 에러를 미리 방지합니다.
+   
+ ### 3️⃣ Type-orm
+ 
+   DB의 제약을 최소화 하기위해 orm을 도입했습니다.
+ 
+ ### 4️⃣ Firebase / Firestore
+ 
+   Firebase, Firestore를 통해 Messanger, Log DB를 구축하였습니다.
+   Serverless를 통해 서버 부담을 줄였습니다.
+ 
+ ### 5️⃣ Sokect.io
+ 
+   Sokect을 이용하여 실시간 경매 및 채팅을 구현하였습니다.
+   채팅과 경매를 즐겨봅시다!
+   
 ## 누가 만들었나요?
 
 👤 **11조**
@@ -76,7 +101,9 @@
     <tr>
     <td align="center"><a href="https://github.com/GirlFriend-Yerin"><img src="https://avatars3.githubusercontent.com/u/38457114?s=460&v=4" width="75px;" alt="Jinkwan Yoo"/><br /><sub><b>Seonjun Hwang</b></sub></a><br /><a href="https://github.com/connect-foundation/2019-11/commits/develop?author=GirlFriend-Yerin" title="Code">💻</a></td>
     <td>
-     👍 <strong>팔다 Develop 서버 관리자 </strong>
+      👍<strong>메인 카테고리 prototype 개발</strong>
+      <br>
+     👍 <strong>팔다 Server 관리 </strong>
      <br>
      👍 <strong>상품 관련 페이지 개발 </strong>
     </td>
