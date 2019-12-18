@@ -56,7 +56,7 @@ export const term2ReaminString = (start, end) => {
   if (d || h || m || s)
     return `${d ? `${d}일` : ""} ${h ? `${h}시간` : ""} ${m ? `${m}분` : ""} ${
       s ? `${s}초` : ""
-    } 후 종료`;
+      } 후 종료`;
   return `종료된 상품 입니다.`;
 };
 
@@ -85,6 +85,16 @@ export const keyValue2Str = obj => {
 
 export const convert2Price = (number = 0) =>
   number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const convert2UnitPrice = (number = 0) => {
+  let uk = Math.floor(number / 100000000);
+  let man = Math.floor(number / 10000);
+  let won = number % 10000;
+
+  if (uk) return `${uk}억 UP`;
+  if (man) return `${man}만 UP`;
+  return `${won}`
+}
 
 export const sec2date = secs => new Date(secs);
 
