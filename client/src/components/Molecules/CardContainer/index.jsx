@@ -7,7 +7,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 8rem;
+  padding-left: 7rem;
 `;
 
 const Title = styled.label`
