@@ -14,6 +14,7 @@ import { convert2Price } from "../../utils/converter";
 import NotificationContext from "../../context/NotificationContext";
 import { getFetch } from "../../services/fetchService";
 import SmallCardContainer from "../../components/Molecules/SmallCardContainer";
+import ErrorPage from "../../pages/ErrorPage";
 
 const { chatUrl, apiUrl } = apiConfig;
 
@@ -74,6 +75,11 @@ const productPageReducer = (state, action) => {
         chats: [...state.chats, action.chat],
         bids: [...state.bids, action.bid]
       };
+    case "ADD_CHAT":
+      return {
+        ...state,
+        chats: [...state.chats, action.chat]
+      };
     case "SET_SOCKET":
       return { ...state, socketClient: action.socket };
     case "UPDATE_PRODUCT":
@@ -108,7 +114,7 @@ const ProductPage = ({ match }) => {
   };
 
   const handleFetchError = error => {
-    dispatchProductPage({ tpye: "FETCH_ERROR", error });
+    dispatchProductPage({ type: "FETCH_ERROR", error });
   };
 
   useFetch(
@@ -147,7 +153,7 @@ const ProductPage = ({ match }) => {
         id: sender.isSnsLogin ? sender.name : sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
         text,
-        key: `${createdAt}.${sender.id}`
+        key: `M.${createdAt}.${sender.id}`
       };
       return dispatchProductPage({ type: "ADD_CHAT", chat });
     });
@@ -161,7 +167,7 @@ const ProductPage = ({ match }) => {
         text: `${sender.name}님께서 ${convert2Price(
           bid.bidPrice
         )}원에 입찰 하셨습니다.`,
-        key: `${createdAt}.${sender.id}`
+        key: `B.${createdAt}.${sender.id}`
       };
 
       return dispatchProductPage({ type: "ADD_BID", chat, bid });
@@ -176,7 +182,7 @@ const ProductPage = ({ match }) => {
         text: `${sender.name}님이 ${convert2Price(
           sold.soldPrice
         )}원에 즉시 구매하셨습니다.`,
-        key: `${createdAt}.${sender.id}`
+        key: `P.${createdAt}.${sender.id}`
       };
 
       const product = { soldPrice: sold.soldPrice, soldDate: sold.soldDate };
@@ -204,6 +210,10 @@ const ProductPage = ({ match }) => {
   useEffect(() => {
     getRelatedItemList();
   }, [productPageState.loading]);
+
+  if (productPageState.error) {
+    return <ErrorPage />;
+  }
 
   return productPageState.loading ? (
     <Spinner text="상품 준비중" />

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import ImgIcon from "./ImageIcon";
 import TextIcon from "./TextIcon";
+import NotiNumber from "../../../Atoms/NotiNumber";
 
 const Wrapper = styled.li`
   display: flex;
@@ -18,6 +19,7 @@ const Components = props => {
 
   return (
     <Wrapper color={color}>
+      {text === "알림" ? <NotiNumber active={active} /> : null}
       <ImgIcon img={img} color={color}></ImgIcon>
       <TextIcon color={color} active={active} onClick={onClick} data-idx={idx}>
         {text}

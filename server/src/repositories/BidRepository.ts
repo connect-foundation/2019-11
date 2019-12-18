@@ -39,6 +39,13 @@ export class BidRepository {
       .getRawOne();
   }
 
+  public findLastBidBy(productId: number) {
+    return this.em.query(
+      "SELECT * FROM bids WHERE product_id=? ORDER BY bid_date DESC LIMIT 1",
+      [productId]
+    );
+  }
+
   public findOne(bidId: number) {
     return this.em.findOne(Bids, bidId);
   }
