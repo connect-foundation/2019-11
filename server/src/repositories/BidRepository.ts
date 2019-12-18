@@ -22,6 +22,7 @@ export class BidRepository {
       .addSelect("COUNT(bids.product) as count")
       .groupBy("bids.product")
       .orderBy("count", "DESC")
+      .addOrderBy("bids.product", "ASC")
       .getRawMany();
   }
 

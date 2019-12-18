@@ -99,8 +99,8 @@ export class ProductRepository {
     });
   }
 
-  public findOneAuction(productId: number) {
-    return this.em.findOne(Products, {
+  public async findOneAuction(productId: number) {
+    return await this.em.findOne(Products, {
       where: {
         id: productId,
         isAuction: true,
