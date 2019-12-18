@@ -32,10 +32,7 @@ export class ItemController {
   }
 
   @Get("/related/:code/:id")
-  public findRelated(
-    @Param("code") categoryCode: number,
-    @Param("id") id: number
-  ) {
+  public findRelated(@Param("code") categoryCode: number, @Param("id") id: number) {
     return this.itemService.findRelated(Number(id), Number(categoryCode));
   }
 }
