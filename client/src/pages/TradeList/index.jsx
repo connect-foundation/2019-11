@@ -10,6 +10,7 @@ import userContext from "../../context/UserContext";
 
 import apiConfig from "../../config/api";
 import pathConfig from "../../config/path";
+import NotFoundImage from "../../assets/notFound.png";
 
 const { apiUrl } = apiConfig;
 const { logfilter } = pathConfig;
@@ -59,6 +60,15 @@ const PageButton = styled.button`
   background-color: white;
   color: ${props => (props.currentPage === props.buttonNumber ? "var(--color-primary)" : "black")};
   font-size: ${props => (props.currentPage === props.buttonNumber ? "var(--font-size-lg)" : "")};
+`;
+
+const NotFoundDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 function TradeList() {
   const [data, setData] = useState([]);
@@ -182,19 +192,18 @@ function TradeList() {
           />
         </LeftRightAlign>
         <TradeContents>
-          {data.map(value => (
-            <TradeListBox key={value.title + value.solddate} {...value} />
-          ))}
-          {/* <InfiniteScroll
-            reset={reset}
-            fetcher={() => getData(isSale, isBuy, dayago, page)}
-            drawer={drawer}
-          /> */}
+          {data.length ? (
+            data.map(value => <TradeListBox key={value.title + value.solddate} {...value} />)
+          ) : (
+            <NotFoundDiv>
+              <img src={NotFoundImage} alt={"Not Found bee"} />
+              <span>검색 기록이 없습니다.</span>
+            </NotFoundDiv>
+          )}
         </TradeContents>
       </TradeWrap>
       <Footer />
     </Wraper>
   );
 }
-
 export default TradeList;
