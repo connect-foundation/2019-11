@@ -17,7 +17,8 @@ const CardStyle = styled.div`
   height: 17rem;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2), 0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2),
+    0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
   transition: all 0.15s ease-in-out;
   &:hover {
     transform: scale(1.05);
@@ -116,18 +117,18 @@ const BuyNowPriceStyle = styled.div`
   color: var(--color-tertiary);
   label {
     color: black;
-    margin-right: 0.5rem;
+    margin-right: 0.3rem;
   }
 `;
 
 const TopBidStyle = styled.div`
   display: flex;
   height: 1rem;
-  font-size: medium;
+  font-size: 0.95em;
   color: var(--color-secondary);
   label {
     color: black;
-    margin-right: 0.5rem;
+    margin-right: 0.3rem;
   }
 `;
 
@@ -154,7 +155,11 @@ const Card = ({ item }) => {
         </CardTitle>
         <InfoContainer>
           {isAuction && <Bids bids={countBids} />}
-          <PriceContainer buyNowPrice={immediatePrice} topBid={topBid} isAuction={isAuction} />
+          <PriceContainer
+            buyNowPrice={immediatePrice}
+            topBid={topBid}
+            isAuction={isAuction}
+          />
         </InfoContainer>
       </CardStyle>
     </StyledLink>
