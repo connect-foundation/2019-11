@@ -46,6 +46,7 @@ const InfoContainer = styled.div`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: black;
+  height: 17rem;
 `;
 
 const BidsStyle = styled.div`
