@@ -171,11 +171,7 @@ function Component(props) {
       <ProfileWrap>
         <ProfileBig>
           <img
-            src={
-              user.profileUrl === (undefined || null)
-                ? DefaultProfileIcon
-                : user.profileUrl
-            }
+            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
             alt={"Profile Image"}
           />
         </ProfileBig>
@@ -184,10 +180,7 @@ function Component(props) {
           undefined
         ) : (
           <>
-            <ChangeImgButtonLabel
-              htmlFor="change-img"
-              data-tip="프로필 이미지 변경"
-            >
+            <ChangeImgButtonLabel htmlFor="change-img" data-tip="프로필 이미지 변경">
               <img src="https://image.flaticon.com/icons/png/512/17/17789.png" />
             </ChangeImgButtonLabel>
             <ChangeImgButton

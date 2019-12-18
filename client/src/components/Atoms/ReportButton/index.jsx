@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import ReportDialog from "../../Molecules/ReportDialog";
+import ModalContext from "../../../context/ModalContext";
+import ReportModal from "../../Molecules/CustomModal/ReportModal";
 
 const Button = styled.button`
   margin: 0 var(--margin-xs);
@@ -31,18 +32,17 @@ const ButtonWrap = styled.div`
  * targetId : id
  */
 const Component = props => {
-  const [show, setShow] = useState(false);
+  const [modal, setModal] = useContext(ModalContext);
   function ReportWrite() {
-    setShow(!show);
+    return setModal({
+      isOpen: true,
+      component: ReportModal,
+      props: { userId: props.userId, productId: props.productId }
+    });
   }
   return (
     <ButtonWrap>
       <Button onClick={ReportWrite}>{props.text}</Button>
-      {show ? (
-        <ReportDialog onClick={ReportWrite} userId={props.userId} productId={props.productId} />
-      ) : (
-        undefined
-      )}
     </ButtonWrap>
   );
 };

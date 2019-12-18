@@ -28,7 +28,9 @@ const Main = () => {
     const url = `${apiUrl}${items.hot}`;
     fetch(url)
       .then(result => result.json())
-      .then(result => setPopular(result));
+      .then(result => {
+        setPopular(result);
+      });
   };
 
   const getDeadLineList = () => {
@@ -46,10 +48,7 @@ const Main = () => {
   return (
     <MainStyle>
       <CardContainer items={popular} title={"HOT - 인기 경매 상품"} />
-      <CardContainer
-        items={deadline}
-        title={"HURRY UP - 마감 임박 경매 상품"}
-      />
+      <CardContainer items={deadline} title={"HURRY UP - 마감 임박 경매 상품"} />
     </MainStyle>
   );
 };

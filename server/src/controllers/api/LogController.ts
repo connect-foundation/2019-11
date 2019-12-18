@@ -1,16 +1,5 @@
-import {
-  JsonController,
-  Get,
-  Param,
-  Post,
-  Body,
-  Patch,
-  Put,
-  Delete,
-  BodyParam,
-  OnUndefined
-} from "routing-controllers"
-import { LogService } from "../../services/LogService"
+import { JsonController, Post, BodyParam } from "routing-controllers";
+import { LogService } from "../../services/LogService";
 
 @JsonController("/log")
 export class LogController {
@@ -26,14 +15,14 @@ export class LogController {
     @BodyParam("limit") limit: number
   ) {
     if (isBuy && isSale) {
-      return this.logService.findAllLog(userid, dayago, page, limit)
+      return this.logService.findAllLog(userid, dayago, page, limit);
     } else {
       if (isBuy) {
-        return this.logService.findBuyLog(userid, dayago, page, limit)
+        return this.logService.findBuyLog(userid, dayago, page, limit);
       } else if (isSale) {
-        return this.logService.findSellLog(userid, dayago, page, limit)
+        return this.logService.findSellLog(userid, dayago, page, limit);
       } else {
-        return [[], [0]]
+        return [[], [0]];
       }
     }
   }
