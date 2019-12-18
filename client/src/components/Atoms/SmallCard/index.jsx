@@ -1,10 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
+const smallCardSize = "9em";
+
 const SmallCardStyle = styled.div`
   display: flex;
-  height: 9em;
-  width: 9em;
+  height: ${smallCardSize};
+  width: ${smallCardSize};
   margin: 1rem;
   border-radius: 1rem;
   overflow: hidden;
@@ -22,16 +24,19 @@ const SmallCardStyle = styled.div`
     transform: scale(1.05);
   }
 `;
+const Link = styled.a`
+  height: ${smallCardSize};
+`;
 
 const SmallCard = ({ item }) => {
   const { id, thumbnailUrl } = item;
   const link = `/products/${id}`;
   return (
-    <a href={link}>
+    <Link href={link}>
       <SmallCardStyle>
         <img src={thumbnailUrl} alt={"thumbnail"} />
       </SmallCardStyle>
-    </a>
+    </Link>
   );
 };
 
