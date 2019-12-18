@@ -87,10 +87,12 @@ const mailService = (toEmail, content, isSeller, isSold) => {
   run()
 }
 
-module.exports = sendMail = (pool, userid, title, isSeller, isSold) => {
+const sendMail = (pool, userid, title, isSeller, isSold) => {
   pool.query('select email from users where id = ?', [userid],
     (err, row, field) => {
       if (!row) return;
       mailService(row[0].email, title, isSeller, isSold)
     })
 }
+
+module.exports = { sendMail }
