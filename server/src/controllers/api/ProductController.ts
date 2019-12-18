@@ -93,11 +93,11 @@ export class ProductController {
     @BodyParam("subCategory") subCategory: string,
     @BodyParam("isAuction") isAuction: boolean
   ) {
-    const mainIdx = categoryJson.map(value => value.name).indexOf(mainCategory) + 1;
-    const subIdx = categoryJson.map(value => value.sub)[mainIdx].indexOf(subCategory) + 1;
-    const categoryCode = Number(mainIdx * 1000) + Number(subIdx);
+    const mainIdx = categoryJson.map(value => value.name).indexOf(mainCategory);
+    const subIdx = categoryJson.map(value => value.sub)[mainIdx].indexOf(subCategory);
+    const categoryCode = Number((mainIdx + 1) * 1000) + (subIdx + 1);
 
-    if (!mainIdx || !subIdx) return NotFoundError;
+    if (mainIdx === -1 || subIdx === -1) return NotFoundError;
 
     const result = await this.productService.create(
       userId,
