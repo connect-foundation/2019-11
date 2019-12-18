@@ -39,29 +39,17 @@ export class UserController {
       return await this.getUserGoogle(accessToken, refreshToken);
     }
     try {
-      const decodedAccessToken = jwt.verify(
-        accessToken,
-        `${process.env.JWT_KEY}`
-      );
-      const user = await this.userService.findOne(
-        (<any>decodedAccessToken).loginId
-      );
+      const decodedAccessToken = jwt.verify(accessToken, `${process.env.JWT_KEY}`);
+      const user = await this.userService.findOne((<any>decodedAccessToken).loginId);
       return user;
     } catch {
       try {
-        const decodedRefreshToken = jwt.verify(
-          refreshToken,
-          `${process.env.JWT_KEY}`
-        );
+        const decodedRefreshToken = jwt.verify(refreshToken, `${process.env.JWT_KEY}`);
         const { loginId } = <any>decodedRefreshToken;
         accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
           expiresIn: "2h"
         });
-        const user = await this.userService.updateToken(
-          loginId,
-          accessToken,
-          refreshToken
-        );
+        const user = await this.userService.updateToken(loginId, accessToken, refreshToken);
         return user;
       } catch {
         return false;
@@ -87,13 +75,7 @@ export class UserController {
   ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
     if (!isSignUp) {
-      const user = await this.userService.update(
-        id,
-        loginId,
-        password,
-        name,
-        email
-      );
+      const user = await this.userService.update(id, loginId, password, name, email);
       return { msg: true, user };
     }
     if (await this.userService.checkDuplicate(loginId)) {
@@ -115,7 +97,6 @@ export class UserController {
       accessToken,
       refreshToken
     );
-    console.log(user);
     return { msg: true, user };
   }
 
@@ -172,12 +153,8 @@ export class UserController {
       access_token: accessToken
     };
     const paramsStr = keyValue2Str(params);
-    const checkExpireResult = await Await(
-      `${google.checkTokenExpired}?${paramsStr}`,
-      Option.get
-    );
+    const checkExpireResult = await Await(`${google.checkTokenExpired}?${paramsStr}`, Option.get);
     const { user_id } = checkExpireResult;
-    console.log(checkExpireResult);
 
     if (user_id === undefined) {
       const params = {
@@ -187,10 +164,7 @@ export class UserController {
         grant_type: "refresh_token"
       };
       const paramsStr = keyValue2Str(params);
-      const { access_token } = await Await(
-        `${google.getToken}?${paramsStr}`,
-        Option.post
-      );
+      const { access_token } = await Await(`${google.getToken}?${paramsStr}`, Option.post);
       const { loginId, name, email, profileUrl } = <UserDTO>user;
       return await this.userService.updateAuth(
         loginId,
