@@ -13,7 +13,7 @@ const CardStyle = styled.div`
   border-radius: 1rem;
   margin: 1rem;
   background: white;
-  width: 13rem;
+  width: 13.5rem;
   height: 17rem;
   padding: 0;
   cursor: pointer;
@@ -167,6 +167,7 @@ const Card = ({ item }) => {
 };
 
 const Bids = ({ bids }) => {
+  if (bids >= 1000) bids = `${Number(bids / 1000)}K`;
   return (
     <BidsStyle>
       <img src={ticketIcon} alt={"profile Image"} />
