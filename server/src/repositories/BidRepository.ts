@@ -22,6 +22,7 @@ export class BidRepository {
       .addSelect("COUNT(bids.product) as count")
       .groupBy("bids.product")
       .orderBy("count", "DESC")
+      .addOrderBy("bids.product", "ASC")
       .getRawMany();
   }
 
@@ -37,6 +38,13 @@ export class BidRepository {
       .addSelect("COUNT(bids.product) as count")
       .groupBy("bids.product")
       .getRawOne();
+  }
+
+  public findLastBidBy(productId: number) {
+    return this.em.query(
+      "SELECT * FROM bids WHERE product_id=? ORDER BY bid_date DESC LIMIT 1",
+      [productId]
+    );
   }
 
   public findOne(bidId: number) {

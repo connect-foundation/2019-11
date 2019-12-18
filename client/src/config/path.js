@@ -21,5 +21,8 @@ export default {
     hot: "/api/items/hot",
     deadline: "/api/items/deadline",
     related: "/api/items/related"
+  },
+  statics: {
+    categories: "/api/statics/categories"
   }
 };

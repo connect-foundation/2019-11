@@ -4,26 +4,25 @@ import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const TextTimerStyle = styled.span``;
 
-const TextTimer = ({ auctionDeadline }) => {
-  const { d, h, m, s } = getDiffDateTime(auctionDeadline);
-  const [deadLine, setDeadLine] = useState(`D-${d} ${h}:${m}:${s}`);
+const TextTimer = ({ datetime }) => {
+  const [deadLine, setDeadLine] = useState(`시간 계산중`);
 
   useEffect(() => {
-    if (!auctionDeadline) return;
-
+    if (!datetime) return;
     const timer = setInterval(() => {
-      const { diff, d, h, m, s } = getDiffDateTime(auctionDeadline);
+      const { diff, d, h, m, s } = getDiffDateTime(datetime);
+
       if (diff > 0) {
         setDeadLine(`D-${d} ${h}:${m}:${s}`);
       } else {
         clearInterval(timer);
-        setDeadLine(`경매 마감`);
+        setDeadLine(`종료`);
       }
     }, 1000);
     return () => {
       clearInterval(timer);
     };
-  }, [auctionDeadline, setDeadLine]);
+  }, [datetime, setDeadLine]);
 
   return <TextTimerStyle>{deadLine}</TextTimerStyle>;
 };

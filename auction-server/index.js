@@ -25,12 +25,13 @@ require("dotenv").config();
 var moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+const { sendMail } = require('./mailService')
 
 const pool = mysql.createPool({
   host:
-    process.env.NODE_ENV === "development"
-      ? process.env.DB_DOCKER_COMPOSE_SERVICE_HOST
-      : process.env.DB_HOST,
+    process.env.NODE_ENV === "production"
+      ? process.env.DB_HOST
+      : process.env.DB_DOCKER_COMPOSE_SERVICE_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -39,12 +40,16 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-const socket = require("socket.io-client")("http://localhost:4000");
+const chatURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.CHAT_SERVER
+    : process.env.CHAT_DEV_SERVER;
+const socket = require("socket.io-client")(chatURL);
 socket.on("connect", () => {
-  console.log("connected socket");
+  console.log(` => ${chatURL} connected`);
 });
-socket.on("event", data => {});
-socket.on("disconnect", () => {});
+socket.on("event", data => { });
+socket.on("disconnect", () => { });
 
 let queue = [];
 
@@ -52,6 +57,7 @@ let queue = [];
 //[작업 할당 클론]
 cron.schedule("*/10 * * * * *", () => {
   const now = moment().format("YYYY-MM-DD HH:mm:ss");
+  console.log(now);
   pool.query(
     `SELECT * FROM products WHERE extension_date < ? and is_end = 0 ORDER BY extension_date`,
     [now],
@@ -84,6 +90,7 @@ cron.schedule("*/10 * * * * *", () => {
 cron.schedule("*/10 * * * * *", () => {
   if (queue.length === 0) return console.log("QUEUE IS EMPTY");
   console.dir(queue);
+  console.dir(queue.length);
 
   while (queue.length > 0) {
     //1. 큐에 있는 경매(상품)을 꺼낸다.
@@ -96,9 +103,6 @@ cron.schedule("*/10 * * * * *", () => {
       [product.id],
       (err, rows, filed) => {
         const bids = rows;
-        console.log("PRODCUT ID:::" + product.id);
-        console.log("#####BIDS");
-        console.dir(bids);
         const productInfo = {
           id: product.id,
           title: product.title,
@@ -109,7 +113,9 @@ cron.schedule("*/10 * * * * *", () => {
 
         //2. 즉시구매된 상품인 경우
         if (product.sold_price) {
-          console.log("[즉시구매]");
+          console.log(
+            `[즉시구매] ${product.id}상품 ${product.buyer_id}가 즉시구매 `
+          );
           // 2-1. 구매자에게 즉시 구매가 성공됨을 알린다.(mongo, socket.io)
           socket.emit("auctionResult", {
             userId: product.buyer_id,
@@ -125,23 +131,32 @@ cron.schedule("*/10 * * * * *", () => {
 
           bids.forEach(bid => {
             // 2-3. 입찰한 유저들에게 경매(상품)이 즉시 구매로 팔렸음을 알린다.(mongo, socket.io)
+            if (bid.user_id === product.buyer_id) return;
+
             socket.emit("auctionResult", {
               userId: bid.user_id,
               type: "AUCTION_END_BY_PURCHASE",
               product: productInfo
             });
           });
+
+          sendMail(pool, product.buyer_id, product.title, false, true)
+          sendMail(pool, product.seller_id, product.title, true, true)
         } else {
           //3. 즉시 구매가 아닌 상품인 경우, 낙찰/유찰 여부를 확인한다.(쿼리)
           //3-1. 유찰인 경우
           if (bids.length === 0) {
-            console.log("[유찰]");
+            console.log(
+              `[유찰] ${product.seller_id} 판매자의 상품 ${productInfo.id} 유찰됨`
+            );
             //3-1-1. 판매자에게 유찰을 알림(mongo, socket.io)
             socket.emit("auctionResult", {
               userId: product.seller_id,
               type: "AUCTION_FAIL",
               product: productInfo
             });
+
+            sendMail(pool, product.seller_id, product.title, true, false)
           } else {
             //3-2. 낙찰인 경우
             // 가장 비싼 가격으로 구매한 buyer_id의 값을 product 테이블에 업데이트 한다.
@@ -153,7 +168,9 @@ cron.schedule("*/10 * * * * *", () => {
               `Update products SET buyer_id=? WHERE id=?`,
               [product.id, buyerId],
               (err, rows, filed) => {
-                console.log(`[낙찰] ${rows.changedRows}개 ROW UPDATED`);
+                console.log(
+                  `[낙찰] ${product.id}상품 ${buyerId}가 구매 / ${rows.changedRows}개 ROW UPDATED`
+                );
                 //3-2-1. 판매자에게 낙찰되었음을 알린다.(mongo, socket.io)
                 socket.emit("auctionResult", {
                   userId: product.seller_id,
@@ -178,6 +195,8 @@ cron.schedule("*/10 * * * * *", () => {
                 });
               }
             );
+            sendMail(pool, product.buyer_id, product.title, false, true)
+            sendMail(pool, product.seller_id, product.title, true, true)
           }
         }
       }

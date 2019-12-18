@@ -97,7 +97,6 @@ export class UserController {
       accessToken,
       refreshToken
     );
-    console.log(user);
     return { msg: true, user };
   }
 
@@ -143,7 +142,6 @@ export class UserController {
         `kakao_${refreshToken}`
       );
     }
-
     return user;
   }
 
@@ -157,7 +155,6 @@ export class UserController {
     const paramsStr = keyValue2Str(params);
     const checkExpireResult = await Await(`${google.checkTokenExpired}?${paramsStr}`, Option.get);
     const { user_id } = checkExpireResult;
-    console.log(checkExpireResult);
 
     if (user_id === undefined) {
       const params = {

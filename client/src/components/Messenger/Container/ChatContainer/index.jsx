@@ -31,10 +31,6 @@ const MessengerChatHead = styled.div`
 
   background-color: var(--color-primary-minus0);
 
-  margin: 0.05rem 0.05rem;
-
-  width: 19.9rem;
-
   height: 2.4rem;
 `;
 
@@ -66,10 +62,7 @@ const MessengerChatFoot = styled.div`
 
   background-color: var(--color-primary-minus0);
 
-  margin: 0 0.05rem;
-
-  width: 19.9rem;
-  height: 10%;
+  height: 11%;
 `;
 const MessengerChatForm = styled.form`
   width: 100%;

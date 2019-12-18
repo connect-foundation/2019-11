@@ -39,17 +39,24 @@ const TitleText = styled.span`
 `;
 
 const ChatAlert = styled.div`
-  padding: var(--padding-md) var(--padding-sm);
+  padding: var(--padding-sm);
 `;
 
 const ChatAlertWithBid = styled.div`
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-secondary);
   padding: var(--padding-sm);
-  color: var(--color-primary);
+  color: var(--color-secondary);
+  font-weight: bold;
   text-align: center;
   font-size: 0.8rem;
-  background-color: var(--color-primary-minus2);
+  background-color: var(--color-secondary-lighter);
   border-radius: 8px;
+`;
+
+const ChatAlertWithPurchase = styled(ChatAlertWithBid)`
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-primary-minus2);
 `;
 
 const ChatBox = ({ productId, user }) => {
@@ -57,7 +64,7 @@ const ChatBox = ({ productId, user }) => {
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, chats } = productPageState;
 
-  const [setModal] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext);
 
   useEffect(() => {
     chatBodyRef.current.scrollTo(0, chatBodyRef.current.scrollHeight);
@@ -96,7 +103,11 @@ const ChatBox = ({ productId, user }) => {
             <Chat key={chat.key} chat={chat} />
           ) : (
             <ChatAlert key={chat.key}>
-              <ChatAlertWithBid>{chat.text}</ChatAlertWithBid>
+              {chat.type === "bid" ? (
+                <ChatAlertWithBid>{chat.text}</ChatAlertWithBid>
+              ) : (
+                <ChatAlertWithPurchase>{chat.text}</ChatAlertWithPurchase>
+              )}
             </ChatAlert>
           );
         })}

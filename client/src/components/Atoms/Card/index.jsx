@@ -2,9 +2,10 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { dateDiff2Dday } from "../../../utils/converter";
+import { convert2UnitPrice } from "../../../utils/converter";
 
-import personIcon from "../../../assets/person.svg";
+import ticketIcon from "../../../assets/tickets.svg";
+import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const CardStyle = styled.div`
   display: flex;
@@ -16,8 +17,7 @@ const CardStyle = styled.div`
   height: 17rem;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2),
-    0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2), 0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
   transition: all 0.15s ease-in-out;
   &:hover {
     transform: scale(1.05);
@@ -123,7 +123,7 @@ const BuyNowPriceStyle = styled.div`
 const TopBidStyle = styled.div`
   display: flex;
   height: 1rem;
-  font-size: middle;
+  font-size: medium;
   color: var(--color-secondary);
   label {
     color: black;
@@ -154,11 +154,7 @@ const Card = ({ item }) => {
         </CardTitle>
         <InfoContainer>
           {isAuction && <Bids bids={countBids} />}
-          <PriceContainer
-            buyNowPrice={immediatePrice}
-            topBid={topBid}
-            isAuction={isAuction}
-          />
+          <PriceContainer buyNowPrice={immediatePrice} topBid={topBid} isAuction={isAuction} />
         </InfoContainer>
       </CardStyle>
     </StyledLink>
@@ -168,20 +164,20 @@ const Card = ({ item }) => {
 const Bids = ({ bids }) => {
   return (
     <BidsStyle>
-      <img src={personIcon} alt={"profile Image"} />
+      <img src={ticketIcon} alt={"profile Image"} />
       {bids}
     </BidsStyle>
   );
 };
 
 const TagContainer = ({ isAuction, date }) => {
-  const day = dateDiff2Dday(date);
+  const { d } = getDiffDateTime(date);
 
   return (
     <TagContainerStyle>
       {isAuction && <IsAuctionTag>경매중</IsAuctionTag>}
       {!isAuction && <IsSaleTag>판매중</IsSaleTag>}
-      <DDayTag>D - {day}</DDayTag>
+      <DDayTag>D - {d === 0 ? "day" : d}</DDayTag>
     </TagContainerStyle>
   );
 };
@@ -206,7 +202,7 @@ const BuyNowPrice = ({ buyNowPrice }) => {
   return (
     <BuyNowPriceStyle>
       <label>즉시 구매가</label>
-      {buyNowPrice}
+      {convert2UnitPrice(buyNowPrice)}
     </BuyNowPriceStyle>
   );
 };
@@ -215,7 +211,7 @@ const TopBid = ({ topBid }) => {
   return (
     <TopBidStyle>
       <label>현재 입찰가</label>
-      {topBid}
+      {convert2UnitPrice(topBid)}
     </TopBidStyle>
   );
 };

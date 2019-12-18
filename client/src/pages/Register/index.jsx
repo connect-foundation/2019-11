@@ -10,7 +10,7 @@ import AlertDialog from "../../components/Molecules/AlertDialog";
 import Spinner from "../../components/Atoms/Spinner";
 
 import { base642Blob } from "../../utils/converter";
-import { postJsonFetch } from "../../services/fetchService";
+import { postJsonFetch, getFetch } from "../../services/fetchService";
 import { createThumbnail } from "../../services/imageService";
 import { phaseList, defaultData, dialogOption } from "./constants";
 import apiConfig from "../../config/api";
@@ -18,9 +18,10 @@ import pathConfig from "../../config/path";
 
 import productContext from "./context";
 import UserContext from "../../context/UserContext";
+import { getNowDateTime } from "../../utils/dateUtil";
 
 const { apiUrl } = apiConfig;
-const { storage, products } = pathConfig;
+const { storage, products, statics } = pathConfig;
 
 const WIDTH = 80;
 
@@ -52,7 +53,7 @@ const Window = styled.div`
 `;
 
 const registerProduct = async ({ data, callback }) => {
-  const timestamp = new Date().toUTCString();
+  const timestamp = getNowDateTime();
   const productsHeader = { "x-timestamp": timestamp };
   const imageHeader = Object.assign(productsHeader, { "x-auth": "user" });
   const imageUrl = `${apiUrl}${storage.image}`;
@@ -79,14 +80,23 @@ const Page = () => {
   const [phase, setPhase] = useState(0);
   const [maxPhase, setMaxPhase] = useState(0);
   const [open, setOpen] = useState(false);
+  const [mainCategory, setMainCateogries] = useState([]);
+  const [subCategory, setSubCategories] = useState([]);
 
   const [onlazy, setOnlazy] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       setOnlazy(false);
+      const url = `${apiUrl}${statics.categories}`;
+      const result = await getFetch(url);
+      const main = result.map(value => value.name);
+      const sub = result.map(value => value.sub);
+
+      setMainCateogries(main);
+      setSubCategories(sub);
     }, 1000);
-  });
+  }, []);
 
   useEffect(() => {
     if (!user.id) window.location.href = "/";
@@ -101,21 +111,21 @@ const Page = () => {
         <Content>
           <Window phase={phase}>
             <SelectCategory
-              width={80}
+              leftList={mainCategory}
+              rightList={subCategory}
               next={() => {
                 setPhase(1);
                 setMaxPhase(1);
               }}
             />
             <InsertInfo
-              width={80}
               next={() => {
                 setPhase(2);
                 setMaxPhase(2);
               }}
               registItem={() => setOpen(true)}
             />
-            <Complete width={80} next={() => setPhase(3)} />
+            <Complete next={() => setPhase(3)} />
           </Window>
         </Content>
       </TemplateContainer>

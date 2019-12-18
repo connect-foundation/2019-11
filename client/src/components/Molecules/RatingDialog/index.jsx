@@ -32,6 +32,7 @@ function Components(props) {
       }).then(result => {
         if (result) {
           alert("의견 감사합니다.");
+          props.doCheck();
           props.onClick();
         } else {
           alert("잘못된 요청입니다.");

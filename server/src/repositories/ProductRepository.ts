@@ -1,4 +1,12 @@
-import { EntityRepository, EntityManager, Equal, Not, IsNull, MoreThan } from "typeorm";
+import {
+  EntityRepository,
+  EntityManager,
+  Equal,
+  Not,
+  IsNull,
+  MoreThan,
+  MoreThanOrEqual
+} from "typeorm";
 import { ProductsDTO } from "../dto/ProductDTO";
 import { Products } from "../models/Products";
 import { Today } from "../util/DateUtils";
@@ -41,10 +49,12 @@ export class ProductRepository {
     return await this.em.findAndCount(Products, {
       select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
       where: {
-        seller: userId
+        seller: userId,
+        soldDate: null,
+        auctionDeadline: MoreThanOrEqual(new Date())
       },
       order: {
-        id: "ASC"
+        id: "DESC"
       },
       skip: start,
       take: limits,
@@ -89,8 +99,8 @@ export class ProductRepository {
     });
   }
 
-  public findOneAuction(productId: number) {
-    return this.em.findOne(Products, {
+  public async findOneAuction(productId: number) {
+    return await this.em.findOne(Products, {
       where: {
         id: productId,
         isAuction: true,

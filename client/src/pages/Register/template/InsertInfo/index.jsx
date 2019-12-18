@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
-import PageBase from "../../../../components/PageBase";
 import Button from "../../../../components/Atoms/BoxButton";
 import Carousel from "../../../../components/Molecules/Carousel";
 import TitleBox from "../../../../components/Atoms/InputWithLimit";
@@ -14,6 +13,16 @@ import productContext from "../../context";
 
 import { termList, itemDescription } from "../../constants";
 import { idxNotSelected, isArrayEmpty, strEmpty } from "../../../../utils/validator.js";
+import moment from "moment";
+import apiConfig from "../../../../config/api";
+import pathConfig from "../../../../config/path";
+import { deleteJsonFetch } from "../../../../services/fetchService";
+
+const PageBase = styled.div`
+  width: 80%;
+
+  box-sizing: border-box;
+`;
 
 const ContentDiv = styled.div`
   width: 80%;
@@ -109,7 +118,7 @@ const validation = (result, successCallback, failCallback) => {
   isInvalid ? failCallback() : successCallback();
 };
 
-const Component = ({ width, next, registItem }) => {
+const Component = ({ next, registItem }) => {
   const [user] = useContext(userContext);
   const obj = useContext(productContext);
   const dayList = generateDayList();
@@ -147,8 +156,9 @@ const Component = ({ width, next, registItem }) => {
 
   const successCallback = () => {
     const { data } = obj;
-    const deadLine = new Date();
-    deadLine.setDate(deadLine.getDate() + termList[dayIdx].term);
+    const deadLine = moment()
+      .add(termList[dayIdx].term, "days")
+      .format("YYYY-MM-DD HH:mm:ss");
 
     // 임시 사용자 번호 필히 변경 할것
     data.userId = user.id;
@@ -157,14 +167,22 @@ const Component = ({ width, next, registItem }) => {
     data.nowPrice = parseInt(buyNow);
     data.minPrice = isAuction ? parseInt(minPrice) : undefined;
     data.hopePrice = isAuction ? parseInt(predictPrice) : undefined;
-    data.endDate = deadLine.toString();
+    data.endDate = deadLine;
     data.isAuction = isAuction;
 
     for (let i = 0; i < imgList.length; i++) data.images.push(imgList[i].split(",")[1]);
 
     obj.callback = result => {
-      if (isNaN(result)) alert("문제가 발생해 상품이 등록되지 않았습니다.");
-      else {
+      if (isNaN(result)) {
+        alert("문제가 발생해 상품이 등록되지 않았습니다.");
+        obj.data.images.forEach(value => {
+          deleteJsonFetch(
+            `${apiConfig.apiUrl}${pathConfig.storage.image}`,
+            {},
+            { data: { url: value } }
+          );
+        });
+      } else {
         data.productId = result;
         next();
       }
@@ -178,7 +196,7 @@ const Component = ({ width, next, registItem }) => {
   };
 
   return (
-    <PageBase width={width}>
+    <PageBase>
       <ContentDiv>
         <TopContentDiv>
           <CarouselDiv>
