@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { convert2Price } from "../../../utils/converter";
 
-import personIcon from "../../../assets/person.svg";
+import ticketIcon from "../../../assets/tickets.svg";
 import { getDiffDateTime } from "../../../utils/dateUtil";
 
 const CardStyle = styled.div`
@@ -124,7 +124,7 @@ const BuyNowPriceStyle = styled.div`
 const TopBidStyle = styled.div`
   display: flex;
   height: 1rem;
-  font-size: small;
+  font-size: medium;
   color: var(--color-secondary);
   label {
     color: black;
@@ -169,7 +169,7 @@ const Card = ({ item }) => {
 const Bids = ({ bids }) => {
   return (
     <BidsStyle>
-      <img src={personIcon} alt={"profile Image"} />
+      <img src={ticketIcon} alt={"profile Image"} />
       {bids}
     </BidsStyle>
   );
