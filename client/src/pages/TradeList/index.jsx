@@ -102,6 +102,7 @@ function TradeList() {
       })
       .then(result => {
         let resultData = result[0].map(ele => {
+          let hope_price_check = ele.hopePrice ? ele.hopePrice : undefined;
           return {
             id: ele.id,
             title: ele.title,
@@ -110,8 +111,8 @@ function TradeList() {
             soldprice: ele.soldPrice,
             solddate: ele.soldDate,
             registdate: ele.registerDate,
-            hopeprice: ele.hopePrice,
-            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2),
+            hopeprice: hope_price_check,
+            deviation: (((ele.soldPrice - hope_price_check) / hope_price_check) * 100).toFixed(2),
 
             userId: user.id,
             targetId: ele.seller.id === user.id ? ele.buyerId : ele.seller.id,

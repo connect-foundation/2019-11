@@ -59,7 +59,7 @@ const ChatAlertWithPurchase = styled(ChatAlertWithBid)`
   background-color: var(--color-primary-minus2);
 `;
 
-const ChatBox = ({ productId, user }) => {
+const ChatBox = ({ productId, sellerId, user }) => {
   const chatBodyRef = useRef();
   const [productPageState] = useContext(ProductPageContext);
   const { socketClient, chats } = productPageState;
@@ -80,7 +80,6 @@ const ChatBox = ({ productId, user }) => {
         props: { message: "로그인이 필요합니다." }
       });
     }
-
     socketClient.emit("message", {
       roomId: productId,
       sender: { ...user, sessionId: socketClient.id },
@@ -91,7 +90,6 @@ const ChatBox = ({ productId, user }) => {
 
     e.target.message.value = "";
   };
-
   return (
     <ChatBoxStyle>
       <ChatHeader>
@@ -100,7 +98,7 @@ const ChatBox = ({ productId, user }) => {
       <ChatBody ref={chatBodyRef}>
         {chats.map(chat => {
           return chat.type === "message" ? (
-            <Chat key={chat.key} chat={chat} />
+            <Chat key={chat.key} chat={chat} isSeller={sellerId === chat.senderId} />
           ) : (
             <ChatAlert key={chat.key}>
               {chat.type === "bid" ? (
