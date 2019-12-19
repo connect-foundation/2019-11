@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { convert2UnitPrice } from "../../../utils/converter";
+import { convert2Price, convert2UnitPrice } from "../../../utils/converter";
 
 import ticketIcon from "../../../assets/tickets.svg";
 import { getDiffDateTime } from "../../../utils/dateUtil";
@@ -17,7 +17,8 @@ const CardStyle = styled.div`
   height: 17rem;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2), 0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2),
+    0 0.3rem 0.2rem 0 rgba(0, 0, 0, 0.19);
   transition: all 0.15s ease-in-out;
   &:hover {
     transform: scale(1.05);
@@ -156,7 +157,11 @@ const Card = ({ item }) => {
         </CardTitle>
         <InfoContainer>
           {isAuction && <Bids bids={countBids} />}
-          <PriceContainer buyNowPrice={immediatePrice} topBid={topBid} isAuction={isAuction} />
+          <PriceContainer
+            buyNowPrice={immediatePrice}
+            topBid={topBid}
+            isAuction={isAuction}
+          />
         </InfoContainer>
       </CardStyle>
     </StyledLink>
@@ -205,7 +210,9 @@ const BuyNowPrice = ({ buyNowPrice }) => {
   return (
     <BuyNowPriceStyle>
       <label>즉시 구매가</label>
-      {convert2UnitPrice(buyNowPrice)}
+      {Number(buyNowPrice) < 10000
+        ? convert2Price(buyNowPrice)
+        : convert2UnitPrice(buyNowPrice)}
     </BuyNowPriceStyle>
   );
 };
@@ -214,7 +221,9 @@ const TopBid = ({ topBid }) => {
   return (
     <TopBidStyle>
       <label>현재 입찰가</label>
-      {convert2UnitPrice(topBid)}
+      {Number(topBid) < 10000
+        ? convert2Price(topBid)
+        : convert2UnitPrice(topBid)}
     </TopBidStyle>
   );
 };
