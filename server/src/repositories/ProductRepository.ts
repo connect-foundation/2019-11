@@ -5,7 +5,8 @@ import {
   Not,
   IsNull,
   MoreThan,
-  MoreThanOrEqual
+  MoreThanOrEqual,
+  LessThan
 } from "typeorm";
 import { ProductsDTO } from "../dto/ProductDTO";
 import { Products } from "../models/Products";
@@ -50,8 +51,8 @@ export class ProductRepository {
       select: ["id", "title", "thumbnailUrl", "immediatePrice", "registerDate"],
       where: {
         seller: userId,
-        soldDate: null,
-        auctionDeadline: MoreThanOrEqual(new Date())
+        soldDate: IsNull(),
+        extensionDate: MoreThan(Today())
       },
       order: {
         id: "DESC"
