@@ -141,9 +141,15 @@ const LoginModal = ({ close }) => {
     } else alert("구글 로그인에 실패하였습니다.");
   };
   const handleKeyUpId = e => {
+    if (e.keyCode === 13) {
+      handleSubmit(e);
+    }
     setId(e.target.value);
   };
   const handleKeyUpPwd = e => {
+    if (e.keyCode === 13) {
+      handleSubmit(e);
+    }
     setPwd(e.target.value);
   };
 
