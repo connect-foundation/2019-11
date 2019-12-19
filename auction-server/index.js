@@ -25,6 +25,7 @@ require("dotenv").config();
 var moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
+const { sendMail } = require('./mailService')
 
 const pool = mysql.createPool({
   host:
@@ -47,8 +48,8 @@ const socket = require("socket.io-client")(chatURL);
 socket.on("connect", () => {
   console.log(` => ${chatURL} connected`);
 });
-socket.on("event", data => {});
-socket.on("disconnect", () => {});
+socket.on("event", data => { });
+socket.on("disconnect", () => { });
 
 let queue = [];
 
@@ -138,6 +139,9 @@ cron.schedule("*/2 * * * * *", () => {
               product: productInfo
             });
           });
+
+          sendMail(pool, product.buyer_id, product.title, false, true)
+          sendMail(pool, product.seller_id, product.title, true, true)
         } else {
           //3. 즉시 구매가 아닌 상품인 경우, 낙찰/유찰 여부를 확인한다.(쿼리)
           //3-1. 유찰인 경우
@@ -151,6 +155,8 @@ cron.schedule("*/2 * * * * *", () => {
               type: "AUCTION_FAIL",
               product: productInfo
             });
+
+            sendMail(pool, product.seller_id, product.title, true, false)
           } else {
             //3-2. 낙찰인 경우
             // 가장 비싼 가격으로 구매한 buyer_id의 값을 product 테이블에 업데이트 한다.
@@ -189,6 +195,8 @@ cron.schedule("*/2 * * * * *", () => {
                 });
               }
             );
+            sendMail(pool, product.buyer_id, product.title, false, true)
+            sendMail(pool, product.seller_id, product.title, true, true)
           }
         }
       }

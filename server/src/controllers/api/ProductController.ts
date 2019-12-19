@@ -94,10 +94,8 @@ export class ProductController {
     @BodyParam("isAuction") isAuction: boolean
   ) {
     const mainIdx = categoryJson.map(value => value.name).indexOf(mainCategory);
-    const subIdx = categoryJson
-      .map(value => value.sub)
-      [mainIdx].indexOf(subCategory);
-    const categoryCode = Number(mainIdx * 1000) + Number(subIdx);
+    const subIdx = categoryJson.map(value => value.sub)[mainIdx].indexOf(subCategory);
+    const categoryCode = Number((mainIdx + 1) * 1000) + (subIdx + 1);
 
     if (mainIdx === -1 || subIdx === -1) return NotFoundError;
 
@@ -137,11 +135,6 @@ export class ProductController {
     @BodyParam("point") point: number,
     @BodyParam("isSeller") isSeller: boolean
   ) {
-    return await this.productService.rating(
-      targetUserId,
-      productId,
-      point,
-      isSeller
-    );
+    return await this.productService.rating(targetUserId, productId, point, isSeller);
   }
 }

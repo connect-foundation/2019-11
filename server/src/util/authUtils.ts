@@ -1,4 +1,8 @@
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import config from "../config/key";
+
+const { jwtSecret } = config;
 
 export function encryptPassword(password: string) {
   const salt = crypto.randomBytes(30).toString("base64");
@@ -17,3 +21,25 @@ export function checkPassword(
 
 export const checkIsSnsLogin = (token: string) =>
   token.includes("kakao_") || token.includes("google_") ? true : false;
+
+export const makeTokens = (loginId: string) => {
+  const accessToken = jwt.sign({ loginId }, `${jwtSecret}`, {
+    expiresIn: "2h"
+  });
+
+  const refreshToken = jwt.sign({ loginId }, `${jwtSecret}`, {
+    expiresIn: "3 days"
+  });
+
+  return { accessToken, refreshToken };
+};
+
+export const replaceOAuthToken = (
+  oauth: string,
+  accessToken: string,
+  refreshToken: string
+) => {
+  const at = accessToken.replace(`${oauth}_`, "");
+  const rt = refreshToken.replace(`${oauth}_`, "");
+  return { at, rt };
+};

@@ -89,8 +89,7 @@ const productPageReducer = (state, action) => {
   }
 };
 
-const DEFAULT_PROFILE_URL =
-  "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
+const DEFAULT_PROFILE_URL = "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
 
 const ProductPage = ({ match }) => {
   const [productPageState, dispatchProductPage] = useReducer(
@@ -117,11 +116,7 @@ const ProductPage = ({ match }) => {
     dispatchProductPage({ type: "FETCH_ERROR", error });
   };
 
-  useFetch(
-    `${pathConfig.productsWithBids}/${productId}`,
-    handleFetchSuccess,
-    handleFetchError
-  );
+  useFetch(`${pathConfig.productsWithBids}/${productId}`, handleFetchSuccess, handleFetchError);
 
   const getRelatedItemList = async () => {
     if (!productPageState.loading) {
@@ -151,6 +146,7 @@ const ProductPage = ({ match }) => {
         type,
         sessionId: sender.sessionId,
         id: sender.isSnsLogin ? sender.name : sender.loginId,
+        senderId: sender.id,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
         text,
         key: `M.${createdAt}.${sender.id}`
@@ -164,9 +160,7 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님께서 ${convert2Price(
-          bid.bidPrice
-        )}원에 입찰 하셨습니다.`,
+        text: `${sender.name}님께서 ${convert2Price(bid.bidPrice)}원에 입찰 하셨습니다.`,
         key: `B.${createdAt}.${sender.id}`
       };
 
@@ -179,9 +173,7 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님이 ${convert2Price(
-          sold.soldPrice
-        )}원에 즉시 구매하셨습니다.`,
+        text: `${sender.name}님이 ${convert2Price(sold.soldPrice)}원에 즉시 구매하셨습니다.`,
         key: `P.${createdAt}.${sender.id}`
       };
 
@@ -214,13 +206,11 @@ const ProductPage = ({ match }) => {
   if (productPageState.error) {
     return <ErrorPage />;
   }
-
+  const sellerId = productPageState.product.seller ? productPageState.product.seller.id : undefined;
   return productPageState.loading ? (
     <Spinner text="상품 준비중" />
   ) : (
-    <ProductPageContext.Provider
-      value={[productPageState, dispatchProductPage]}
-    >
+    <ProductPageContext.Provider value={[productPageState, dispatchProductPage]}>
       <ProductPageStyle>
         <MainColumn>
           <Section>
@@ -232,15 +222,11 @@ const ProductPage = ({ match }) => {
             </Section>
           ) : null}
           <Section>
-            <SmallCardContainer
-              items={relatedItemList}
-              title={"연관상품"}
-              isWrap={true}
-            />
+            <SmallCardContainer items={relatedItemList} title={"연관상품"} isWrap={true} />
           </Section>
         </MainColumn>
         <ChatColumn>
-          <ChatBox productId={productId} user={user}></ChatBox>
+          <ChatBox productId={productId} sellerId={sellerId} user={user}></ChatBox>
         </ChatColumn>
       </ProductPageStyle>
     </ProductPageContext.Provider>

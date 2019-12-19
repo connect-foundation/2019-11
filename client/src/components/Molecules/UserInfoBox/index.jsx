@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import UserContext from "../../../context/UserContext";
+import settingIcon from "../../../assets/settings.svg";
 import DefaultProfileIcon from "../../../assets/default-profile.svg";
 import ModalContext from "../../../context/ModalContext";
 import SignUpModal from "../CustomModal/SignUpModal";
@@ -171,7 +172,11 @@ function Component(props) {
       <ProfileWrap>
         <ProfileBig>
           <img
-            src={user.profileUrl === (undefined || null) ? DefaultProfileIcon : user.profileUrl}
+            src={
+              user.profileUrl === (undefined || null)
+                ? DefaultProfileIcon
+                : user.profileUrl
+            }
             alt={"Profile Image"}
           />
         </ProfileBig>
@@ -180,8 +185,11 @@ function Component(props) {
           undefined
         ) : (
           <>
-            <ChangeImgButtonLabel htmlFor="change-img" data-tip="프로필 이미지 변경">
-              <img src="https://image.flaticon.com/icons/png/512/17/17789.png" />
+            <ChangeImgButtonLabel
+              htmlFor="change-img"
+              data-tip="프로필 이미지 변경"
+            >
+              <img src={settingIcon} />
             </ChangeImgButtonLabel>
             <ChangeImgButton
               id="change-img"

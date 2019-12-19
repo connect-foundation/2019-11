@@ -10,6 +10,7 @@ import userContext from "../../context/UserContext";
 
 import apiConfig from "../../config/api";
 import pathConfig from "../../config/path";
+import NotFoundImage from "../../assets/notFound.png";
 
 const { apiUrl } = apiConfig;
 const { logfilter } = pathConfig;
@@ -60,6 +61,15 @@ const PageButton = styled.button`
   color: ${props => (props.currentPage === props.buttonNumber ? "var(--color-primary)" : "black")};
   font-size: ${props => (props.currentPage === props.buttonNumber ? "var(--font-size-lg)" : "")};
 `;
+
+const NotFoundDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 function TradeList() {
   const [data, setData] = useState([]);
   const [isSale, setIsSale] = useState(true);
@@ -92,19 +102,27 @@ function TradeList() {
       })
       .then(result => {
         let resultData = result[0].map(ele => {
+          let hope_price_check = ele.hopePrice ? ele.hopePrice : undefined;
+          let sold_price_check = ele.soldPrice ? ele.soldPrice : undefined;
+          let sold_date_check = ele.soldDate ? ele.soldDate : undefined;
+          let buyer_id_check = ele.buyerId ? ele.buyerId : undefined;
+
           return {
             id: ele.id,
             title: ele.title,
             thumbnail: ele.thumbnailUrl,
-            status: ele.seller.id === user.id ? "판매" : "구매",
-            soldprice: ele.soldPrice,
-            solddate: ele.soldDate,
+            status: ele.seller.id === user.id ? (sold_price_check ? "판매" : "판매실패") : "구매",
+            soldprice: sold_price_check,
+            solddate: sold_date_check,
             registdate: ele.registerDate,
-            hopeprice: ele.hopePrice,
-            deviation: (((ele.hopePrice - ele.soldPrice) / ele.soldPrice) * 100).toFixed(2),
+            hopeprice: hope_price_check,
+            deviation: (((sold_price_check - hope_price_check) / hope_price_check) * 100).toFixed(
+              2
+            ),
+            immediatePrice: ele.immediatePrice,
 
             userId: user.id,
-            targetId: ele.seller.id === user.id ? ele.buyerId : ele.seller.id,
+            targetId: ele.seller.id === user.id ? buyer_id_check : ele.seller.id,
 
             sellerCheck: ele.sellerCheck,
             buyerCheck: ele.buyerCheck
@@ -182,19 +200,18 @@ function TradeList() {
           />
         </LeftRightAlign>
         <TradeContents>
-          {data.map(value => (
-            <TradeListBox key={value.title + value.solddate} {...value} />
-          ))}
-          {/* <InfiniteScroll
-            reset={reset}
-            fetcher={() => getData(isSale, isBuy, dayago, page)}
-            drawer={drawer}
-          /> */}
+          {data.length ? (
+            data.map(value => <TradeListBox key={value.title + value.solddate} {...value} />)
+          ) : (
+            <NotFoundDiv>
+              <img src={NotFoundImage} alt={"Not Found bee"} />
+              <span>검색 기록이 없습니다.</span>
+            </NotFoundDiv>
+          )}
         </TradeContents>
       </TradeWrap>
       <Footer />
     </Wraper>
   );
 }
-
 export default TradeList;

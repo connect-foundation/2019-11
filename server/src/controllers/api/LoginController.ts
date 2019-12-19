@@ -7,12 +7,14 @@ import {
   Get
 } from "routing-controllers";
 import { UserService } from "../../services/UserService";
-import { Users } from "../../models/Users";
-import jwt from "jsonwebtoken";
 import uuid from "uuid";
-import fetch from "node-fetch";
 import { google } from "../../constants/oauthAPIs";
-import { Await, Option } from "../../util/fetchUtil";
+import { fetchToJson, option } from "../../util/fetchUtil";
+import { makeTokens } from "../../util/authUtils";
+import { keyValue2Str } from "../../util/StringUtils";
+import config from "../../config/key";
+
+const { googleKey } = config;
 
 @JsonController("/sign")
 export class LoginController {
@@ -25,26 +27,15 @@ export class LoginController {
     @Req() req: any
   ) {
     const { msg } = await this.userService.checkLogin(loginId, password);
-    if (msg) {
-      const accessToken = await jwt.sign(
-        { loginId },
-        `${process.env.JWT_KEY}`,
-        { expiresIn: "2h" }
-      );
+    if (!msg) return { msg, user: null };
 
-      const refreshToken = await jwt.sign(
-        { loginId },
-        `${process.env.JWT_KEY}`,
-        { expiresIn: "3 days" }
-      );
-      const user = await this.userService.updateToken(
-        loginId,
-        accessToken,
-        refreshToken
-      );
-      return { msg, user };
-    }
-    return { msg, user: null };
+    const { accessToken, refreshToken } = makeTokens(loginId);
+    const user = await this.userService.updateToken(
+      loginId,
+      accessToken,
+      refreshToken
+    );
+    return { msg, user };
   }
 
   @Post("/kakao")
@@ -86,13 +77,21 @@ export class LoginController {
   @Post("/google")
   public async authGoogle(@Req() req: any) {
     const authCode = req.headers["auth-code"];
-    const { id_token, access_token, refresh_token } = await Await(
-      `${google.getAccess}?code=${authCode}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=postmessage&grant_type=authorization_code`,
-      Option.post
+    const params = {
+      code: authCode,
+      client_id: googleKey.clientId,
+      client_secret: googleKey.clientSecret,
+      redirect_uri: "postmessage",
+      grant_type: "authorization_code"
+    };
+    const paramsStr = keyValue2Str(params);
+    const { id_token, access_token, refresh_token } = await fetchToJson(
+      `${google.getAccess}?${paramsStr}`,
+      option.post
     );
-    const { sub, email, name, picture } = await Await(
+    const { sub, email, name, picture } = await fetchToJson(
       `${google.getUserInfo}?id_token=${id_token}`,
-      Option.get
+      option.get
     );
     const accessToken = `google_${access_token}`;
     const refreshToken = `google_${refresh_token}`;
@@ -122,13 +121,5 @@ export class LoginController {
   }
 
   @Get("/logout")
-  public async logout(@Req() req: any, @Res() res: any) {
-    // const sess = req.session;
-    // if (sess.username) {
-    //   sess.destroy();
-    //   res.clearCookie("connect.sid");
-    //   return true;
-    // }
-    // return false;
-  }
+  public async logout(@Req() req: any, @Res() res: any) {}
 }

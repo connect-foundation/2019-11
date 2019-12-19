@@ -1,5 +1,5 @@
-import { EntityRepository, EntityManager, MoreThanOrEqual } from "typeorm";
-import { prevDay } from "../util/DateUtils";
+import { EntityRepository, EntityManager, MoreThanOrEqual, IsNull, Between } from "typeorm";
+import { prevDay, Today } from "../util/DateUtils";
 import { Products } from "../models/Products";
 
 @EntityRepository()
@@ -31,6 +31,23 @@ export class LogRepository {
       },
       order: {
         soldDate: "DESC"
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      cache: true
+    });
+  }
+
+  public findFail(userid: number, dayago: number, page: number, limit: number) {
+    return this.em.findAndCount(Products, {
+      relations: ["seller"],
+      where: {
+        soldDate: IsNull(),
+        extensionDate: Between(prevDay(dayago), Today()),
+        seller: { id: userid }
+      },
+      order: {
+        registerDate: "DESC"
       },
       skip: (page - 1) * limit,
       take: limit,
