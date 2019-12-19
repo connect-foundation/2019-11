@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import serviceAccount from "../config/firestore";
-import { Today } from "../util/DateUtils";
+import { getDateStr, Today } from "../util/DateUtils";
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -11,13 +11,14 @@ export const addLog = (id: number, name: string, ip: string, path: string) => {
   const db = admin.firestore();
   const timestamp = Date.now().toString();
 
-  db.collection(Today())
+  db.collection(getDateStr(new Date()))
     .doc(timestamp)
     .set({
       id,
       name,
       ip,
-      path
+      path,
+      date: Today()
     });
 };
 
