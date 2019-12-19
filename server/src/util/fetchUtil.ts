@@ -1,6 +1,10 @@
 import fetch from "node-fetch";
 
-export const Async = (url: any, option: any, callback: Function) => {
+export const fetchToJsonWithCallback = (
+  url: any,
+  option: any,
+  callback: Function
+) => {
   fetch(url, option)
     .then(res => {
       return res.json();
@@ -10,17 +14,13 @@ export const Async = (url: any, option: any, callback: Function) => {
     });
 };
 
-export const Await = async (url: any, option: any) => {
-  return await fetch(url, option)
-    .then(res => {
-      return res.json();
-    })
-    .then(json => {
-      return json;
-    });
+export const fetchToJson = async (url: any, option: any) => {
+  return await fetch(url, option).then(res => {
+    return res.json();
+  });
 };
 
-export const Option = {
+export const option = {
   get: { method: "GET", headers: { "User-Agent": "Mozilla/5.0" } },
   post: {
     method: "POST",
@@ -37,4 +37,4 @@ export const Option = {
   }
 };
 
-export default { Async, Await, Option };
+export default { fetchToJsonWithCallback, fetchToJson, option };
