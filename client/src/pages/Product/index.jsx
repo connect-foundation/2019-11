@@ -99,7 +99,7 @@ const ProductPage = ({ match }) => {
   );
 
   const [user] = useContext(UserContext);
-  const [notifications, setNotifications] = useContext(NotificationContext);
+  const [, setNotifications] = useContext(NotificationContext);
   const [relatedItemList, setRelatedItemList] = useState([]);
 
   const productId = match.params.id;
