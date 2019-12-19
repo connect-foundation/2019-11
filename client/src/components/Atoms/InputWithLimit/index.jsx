@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import styled from "styled-components"
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
@@ -16,7 +16,7 @@ const Container = styled.div`
     border-color: ${props =>
       props.exceed ? "var(--color-danger)" : "var(--color-primary-minus0)"};
   }
-`
+`;
 
 const NonBorder = styled.input`
   font-family: "BMJUA";
@@ -24,29 +24,31 @@ const NonBorder = styled.input`
   height: fit-content;
   font-size: var(--font-size-xl);
   outline: none;
-`
+`;
 
 const Counter = styled.div`
   width: fit-content;
   font-size: var(--font-size-xs);
   color: ${props => (props.exceed ? "var(--color-danger)" : "var(--color-gray)")};
-`
+`;
 
 const Component = ({ limit, hint, onChange, value, isBlockMode }) => {
-  const [focus, setFocus] = useState(false)
-  const [length, setLength] = useState(value.length)
+  const [focus, setFocus] = useState(false);
+  const [length, setLength] = useState(value.length);
 
   const handleOnChange = e => {
-    const content = e.target.value
+    const content = e.target.value;
     const validContent =
-      isBlockMode && content.length > limit ? content.substring(0, limit) : content
-    onChange(validContent)
-    setLength(validContent.length)
-  }
+      isBlockMode && content.length > limit ? content.substring(0, limit) : content;
+    onChange(validContent);
+    setLength(validContent.length);
+  };
 
   const handleBlock = e => {
-    if (e.target.value.length >= limit) e.preventDefault()
-  }
+    const keyCode = e.keyCode;
+    const value = e.target.value;
+    if (keyCode !== 8 && keyCode !== 46 && value.length >= limit) e.preventDefault();
+  };
 
   return (
     <Container foucs={focus} exceed={length > limit}>
@@ -60,7 +62,7 @@ const Component = ({ limit, hint, onChange, value, isBlockMode }) => {
       />
       <Counter exceed={length > limit}>{`${length} / ${limit}`}</Counter>
     </Container>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
