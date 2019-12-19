@@ -23,20 +23,24 @@ const IdText = styled.div`
   font-size: 0.9rem;
   color: var(--color-darkgray);
 `;
-
+const SellerIdText = styled.div`
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--color-darkgray);
+`;
 const MessageText = styled.div`
   font-size: 0.8rem;
   word-break: break-all;
 `;
 
-const Chat = ({ chat }) => {
+const Chat = ({ chat, isSeller }) => {
   return (
     <ChatStyle>
       <AvatarBox>
         <Avatar src={chat.src} />
       </AvatarBox>
       <Content>
-        <IdText>{chat.id}</IdText>
+        {isSeller ? <SellerIdText>{chat.id}(판매자)</SellerIdText> : <IdText>{chat.id}</IdText>}
         <MessageText>{chat.text}</MessageText>
       </Content>
     </ChatStyle>
