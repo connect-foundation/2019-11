@@ -40,8 +40,9 @@ const OptionPriceCheck = styled.div`
 const Component = props => {
   const [isHover, setIsHover] = useState(false);
   const [rateCheck, setRateCheck] = useState(false);
-  let soldDate = toFormatDateTime(props.solddate);
-
+  let soldDate = props.solddate
+    ? toFormatDateTime(props.solddate)
+    : toFormatDateTime(props.registdate);
   function doCheck() {
     setRateCheck(true);
   }
@@ -53,7 +54,9 @@ const Component = props => {
         title={props.title}
         thumbnail={props.thumbnail}
         status={props.status}
-        price={convert2Price(props.soldprice)}
+        price={
+          props.soldprice ? convert2Price(props.soldprice) : convert2Price(props.immediatePrice)
+        }
         time={soldseconds}
       />
       <TradeContents isHover={isHover}>
@@ -82,7 +85,7 @@ const Component = props => {
             />
             <ReportButton userId={props.targetId} productId={props.id} text={"구매자 신고"} />
           </div>
-        ) : (
+        ) : props.status === "판매" ? (
           <div>
             {rateCheck || props.buyerCheck ? (
               "평가완료"
@@ -102,6 +105,8 @@ const Component = props => {
             />
             <ReportButton userId={props.targetId} productId={props.id} text={"판매자 신고"} />
           </div>
+        ) : (
+          undefined
         )}
       </TradeContents>
     </div>
