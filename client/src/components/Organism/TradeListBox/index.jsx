@@ -85,7 +85,7 @@ const Component = props => {
             />
             <ReportButton userId={props.targetId} productId={props.id} text={"구매자 신고"} />
           </div>
-        ) : props.status === "판매" ? (
+        ) : props.status === "구매" ? (
           <div>
             {rateCheck || props.buyerCheck ? (
               "평가완료"
