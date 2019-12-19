@@ -22,7 +22,7 @@ export class LogController {
       } else if (isSale) {
         return this.logService.findSellLog(userid, dayago, page, limit);
       } else {
-        return [[], [0]];
+        return this.logService.findFailLog(userid, dayago, page, limit);
       }
     }
   }
