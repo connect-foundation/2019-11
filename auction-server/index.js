@@ -55,7 +55,7 @@ let queue = [];
 
 //1분 반복 예시 "*/1 * * * *"
 //[작업 할당 클론]
-cron.schedule("*/10 * * * * *", () => {
+cron.schedule("*/2 * * * * *", () => {
   const now = moment().format("YYYY-MM-DD HH:mm:ss");
   console.log(now);
   pool.query(
@@ -87,7 +87,7 @@ cron.schedule("*/10 * * * * *", () => {
 });
 
 // [작업 처리 클론]
-cron.schedule("*/10 * * * * *", () => {
+cron.schedule("*/2 * * * * *", () => {
   if (queue.length === 0) return console.log("QUEUE IS EMPTY");
   console.dir(queue);
   console.dir(queue.length);

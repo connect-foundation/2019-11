@@ -5,6 +5,7 @@ import ChatSend from "./ChatSend";
 import ModalContext from "../../../context/ModalContext";
 import FailModal from "../../Molecules/CustomModal/FailModal";
 import ProductPageContext from "../../../context/ProductPageContext";
+import SocketContext from "../../../context/SocketContext";
 
 const ChatBoxStyle = styled.div`
   display: flex;
@@ -61,8 +62,9 @@ const ChatAlertWithPurchase = styled(ChatAlertWithBid)`
 
 const ChatBox = ({ productId, sellerId, user }) => {
   const chatBodyRef = useRef();
+  const { socket } = useContext(SocketContext);
   const [productPageState] = useContext(ProductPageContext);
-  const { socketClient, chats } = productPageState;
+  const { chats } = productPageState;
 
   const [modal, setModal] = useContext(ModalContext);
 
@@ -73,6 +75,10 @@ const ChatBox = ({ productId, sellerId, user }) => {
   const onSubmit = e => {
     e.preventDefault();
 
+    const text = e.target.message.value;
+
+    if (text === "" || text.trim() === "") return;
+
     if (Object.keys(user).length === 0) {
       return setModal({
         isOpen: true,
@@ -80,11 +86,11 @@ const ChatBox = ({ productId, sellerId, user }) => {
         props: { message: "로그인이 필요합니다." }
       });
     }
-    socketClient.emit("message", {
+    socket.emit("message", {
       roomId: productId,
-      sender: { ...user, sessionId: socketClient.id },
+      sender: { ...user, sessionId: socket.id },
       type: "message",
-      text: e.target.message.value,
+      text,
       createdAt: Date.now()
     });
 
@@ -98,7 +104,11 @@ const ChatBox = ({ productId, sellerId, user }) => {
       <ChatBody ref={chatBodyRef}>
         {chats.map(chat => {
           return chat.type === "message" ? (
-            <Chat key={chat.key} chat={chat} isSeller={sellerId === chat.senderId} />
+            <Chat
+              key={chat.key}
+              chat={chat}
+              isSeller={sellerId === chat.senderId}
+            />
           ) : (
             <ChatAlert key={chat.key}>
               {chat.type === "bid" ? (

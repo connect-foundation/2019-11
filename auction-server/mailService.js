@@ -1,20 +1,26 @@
-const axios = require("axios")
+const axios = require("axios");
 
 const mailTemplate = (isSeller, isSold, content) => `
 <div>
     <h3>세상의 모든 중고 경매 팔다 알림메일 입니다.</h3>
     <span>${isSeller ? "등록하신" : "입찰하신"} ${content}이 
     ${
-  isSeller ? (isSold ? "판매되었" : "유찰되었") : isSold ? "낙찰되었" : "유찰되었"
-  }습니다.</span>
+      isSeller
+        ? isSold
+          ? "판매되었"
+          : "유찰되었"
+        : isSold
+        ? "낙찰되었"
+        : "유찰되었"
+    }습니다.</span>
     <div>팔다에 접속해 확인하시기 바랍니다.</div>
 </div>
-`
+`;
 
 const mailTitleTemplate = (isSeller, isSold) => {
-  if (isSeller) return `${isSold ? "판매" : "유찰"} 되었습니다.`
-  return `${isSold ? "낙찰" : "유찰"} 되었습니다.`
-}
+  if (isSeller) return `${isSold ? "판매" : "유찰"} 되었습니다.`;
+  return `${isSold ? "낙찰" : "유찰"} 되었습니다.`;
+};
 
 const mailFooter = `
 <a href="http://palda.shop" style="
@@ -33,21 +39,24 @@ const mailFooter = `
 ">중고 물건은 이곳 팔다에서!</h3>
             <span>http://palda.shop</span>
         </div>
-    </a>`
+    </a>`;
 
 const user = {
   id: process.env.MAIL_ID,
   password: process.env.MAIL_PASSWORD
-}
+};
 
 const mailService = (toEmail, content, isSeller, isSold) => {
   if (!toEmail) return;
   // text html 택1 (html이 우선순위 높음)
   const mail = {
     to: toEmail,
-    subject: `[팔다] 상품 ${content}이(가) ${mailTitleTemplate(isSeller, isSold)}`,
+    subject: `[팔다] 상품 ${content}이(가) ${mailTitleTemplate(
+      isSeller,
+      isSold
+    )}`,
     html: mailTemplate(isSeller, isSold, content) + mailFooter
-  }
+  };
 
   const instance = axios.create({
     baseURL: process.env.MAIL_BASE,
@@ -55,44 +64,49 @@ const mailService = (toEmail, content, isSeller, isSold) => {
       "content-type": "application/json",
       Accept: "application/json"
     }
-  })
+  });
 
-  let cookie = ""
+  let cookie = "";
 
   const getCookie = async () => {
-    const response = await instance.post("/auth/login", user)
-    cookie = response.headers["set-cookie"][0]
-  }
+    const response = await instance.post("/auth/login", user);
+    cookie = response.headers["set-cookie"][0];
+  };
 
   const sendMail = () =>
     instance.post("/mail", mail, {
       headers: {
         Cookie: cookie
       }
-    })
+    });
 
   const run = async () => {
     try {
-      await sendMail()
-      return true
+      await sendMail();
+      return true;
     } catch (error) {
       if (error.response.status !== 401) {
-        return error
+        return error;
       }
     }
-    await getCookie()
-    const result = await sendMail()
-  }
+    await getCookie();
+    const result = await sendMail();
+  };
 
-  run()
-}
+  run();
+};
 
 const sendMail = (pool, userid, title, isSeller, isSold) => {
-  pool.query('select email from users where id = ?', [userid],
+  pool.query(
+    "select email from users where id = ?",
+    [userid],
     (err, row, field) => {
       if (!row) return;
-      mailService(row[0].email, title, isSeller, isSold)
-    })
-}
+      if (!row[0]) return;
+      if (!row[0].email) return;
+      mailService(row[0].email, title, isSeller, isSold);
+    }
+  );
+};
 
-module.exports = { sendMail }
+module.exports = { sendMail };

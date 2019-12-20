@@ -109,7 +109,7 @@ const Component = ({ url, object, width }) => {
       </Wrapper>
       <CopyToClipboard text={url}>
         <Wrapper>
-          <Logo src={URLLogo} />
+          <Logo src={URLLogo} onClick={() => alert("URL이 복사되었습니다.")} />
           <Title>URL</Title>
         </Wrapper>
       </CopyToClipboard>

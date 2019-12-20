@@ -10,7 +10,8 @@ const NotifyItemStyle = styled.div`
 
 const NotifyBadge = styled.div`
   width: 52px;
-  background: ${props => (props.success ? "var(--color-success)" : "var(--color-primary)")};
+  background: ${props =>
+    props.success ? "var(--color-success)" : "var(--color-primary)"};
   padding: var(--padding-sm);
   color: white;
   font-weight: bold;
@@ -22,7 +23,9 @@ const NotifyContent = styled.div`
   width: 100%;
   display: flex;
   border: 1px solid var(--color-gray);
-  /* border-color: ${props => (props.success ? "var(--color-success)" : "var(--color-primary)")}; */
+  background-color:white;
+  /* border-color: ${props =>
+    props.success ? "var(--color-success)" : "var(--color-primary)"}; */
 `;
 
 const NotifyLeftContent = styled.div`
@@ -84,9 +87,9 @@ export const NotifyItem = props => {
   return (
     <NotifyItemStyle>
       {isSuccess(type) ? (
-        <NotifyBadge success>구매 성공</NotifyBadge>
+        <NotifyBadge success>성공</NotifyBadge>
       ) : (
-        <NotifyBadge>구매 실패</NotifyBadge>
+        <NotifyBadge>실패</NotifyBadge>
       )}
       <NotifyContent success>
         <NotifyLeftContent>
