@@ -70,13 +70,17 @@ io.on("connection", function(socket) {
     userMapper[userId] = sessionId;
   });
 
-  socket.on("leaveRoom", (roomId, sessionId, userId) => {
+  socket.on("leaveRoom", ({ roomId, sessionId, user }) => {
     console.log(
-      `##### USER(${sessionId}, ${userId})가 ${roomId}방에서 나감 #####`
+      `##### USER(${sessionId}, ${user.id})가 ${roomId}방에서 나감 #####`
     );
     socket.leave(roomId, () => {
       //rooms 정보에서 삭제한다.
       delete rooms[roomId][sessionId];
     });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("DISCONNECTED");
   });
 });

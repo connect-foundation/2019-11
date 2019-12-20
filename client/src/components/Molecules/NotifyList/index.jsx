@@ -31,7 +31,7 @@ function Component() {
         {notifications.map(noti => {
           return (
             <NotifyItem
-              key={`${noti.product.id}${noti.product.title}`}
+              key={`${noti.type}${noti.product.id}${noti.product.title}`}
               {...noti}
             />
           );
