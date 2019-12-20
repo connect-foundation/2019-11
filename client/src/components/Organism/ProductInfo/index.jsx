@@ -16,6 +16,7 @@ import ReportButton from "../../Atoms/ReportButton";
 import MessengerCreateButton from "../../Messenger/CreateButton";
 import Carousel from "../../Molecules/Carousel";
 import { getNowDateTime, isTerminated } from "../../../utils/dateUtil";
+import SocketContext from "../../../context/SocketContext";
 
 const { apiUrl } = apiConfig;
 
@@ -195,11 +196,11 @@ const ShareWrapper = styled.div`
 
 const ProductInfo = () => {
   const [user] = useContext(UserContext);
-
+  const { socket } = useContext(SocketContext);
   const [productPageState, dispatchProductPage] = useContext(
     ProductPageContext
   );
-  const { socketClient, product, chats, bids } = productPageState;
+  const { product, chats, bids } = productPageState;
 
   const [modal, setModal] = useContext(ModalContext);
   /*   
@@ -298,7 +299,7 @@ const ProductInfo = () => {
     axios
       .post(`${baseURL}${pathConfig.bids}`, params)
       .then(response => {
-        socketClient.emit("bid", {
+        socket.emit("bid", {
           type: "bid",
           roomId: id,
           sender: { ...user, sessionId: user.sessionId },
@@ -366,9 +367,9 @@ const ProductInfo = () => {
     axios
       .patch(`${baseURL}${pathConfig.products}/${id}`, params)
       .then(response => {
-        socketClient.emit("purchase", {
+        socket.emit("purchase", {
           roomId: id,
-          sender: { ...user, sessionId: socketClient.id },
+          sender: { ...user, sessionId: socket.id },
           sold: response.data,
           createdAt: getNowDateTime()
         });

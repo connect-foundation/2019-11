@@ -8,15 +8,15 @@ import { useFetch } from "../../hooks/useFetch";
 import pathConfig from "../../config/path";
 import UserContext from "../../context/UserContext";
 import apiConfig from "../../config/api";
-import io from "socket.io-client";
 import ProductPageContext from "../../context/ProductPageContext";
 import { convert2Price } from "../../utils/converter";
 import NotificationContext from "../../context/NotificationContext";
 import { getFetch } from "../../services/fetchService";
 import SmallCardContainer from "../../components/Molecules/SmallCardContainer";
 import ErrorPage from "../../pages/ErrorPage";
+import SocketContext from "../../context/SocketContext";
 
-const { chatUrl, apiUrl } = apiConfig;
+const { apiUrl } = apiConfig;
 
 const ProductPageStyle = styled.div`
   display: flex;
@@ -48,8 +48,7 @@ const initialProductPageState = {
   loading: true,
   product: {},
   bids: [],
-  chats: [],
-  socketClient: null
+  chats: []
 };
 
 const productPageReducer = (state, action) => {
@@ -80,8 +79,6 @@ const productPageReducer = (state, action) => {
         ...state,
         chats: [...state.chats, action.chat]
       };
-    case "SET_SOCKET":
-      return { ...state, socketClient: action.socket };
     case "UPDATE_PRODUCT":
       return { ...state, product: { ...state.product, ...action.product } };
     default:
@@ -89,16 +86,17 @@ const productPageReducer = (state, action) => {
   }
 };
 
-const DEFAULT_PROFILE_URL = "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
+const DEFAULT_PROFILE_URL =
+  "https://kr.object.ncloudstorage.com/palda/img/default-profile-img.jpg";
 
 const ProductPage = ({ match }) => {
+  const [user] = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
+  const [, setNotifications] = useContext(NotificationContext);
   const [productPageState, dispatchProductPage] = useReducer(
     productPageReducer,
     initialProductPageState
   );
-
-  const [user] = useContext(UserContext);
-  const [, setNotifications] = useContext(NotificationContext);
   const [relatedItemList, setRelatedItemList] = useState([]);
 
   const productId = match.params.id;
@@ -116,29 +114,19 @@ const ProductPage = ({ match }) => {
     dispatchProductPage({ type: "FETCH_ERROR", error });
   };
 
-  useFetch(`${pathConfig.productsWithBids}/${productId}`, handleFetchSuccess, handleFetchError);
-
-  const getRelatedItemList = async () => {
-    if (!productPageState.loading) {
-      setRelatedItemList([]);
-      const { categoryCode, id } = productPageState.product;
-      const url = `${apiUrl}${pathConfig.items.related}/${categoryCode}/${id}`;
-      let result = await getFetch(url, {}, {});
-
-      setRelatedItemList(result[0]);
-    }
-  };
+  useFetch(
+    `${pathConfig.productsWithBids}/${productId}`,
+    handleFetchSuccess,
+    handleFetchError
+  );
 
   useEffect(() => {
-    if (Object.keys(user).length === 0) return;
-    const socket = io(chatUrl);
-    socket.on("connect", () => {
-      dispatchProductPage({ type: "SET_SOCKET", socket });
-      socket.emit("joinRoom", {
-        roomId: productId,
-        sessionId: socket.id,
-        user: user
-      });
+    if (!socket) return;
+
+    socket.emit("joinRoom", {
+      roomId: productId,
+      sessionId: socket.id,
+      user: user
     });
 
     socket.on("message", ({ roomId, sender, type, text, createdAt }) => {
@@ -160,7 +148,9 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님께서 ${convert2Price(bid.bidPrice)}원에 입찰 하셨습니다.`,
+        text: `${sender.name}님께서 ${convert2Price(
+          bid.bidPrice
+        )}원에 입찰 하셨습니다.`,
         key: `B.${createdAt}.${sender.id}`
       };
 
@@ -173,7 +163,9 @@ const ProductPage = ({ match }) => {
         sessionId: sender.sessionId,
         id: sender.loginId,
         src: sender.profileUrl || DEFAULT_PROFILE_URL,
-        text: `${sender.name}님이 ${convert2Price(sold.soldPrice)}원에 즉시 구매하셨습니다.`,
+        text: `${sender.name}님이 ${convert2Price(
+          sold.soldPrice
+        )}원에 즉시 구매하셨습니다.`,
         key: `P.${createdAt}.${sender.id}`
       };
 
@@ -182,22 +174,25 @@ const ProductPage = ({ match }) => {
       return dispatchProductPage({ type: "ADD_PURCHASE", chat, product });
     });
 
-    socket.on("auctionResult", ({ type, product }) => {
-      setNotifications(notis => [...notis, { type, product }]);
-    });
-
-    socket.on("joinRoom", message => {
-      // console.log(message);
-    });
-
-    socket.on("disconnect", reason => {
-      // console.log(reason);
-    });
-
     return () => {
-      socket.close();
+      socket.emit("leaveRoom", {
+        roomId: productId,
+        sessionId: socket.id,
+        user: user
+      });
     };
-  }, [user, chatUrl, dispatchProductPage]);
+  }, [socket]);
+
+  const getRelatedItemList = async () => {
+    if (!productPageState.loading) {
+      setRelatedItemList([]);
+      const { categoryCode, id } = productPageState.product;
+      const url = `${apiUrl}${pathConfig.items.related}/${categoryCode}/${id}`;
+      let result = await getFetch(url, {}, {});
+
+      setRelatedItemList(result[0]);
+    }
+  };
 
   useEffect(() => {
     getRelatedItemList();
@@ -206,11 +201,15 @@ const ProductPage = ({ match }) => {
   if (productPageState.error) {
     return <ErrorPage />;
   }
-  const sellerId = productPageState.product.seller ? productPageState.product.seller.id : undefined;
+  const sellerId = productPageState.product.seller
+    ? productPageState.product.seller.id
+    : undefined;
   return productPageState.loading ? (
     <Spinner text="상품 준비중" />
   ) : (
-    <ProductPageContext.Provider value={[productPageState, dispatchProductPage]}>
+    <ProductPageContext.Provider
+      value={[productPageState, dispatchProductPage]}
+    >
       <ProductPageStyle>
         <MainColumn>
           <Section>
@@ -222,11 +221,19 @@ const ProductPage = ({ match }) => {
             </Section>
           ) : null}
           <Section>
-            <SmallCardContainer items={relatedItemList} title={"연관상품"} isWrap={true} />
+            <SmallCardContainer
+              items={relatedItemList}
+              title={"연관상품"}
+              isWrap={true}
+            />
           </Section>
         </MainColumn>
         <ChatColumn>
-          <ChatBox productId={productId} sellerId={sellerId} user={user}></ChatBox>
+          <ChatBox
+            productId={productId}
+            sellerId={sellerId}
+            user={user}
+          ></ChatBox>
         </ChatColumn>
       </ProductPageStyle>
     </ProductPageContext.Provider>
