@@ -137,22 +137,24 @@ const Component = ({ next, registItem }) => {
   const handleAuction = ev => setIsAuction(!isAuction);
 
   const handleRegister = ev => {
-    if (onRegister) alert("등록 중입니다. 잠시 기다려주세요");
+    if (onRegister) {
+      alert("등록 중입니다. 잠시 기다려주세요");
+      return;
+    }
     setOnRegister(true);
 
-    validation(valiResult, successCallback, failCallback);
-    setOnRegister(false);
-  };
+    const valiResult = [
+      strEmpty(title),
+      idxNotSelected(dayIdx),
+      strEmpty(buyNow),
+      isAuction && strEmpty(minPrice),
+      isAuction && strEmpty(predictPrice),
+      strEmpty(description),
+      isArrayEmpty(imgList)
+    ];
 
-  const valiResult = [
-    strEmpty(title),
-    idxNotSelected(dayIdx),
-    strEmpty(buyNow),
-    isAuction && strEmpty(minPrice),
-    isAuction && strEmpty(predictPrice),
-    strEmpty(description),
-    isArrayEmpty(imgList)
-  ];
+    validation(valiResult, successCallback, failCallback);
+  };
 
   const successCallback = () => {
     const { data } = obj;
@@ -186,6 +188,7 @@ const Component = ({ next, registItem }) => {
         data.productId = result;
         next();
       }
+      setOnRegister(false);
     };
 
     registItem();
