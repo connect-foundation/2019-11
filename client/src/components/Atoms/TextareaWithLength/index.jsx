@@ -1,28 +1,28 @@
-import React, { useState } from "react"
-import styled from "styled-components"
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
   border: none;
   outline: none;
-`
+`;
 
 const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
-`
+`;
 
 const Title = styled.span`
   font-weight: bold;
-`
+`;
 
 const Counter = styled.span`
   color: ${props => (props.isOver ? "var(--color-danger)" : "var(--color-gary)")};
   font-weight: ${props => (props.isOver ? "700" : "400")};
   font-size: 0.9rem;
-`
+`;
 
 const Content = styled.textarea`
   font-family: D2Coding, "D2 coding", monosapce;
@@ -35,22 +35,24 @@ const Content = styled.textarea`
   outline: none;
   font-size: 1.2rem;
   padding: 1rem;
-`
+`;
 
 const Component = ({ title, limit, content, handler, isBlockMode }) => {
-  const [len, setLen] = useState(content ? content.length : 0)
+  const [len, setLen] = useState(content ? content.length : 0);
 
   const handleContent = event => {
-    const content = event.target.value
+    const content = event.target.value;
     const validContent =
-      isBlockMode && content.length > limit ? content.substring(0, limit) : content
-    handler(validContent)
-    setLen(validContent.length)
-  }
+      isBlockMode && content.length > limit ? content.substring(0, limit) : content;
+    handler(validContent);
+    setLen(validContent.length);
+  };
 
   const handleBlock = e => {
-    if (e.target.value.length >= limit) e.preventDefault()
-  }
+    const keyCode = e.keyCode;
+    const value = e.target.value;
+    if (keyCode !== 8 && keyCode !== 46 && value.length >= limit) e.preventDefault();
+  };
 
   return (
     <Container>
@@ -65,7 +67,7 @@ const Component = ({ title, limit, content, handler, isBlockMode }) => {
         value={content}
       />
     </Container>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

@@ -15,9 +15,13 @@ import { UserService } from "../../services/UserService";
 import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
 import { UserDTO } from "../../dto/UserDTO";
-import { Await, Async, Option } from "../../util/fetchUtil";
+import { fetchToJson, option } from "../../util/fetchUtil";
 import { kakao, google } from "../../constants/oauthAPIs";
 import { keyValue2Str } from "../../util/StringUtils";
+import { makeTokens, replaceOAuthToken } from "../../util/authUtils";
+import config from "../../config/key";
+
+const { googleKey, kakaoKey, jwtSecret } = config;
 
 /** TypeDi Constructor Injection 작동 방식
  * 1. TypeDi의 Container를 routing-controllers가 사용한다.(server.ts 소스 코드 참조)
@@ -33,34 +37,38 @@ export class UserController {
     let accessToken = req.headers["access-token"];
     let refreshToken = req.headers["refresh-token"];
     if (accessToken.includes("kakao_") || refreshToken.includes("kakao_")) {
-      return await this.getUserKakao(accessToken, refreshToken);
+      return this.getUserKakao(accessToken, refreshToken);
     }
     if (accessToken.includes("google_") || refreshToken.includes("google_")) {
-      return await this.getUserGoogle(accessToken, refreshToken);
+      return this.getUserGoogle(accessToken, refreshToken);
     }
+    const decodedAccessToken = jwt.verify(accessToken, `${jwtSecret}`);
+
+    if ((<any>decodedAccessToken).loginId) {
+      return this.userService.findOne((<any>decodedAccessToken).loginId);
+    }
+
+    const decodedRefreshToken = jwt.verify(refreshToken, `${jwtSecret}`);
+    const { loginId } = <any>decodedRefreshToken;
+
+    if (!loginId) {
+      return false;
+    }
+
     try {
-      const decodedAccessToken = jwt.verify(accessToken, `${process.env.JWT_KEY}`);
-      const user = await this.userService.findOne((<any>decodedAccessToken).loginId);
-      return user;
+      accessToken = jwt.sign({ loginId }, `${jwtSecret}`, {
+        expiresIn: "2h"
+      });
     } catch {
-      try {
-        const decodedRefreshToken = jwt.verify(refreshToken, `${process.env.JWT_KEY}`);
-        const { loginId } = <any>decodedRefreshToken;
-        accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
-          expiresIn: "2h"
-        });
-        const user = await this.userService.updateToken(loginId, accessToken, refreshToken);
-        return user;
-      } catch {
-        return false;
-      }
+      return false;
     }
+
+    return this.userService.updateToken(loginId, accessToken, refreshToken);
   }
 
   @Get("/:id")
   public async findOne(@Param("id") loginId: string) {
-    const user = await this.userService.findOne(loginId);
-    return user;
+    return this.userService.findOne(loginId);
   }
 
   @Post()
@@ -75,19 +83,19 @@ export class UserController {
   ) {
     //TODO: user을 Users Model에 맞게 class-transformer를 사용해서 처리하자
     if (!isSignUp) {
-      const user = await this.userService.update(id, loginId, password, name, email);
+      const user = await this.userService.update(
+        id,
+        loginId,
+        password,
+        name,
+        email
+      );
       return { msg: true, user };
     }
     if (await this.userService.checkDuplicate(loginId)) {
       return { msg: false, user: null };
     }
-    const accessToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
-      expiresIn: "2h"
-    });
-
-    const refreshToken = await jwt.sign({ loginId }, `${process.env.JWT_KEY}`, {
-      expiresIn: "3 days"
-    });
+    const { accessToken, refreshToken } = makeTokens(loginId);
 
     const user = await this.userService.create(
       loginId,
@@ -114,32 +122,31 @@ export class UserController {
 
   public async getUserKakao(accessToken: string, refreshToken: string) {
     const user = await this.userService.findOneByToken(accessToken);
-    accessToken = accessToken.replace("kakao_", "");
-    refreshToken = refreshToken.replace("kakao_", "");
-    const checkExpireResult = await Await(kakao.checkTokenExpired, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+    let { at, rt } = replaceOAuthToken("kakao", accessToken, refreshToken);
+    const checkExpireResult = await fetchToJson(kakao.checkTokenExpired, {
+      headers: { Authorization: `Bearer ${at}` }
     });
     const { expiresInMillis } = checkExpireResult;
     if (expiresInMillis <= 0) {
       const params = {
         grant_type: "refresh_token",
-        client_id: process.env.KAKAO_API_KEY,
-        refresh_token: refreshToken
+        client_id: kakaoKey.APIKey,
+        refresh_token: rt
       };
       const paramsStr = keyValue2Str(params);
-      const { access_token, refresh_token } = await Await(
+      const { access_token, refresh_token } = await fetchToJson(
         `${kakao.getToken}?${paramsStr}`,
-        Option.post
+        option.post
       );
-      if (refresh_token !== undefined) refreshToken = `kakao_${refresh_token}`;
+      if (refresh_token !== undefined) rt = `kakao_${refresh_token}`;
       const { loginId, name, email, profileUrl } = <UserDTO>user;
-      return await this.userService.updateAuth(
+      return this.userService.updateAuth(
         loginId,
         name,
         email,
         profileUrl,
         `kakao_${access_token}`,
-        `kakao_${refreshToken}`
+        `kakao_${rt}`
       );
     }
     return user;
@@ -147,32 +154,37 @@ export class UserController {
 
   public async getUserGoogle(accessToken: string, refreshToken: string) {
     const user = await this.userService.findOneByToken(accessToken);
-    accessToken = accessToken.replace("google_", "");
-    refreshToken = refreshToken.replace("google_", "");
+    const { at, rt } = replaceOAuthToken("google", accessToken, refreshToken);
     const params = {
-      access_token: accessToken
+      access_token: at
     };
     const paramsStr = keyValue2Str(params);
-    const checkExpireResult = await Await(`${google.checkTokenExpired}?${paramsStr}`, Option.get);
+    const checkExpireResult = await fetchToJson(
+      `${google.checkTokenExpired}?${paramsStr}`,
+      option.get
+    );
     const { user_id } = checkExpireResult;
 
     if (user_id === undefined) {
       const params = {
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        refresh_token: refreshToken,
+        client_id: googleKey.clientId,
+        client_secret: googleKey.clientSecret,
+        refresh_token: rt,
         grant_type: "refresh_token"
       };
       const paramsStr = keyValue2Str(params);
-      const { access_token } = await Await(`${google.getToken}?${paramsStr}`, Option.post);
+      const { access_token } = await fetchToJson(
+        `${google.getToken}?${paramsStr}`,
+        option.post
+      );
       const { loginId, name, email, profileUrl } = <UserDTO>user;
-      return await this.userService.updateAuth(
+      return this.userService.updateAuth(
         loginId,
         name,
         email,
         profileUrl,
         `google_${access_token}`,
-        `google_${refreshToken}`
+        `google_${rt}`
       );
     }
 
@@ -180,7 +192,7 @@ export class UserController {
   }
 
   @Post("/idx")
-  public async findOnebyIdx(@BodyParam("id") id: number) {
-    return await this.userService.findOnebyIdx(id);
+  public findOnebyIdx(@BodyParam("id") id: number) {
+    return this.userService.findOnebyIdx(id);
   }
 }

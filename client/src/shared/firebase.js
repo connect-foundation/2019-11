@@ -15,6 +15,7 @@ function Firebase() {
    *
    */
   this.makeRoom = (myid, sellerid) => {
+    if (!myid) return;
     if (myid === sellerid) return;
     return this.database
       .ref("/rooms/")

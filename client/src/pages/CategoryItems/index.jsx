@@ -52,7 +52,7 @@ const CategoryItems = ({ match }) => {
 
   return (
     <>
-      {title.length ? (
+      {title && title.length ? (
         <MainStyle>
           <CardContainer items={itemlist} title={title} isWrap={true} />
         </MainStyle>

@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
-import { convert2UnitPrice } from "../../../utils/converter";
+import { convert2Price, convert2UnitPrice } from "../../../utils/converter";
 
 import ticketIcon from "../../../assets/tickets.svg";
 import { getDiffDateTime } from "../../../utils/dateUtil";
@@ -13,7 +13,7 @@ const CardStyle = styled.div`
   border-radius: 1rem;
   margin: 1rem;
   background: white;
-  width: 13rem;
+  width: 13.5rem;
   height: 17rem;
   padding: 0;
   cursor: pointer;
@@ -44,8 +44,10 @@ const InfoContainer = styled.div`
 `;
 
 const StyledLink = styled(Link)`
+  height: fit-content;
   text-decoration: none;
   color: black;
+  height: 17rem;
 `;
 
 const BidsStyle = styled.div`
@@ -167,6 +169,7 @@ const Card = ({ item }) => {
 };
 
 const Bids = ({ bids }) => {
+  if (bids >= 1000) bids = `${Number(bids / 1000)}K`;
   return (
     <BidsStyle>
       <img src={ticketIcon} alt={"profile Image"} />
@@ -207,7 +210,9 @@ const BuyNowPrice = ({ buyNowPrice }) => {
   return (
     <BuyNowPriceStyle>
       <label>즉시 구매가</label>
-      {convert2UnitPrice(buyNowPrice)}
+      {Number(buyNowPrice) < 10000
+        ? convert2Price(buyNowPrice)
+        : convert2UnitPrice(buyNowPrice)}
     </BuyNowPriceStyle>
   );
 };
@@ -216,7 +221,9 @@ const TopBid = ({ topBid }) => {
   return (
     <TopBidStyle>
       <label>현재 입찰가</label>
-      {convert2UnitPrice(topBid)}
+      {Number(topBid) < 10000
+        ? convert2Price(topBid)
+        : convert2UnitPrice(topBid)}
     </TopBidStyle>
   );
 };

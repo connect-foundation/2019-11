@@ -31,7 +31,7 @@ const OriginWrapper = styled.div`
 
 const ListWrapper = styled.div`
   position: absolute;
-  width: ${props => (props.open ? (props.idx === "999" ? 20 : 15) : 0)}rem;
+  width: ${props => (props.open ? (props.idx === 999 ? "21" : "15") : 0)}rem;
   height: 100%;
   left: 5em;
   z-index: 999;
@@ -186,11 +186,7 @@ const Components = () => {
           <ExpandList
             open={open}
             idx={selectIdx}
-            details={
-              selectIdx === 0 || selectIdx === 999
-                ? []
-                : categoryList[selectIdx - 1].sub
-            }
+            details={selectIdx === 0 || selectIdx === 999 ? [] : categoryList[selectIdx - 1].sub}
             onClick={close}
           />
         )}

@@ -20,7 +20,7 @@ const Title = styled.label`
 
 const SmallCardContainerStyle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   height: ${props => (props.isWrap ? "35rem" : "17rem")};
   margin-bottom: 2rem;

@@ -1,7 +1,6 @@
 import { Service } from "typedi";
 import { LogRepository } from "../repositories/LogRepository";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Products } from "../models/Products";
 
 /** TODO: Transaction을 어떻게 처리해야 좋을까? */
 @Service()
@@ -18,5 +17,8 @@ export class LogService {
 
   public findAllLog(userid: number, dayago: number, page: number, limit: number) {
     return this.LogRepository.findAll(userid, dayago, page, limit);
+  }
+  public findFailLog(userid: number, dayago: number, page: number, limit: number) {
+    return this.LogRepository.findFail(userid, dayago, page, limit);
   }
 }

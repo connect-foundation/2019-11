@@ -34,31 +34,34 @@ const Deviation = styled.span`
 `;
 
 const OptionPriceCheck = styled.div`
-  display: ${props => (props.isCheck === null ? "none" : "block")};
+  display: ${props => (props.isCheck ? "block" : "none")};
 `;
 
 const Component = props => {
   const [isHover, setIsHover] = useState(false);
   const [rateCheck, setRateCheck] = useState(false);
-  let soldDate = toFormatDateTime(props.solddate);
-
+  let soldDate = props.solddate
+    ? toFormatDateTime(props.solddate)
+    : toFormatDateTime(props.registdate);
   function doCheck() {
     setRateCheck(true);
   }
   let soldseconds = new Date(soldDate).getTime();
 
   return (
-    <div onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)}>
+    <div onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
       <TradeBox
         title={props.title}
         thumbnail={props.thumbnail}
         status={props.status}
-        price={convert2Price(props.soldprice)}
+        price={
+          props.soldprice ? convert2Price(props.soldprice) : convert2Price(props.immediatePrice)
+        }
         time={soldseconds}
       />
       <TradeContents isHover={isHover}>
         <RegistDate>등록 날짜:{toFormatDateTime(props.registdate)}</RegistDate>
-        <OptionPriceCheck isCheck={props.hopeprice}>
+        <OptionPriceCheck isCheck={props.status === "판매" && props.hopeprice}>
           <HopePrice>희망 가격:{convert2Price(props.hopeprice)}</HopePrice>
           <Deviation setColor={props.deviation}>편차:{props.deviation}%</Deviation>
         </OptionPriceCheck>
@@ -82,7 +85,7 @@ const Component = props => {
             />
             <ReportButton userId={props.targetId} productId={props.id} text={"구매자 신고"} />
           </div>
-        ) : (
+        ) : props.status === "구매" ? (
           <div>
             {rateCheck || props.buyerCheck ? (
               "평가완료"
@@ -100,8 +103,10 @@ const Component = props => {
               sellerId={props.targetId}
               text={"판매자와 대화하기"}
             />
-            <ReportButton targetId={props.targetId} text={"판매자 신고"} />
+            <ReportButton userId={props.targetId} productId={props.id} text={"판매자 신고"} />
           </div>
+        ) : (
+          undefined
         )}
       </TradeContents>
     </div>
