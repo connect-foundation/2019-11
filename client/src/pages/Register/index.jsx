@@ -74,8 +74,8 @@ const registerProduct = async ({ data, callback }) => {
 
 const Page = () => {
   const [user] = useContext(UserContext);
+  useContext(productContext).data = defaultData;
   const product = useContext(productContext);
-  product.data = defaultData;
 
   const [phase, setPhase] = useState(0);
   const [maxPhase, setMaxPhase] = useState(0);
