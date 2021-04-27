@@ -41,7 +41,7 @@
     "mysql2": "^1.7.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.4",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.0",
     "typedi": "^0.8.0",
