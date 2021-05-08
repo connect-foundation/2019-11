@@ -45,7 +45,7 @@
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.8.0",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.21",
+    "typeorm": "^0.2.25",
     "typeorm-seeding": "^1.2.0",
     "typeorm-typedi-extensions": "^0.2.3",
     "typescript": "^3.7.3",
