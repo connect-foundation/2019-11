@@ -14,7 +14,7 @@
     "axios": "^0.19.0",
     "dot-env": "0.0.1",
     "dotenv": "^8.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.27",
     "mysql2": "^2.0.2",
     "node-cron": "^2.0.3",
