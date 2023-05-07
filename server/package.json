@@ -29,7 +29,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "faker": "^4.1.0",
-    "firebase-admin": "^8.8.0",
+    "firebase-admin": "^11.8.0",
     "handlebars": "^4.5.3",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
